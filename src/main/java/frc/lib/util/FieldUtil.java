@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FieldUtil {
 	/* all locations are relative */
-	Pose2d processorOpening = new Pose2d(Units.inchesToMeters(235.73), 
+	Pose2d processorOpening = new Pose2d(Units.inchesToMeters(235.73),
 		Units.inchesToMeters(-0.15), Rotation2d.fromDegrees(90));
 
 	Pose2d leftCoralStation = new Pose2d(Units.inchesToMeters(33.51),
@@ -18,14 +18,14 @@ public class FieldUtil {
 
 	Pose2d RightCoralStation = new Pose2d(Units.inchesToMeters(33.51),
 		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(54));
-	
+
 	Pose2d FarReef = new Pose2d(Units.inchesToMeters(209.49),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 
 	Pose2d NearReef = new Pose2d(Units.inchesToMeters(144.00),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
-	
-	/* counter clockwise 
+
+	/* counter clockwise
 	 * a "reef" is a set of two "prongs" where coral can be scored.  there are 6 sets of these
 	 * in a hexagonal pattern
 	*/
@@ -39,18 +39,18 @@ public class FieldUtil {
 	};
 
 	boolean isRedAlliance() {
-		Optional<Alliance> alliance = DriverStation.getAlliance();		
-		
+		Optional<Alliance> alliance = DriverStation.getAlliance();
+
 		if (alliance.isEmpty())
 			return false;
-		
+
 		if (alliance.get() == Alliance.Red) {
 			return true;
 		}
 
 		return false;
 	}
-	
+
 	/**
 	 * @param i: index from 0
 	 * @return reef pose that is the i-th counter clockwise from the farthermost reef
