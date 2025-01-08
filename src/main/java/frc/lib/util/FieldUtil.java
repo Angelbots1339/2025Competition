@@ -19,18 +19,21 @@ public class FieldUtil {
 	Pose2d RightCoralStation = new Pose2d(Units.inchesToMeters(33.51),
 		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(54));
 	
-	Pose2d FarCoral = new Pose2d(Units.inchesToMeters(209.49),
+	Pose2d FarReef = new Pose2d(Units.inchesToMeters(209.49),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 
-	Pose2d NearCoral = new Pose2d(Units.inchesToMeters(144.00),
+	Pose2d NearReef = new Pose2d(Units.inchesToMeters(144.00),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 	
-	/* counter clockwise */
-	Pose2d CoralPoses[] = {
-		FarCoral,
+	/* counter clockwise 
+	 * a "reef" is a set of two "prongs" where coral can be scored.  there are 6 sets of these
+	 * in a hexagonal pattern
+	*/
+	Pose2d ReefPoses[] = {
+		FarReef,
 		new Pose2d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(300)),
 		new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(240)),
-		NearCoral,
+		NearReef,
 		new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(240)),
 		new Pose2d(Units.inchesToMeters(193.10), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(300)),
 	};
@@ -48,10 +51,11 @@ public class FieldUtil {
 		return false;
 	}
 	
-	/* get coral location that is the i-th location counter clockwise 
-	 * i is 1 to 5
-	*/
-	Pose2d getCoralPose(int i) {
-		return CoralPoses[i-1];
+	/**
+	 * @param i: index from 0
+	 * @return reef pose that is the i-th counter clockwise from the farthermost reef
+	 */
+	Pose2d getReefPose(int i) {
+		return ReefPoses[i % 6];
 	}
 }
