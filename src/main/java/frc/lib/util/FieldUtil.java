@@ -10,26 +10,26 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FieldUtil {
 	/* all locations are relative */
-	Pose2d processorOpening = new Pose2d(Units.inchesToMeters(235.73),
+	public static final Pose2d ProcessorOpening = new Pose2d(Units.inchesToMeters(235.73),
 		Units.inchesToMeters(-0.15), Rotation2d.fromDegrees(90));
 
-	Pose2d leftCoralStation = new Pose2d(Units.inchesToMeters(33.51),
+	public static final Pose2d LeftCoralStation = new Pose2d(Units.inchesToMeters(33.51),
 		Units.inchesToMeters(291.20), Rotation2d.fromDegrees(306));
 
-	Pose2d RightCoralStation = new Pose2d(Units.inchesToMeters(33.51),
+	public static final Pose2d RightCoralStation = new Pose2d(Units.inchesToMeters(33.51),
 		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(54));
 
-	Pose2d FarReef = new Pose2d(Units.inchesToMeters(209.49),
+	public static final Pose2d FarReef = new Pose2d(Units.inchesToMeters(209.49),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 
-	Pose2d NearReef = new Pose2d(Units.inchesToMeters(144.00),
+	public static final Pose2d NearReef = new Pose2d(Units.inchesToMeters(144.00),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 
 	/* counter clockwise
 	 * a "reef" is a set of two "prongs" where coral can be scored.  there are 6 sets of these
 	 * in a hexagonal pattern
 	*/
-	public Pose2d ReefPoses[] = {
+	public static final Pose2d ReefPoses[] = {
 		FarReef,
 		new Pose2d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(300)),
 		new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(240)),
