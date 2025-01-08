@@ -29,7 +29,7 @@ public class FieldUtil {
 	 * a "reef" is a set of two "prongs" where coral can be scored.  there are 6 sets of these
 	 * in a hexagonal pattern
 	*/
-	Pose2d ReefPoses[] = {
+	public Pose2d ReefPoses[] = {
 		FarReef,
 		new Pose2d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(300)),
 		new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(240)),
@@ -49,13 +49,5 @@ public class FieldUtil {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @param i: index from 0
-	 * @return reef pose that is the i-th counter clockwise from the farthermost reef
-	 */
-	Pose2d getReefPose(int i) {
-		return ReefPoses[i % 6];
 	}
 }
