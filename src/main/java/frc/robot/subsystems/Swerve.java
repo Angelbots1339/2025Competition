@@ -24,13 +24,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.PoseEstimation;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.Swerve;
 	private final Field2d m_field = new Field2d();
 
-	private double maxspeed = 1;
+	private double maxspeed = 5;
 	private double maxturn = Math.PI * 2;
 
 	private final StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
@@ -81,6 +82,9 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
+
+		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
 	}
 
 	@Override
