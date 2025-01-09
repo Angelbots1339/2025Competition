@@ -11,29 +11,29 @@ public class Elevator extends SubsystemBase {
 	private double targetHeight = 0;
 
 	public Elevator() {
-		motor.getConfigurator().apply(ElevatorConstants.config);	
+		motor.getConfigurator().apply(ElevatorConstants.config);
 
 		motor.setPosition(0);
 	}
 
-	void setHeight(double meters) {
+	public void setHeight(double meters) {
 		motor.setControl(
 			ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters)));
 		targetHeight = meters;
 	}
 
-	double getHeight() {
+	public double getHeight() {
 		return ElevatorConstants.rotationToMeters(getRotations());
 	}
-	
-	double getRotations() {
+
+	public double getRotations() {
 		return motor.getPosition().getValueAsDouble();
 	}
-	
-	boolean isAtSetpoint() {
+
+	public boolean isAtSetpoint() {
 		return getHeight() < ElevatorConstants.ErrorTolerence;
 	}
-	
+
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("Actual Height", getHeight());
