@@ -12,9 +12,14 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -28,11 +33,11 @@ public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.Swerve;
 	private final Field2d m_field = new Field2d();
 
-	private double maxspeed = 5;
+	private double maxspeed = 3;
 	private double maxturn = Math.PI * 2;
 
-	PIDController turnPid = new PIDController(0, 0, 0);
-
+	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
+		.withDriveRequestType(DriveRequestType.Velocity);
 	private final SwerveRequest.FieldCentric m_driveRequest = new SwerveRequest.FieldCentric()
 			.withDeadband(maxspeed * 0.1).withRotationalDeadband(Math.PI / 2 * 0.1)
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
@@ -40,6 +45,7 @@ public class Swerve extends SubsystemBase {
 
 	/** Creates a new Swerve. */
 	public Swerve() {
+		configPathPlanner();
 		swerve.getPigeon2().setYaw(0);
 
 		putSwerveState();
@@ -55,6 +61,55 @@ public class Swerve extends SubsystemBase {
 				.withRotationalDeadband(0.2 * maxturn);
 
 		swerve.setControl(req);
+	}
+
+	void resetPose(Pose2d pose) {
+		swerve.resetPose(pose);
+	}
+
+	void setChassisSpeeds(ChassisSpeeds speeds) {
+		swerve.setControl(autoRequest.withSpeeds(speeds));
+	}
+
+	ChassisSpeeds getRobotRelativeSpeeds() {
+		return swerve.getState().Speeds;
+	}
+
+	private void configPathPlanner() {
+		RobotConfig config = null;
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+		}
+		AutoBuilder.configure(
+				PoseEstimation::getEstimatedPose, // Robot pose supplier
+				this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+				(speeds, feedforwards) -> setChassisSpeeds(speeds), // Method that will drive the robot given ROBOT
+																		// RELATIVE ChassisSpeeds. Also optionally
+																		// outputs individual module feedforwards
+				new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
+												// holonomic drive trains
+						new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+						new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+				),
+				config, // The robot configuration
+				() -> {
+					// Boolean supplier that controls when the path will be mirrored for the red
+					// alliance
+					// This will flip the path being followed to the red side of the field.
+					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+					// var alliance = DriverStation.getAlliance();
+					// if (alliance.isPresent()) {
+					// 	return alliance.get() == DriverStation.Alliance.Red;
+					// }
+					return false;
+				},
+				this // Reference to this subsystem to set requirements
+		);
 	}
 
 	public Rotation2d getYaw() {
@@ -79,6 +134,7 @@ public class Swerve extends SubsystemBase {
 
 		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
 	}
+
 
 	@Override
 	public void simulationPeriodic() {
