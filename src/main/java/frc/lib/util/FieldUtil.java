@@ -5,6 +5,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -24,6 +25,10 @@ public class FieldUtil {
 
 	public static final Pose2d NearReef = new Pose2d(Units.inchesToMeters(144.00),
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
+
+	/* center of our barge and edge of the net we can score in */
+	public static final Pose2d BargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(0));
+	public static final double BargeWidth = Units.inchesToMeters(146.50);
 
 	/* counter clockwise
 	 * a "reef" is a set of two "prongs" where coral can be scored.  there are 6 sets of these
