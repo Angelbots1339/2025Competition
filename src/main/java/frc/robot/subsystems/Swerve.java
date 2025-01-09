@@ -15,9 +15,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -34,9 +31,6 @@ public class Swerve extends SubsystemBase {
 	private double maxspeed = 5;
 	private double maxturn = Math.PI * 2;
 
-	private final StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
-			.getStructArrayTopic("/SwerveStates", SwerveModuleState.struct).publish();
-
 	PIDController turnPid = new PIDController(0, 0, 0);
 
 	private final SwerveRequest.FieldCentric m_driveRequest = new SwerveRequest.FieldCentric()
@@ -49,7 +43,6 @@ public class Swerve extends SubsystemBase {
 		swerve.getPigeon2().setYaw(0);
 
 		putSwerveState();
-		SmartDashboard.putNumber("yaw", getYaw().getDegrees());
 		SmartDashboard.putData("Field", m_field);
 	}
 
