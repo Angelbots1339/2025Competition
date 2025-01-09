@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
 import frc.robot.generated.TunerConstants;
 
@@ -38,7 +39,7 @@ public class Swerve extends SubsystemBase {
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
-	private final SwerveRequest.FieldCentric m_driveRequest = new SwerveRequest.FieldCentric()
+	private final SwerveRequest.RobotCentric m_robotRequest = new SwerveRequest.RobotCentric()
 			.withDeadband(maxspeed * 0.1).withRotationalDeadband(Math.PI / 2 * 0.1)
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
@@ -52,13 +53,18 @@ public class Swerve extends SubsystemBase {
 		SmartDashboard.putData("Field", m_field);
 	}
 
-	public void fieldCentricDrive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn) {
-		SwerveRequest req = m_driveRequest
-				.withVelocityX(x.get() * maxspeed)
-				.withVelocityY(y.get() * maxspeed)
-				.withRotationalRate(turn.get() * maxturn)
-				.withDeadband(0.2 * maxspeed)
-				.withRotationalDeadband(0.2 * maxturn);
+	public void drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, boolean fieldRelative) {
+		ChassisSpeeds speeds = new ChassisSpeeds(x.get() * maxspeed, y.get() * maxspeed, turn.get() * maxturn);
+		SwerveRequest req;
+
+		if (fieldRelative) {
+			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+		}
+
+		req = m_robotRequest
+			.withVelocityX(speeds.vxMetersPerSecond)
+			.withVelocityY(speeds.vyMetersPerSecond)
+			.withRotationalRate(speeds.omegaRadiansPerSecond);
 
 		swerve.setControl(req);
 	}
@@ -106,7 +112,7 @@ public class Swerve extends SubsystemBase {
 					// if (alliance.isPresent()) {
 					// 	return alliance.get() == DriverStation.Alliance.Red;
 					// }
-					return false;
+					return FieldUtil.isRedAlliance();
 				},
 				this // Reference to this subsystem to set requirements
 		);
@@ -114,6 +120,10 @@ public class Swerve extends SubsystemBase {
 
 	public Rotation2d getYaw() {
 		return swerve.getPigeon2().getRotation2d();
+	}
+
+	public Rotation2d getRelativeYaw() {
+		return FieldUtil.isRedAlliance() ? getYaw().rotateBy(Rotation2d.k180deg) : getYaw();
 	}
 
 	public void setYaw(Rotation2d angle) {

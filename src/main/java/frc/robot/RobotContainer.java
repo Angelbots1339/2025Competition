@@ -34,7 +34,7 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		swerve.setDefaultCommand(Commands.run(() -> {
-			swerve.fieldCentricDrive(leftY, leftX, rightX);
+			swerve.drive(leftY, leftX, rightX, true);
 		}, swerve));
 	}
 
