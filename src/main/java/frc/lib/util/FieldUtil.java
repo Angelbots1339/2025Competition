@@ -27,7 +27,7 @@ public class FieldUtil {
 		Units.inchesToMeters(158.50), Rotation2d.fromDegrees(180));
 
 	/* center of our barge and edge of the net we can score in */
-	public static final Pose2d BargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(0));
+	public static final Pose2d BargeCenter = new Pose2d(Units.inchesToMeters(690.875 / 2.0 - 46/2.0), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(0));
 	public static final double BargeWidth = Units.inchesToMeters(146.50);
 
 	/* counter clockwise
