@@ -20,10 +20,10 @@ public class FieldUtil {
 	public static final Pose2d BlueRightCoralStation = new Pose2d(Units.inchesToMeters(33.51),
 		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(54));
 
-	public static final Pose2d RedLeftCoralStation = new Pose2d(Units.inchesToMeters(657.37),
-		Units.inchesToMeters(291.20), Rotation2d.fromDegrees(126));
 	public static final Pose2d RedRightCoralStation = new Pose2d(Units.inchesToMeters(657.37),
-		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(234));
+		Units.inchesToMeters(291.20), Rotation2d.fromDegrees(234));
+	public static final Pose2d RedLeftCoralStation = new Pose2d(Units.inchesToMeters(657.37),
+		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(126));
 
 	/* center of our barge and edge of the net we can score in from our side */
 	public static final Pose2d BlueBargeCenter = new Pose2d(Units.inchesToMeters(690.875 / 2.0 - 46/2.0), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(180));
