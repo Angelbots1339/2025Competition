@@ -19,7 +19,10 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -36,6 +39,9 @@ public class Swerve extends SubsystemBase {
 
 	private double maxspeed = 3;
 	private double maxturn = Math.PI * 2;
+
+	private double coralScoreOffsetY = Units.inchesToMeters(0);
+	private double coralScoreOffsetX = Units.inchesToMeters(24);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
@@ -143,6 +149,29 @@ public class Swerve extends SubsystemBase {
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 
 		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
+		m_field.getObject("closest reef score").setPose(getReefScoreSpot(getClosestReef()));
+	}
+
+	public Pose2d getClosestReef() {
+		double dist = 10000000;
+		int close = 0;
+		Pose2d[] reefs = FieldUtil.getReef();
+		for (int i = 0; i < reefs.length; i++) {
+			Pose2d reef = reefs[i];
+			double distToReef = PoseEstimation.getEstimatedPose().getTranslation().getDistance(reef.getTranslation());
+			if (distToReef < dist) {
+				dist = distToReef;
+				close = i;
+			}
+		}
+
+		return reefs[close];
+	}
+
+	public Pose2d getReefScoreSpot(Pose2d reef) {
+		Translation2d tmp = new Translation2d(coralScoreOffsetX, coralScoreOffsetY);
+		tmp.rotateBy(reef.getRotation());
+		return reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
 	}
 
 
