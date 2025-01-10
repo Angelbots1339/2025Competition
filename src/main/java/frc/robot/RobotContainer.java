@@ -24,6 +24,8 @@ public class RobotContainer {
 	private Swerve swerve = new Swerve();
 
 	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getAButton());
+	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getBButton());
+	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getXButton());
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -37,6 +39,8 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
+		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
 
 		swerve.setDefaultCommand(Commands.run(() -> {
 			swerve.drive(leftY, leftX, rightX, true);

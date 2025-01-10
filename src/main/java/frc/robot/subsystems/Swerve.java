@@ -177,14 +177,22 @@ public class Swerve extends SubsystemBase {
 		return reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
 	}
 
-	public Command driveToPose(Supplier<Pose2d> target) {
+	public Command driveToPose(Pose2d target) {
 		PathConstraints constraints = new PathConstraints( 3.0, 4.0,
 				maxturn, Units.degreesToRadians(720));
-		return AutoBuilder.pathfindToPose(target.get(), constraints, 0.0);
+		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
 	public Command driveToClosestReef() {
-		return driveToPose(() -> getReefScoreSpot(getClosestReef()));
+		return driveToPose(getReefScoreSpot(getClosestReef()));
+	}
+
+	public Command driveToLeftCoralStation() {
+		return driveToPose(FieldUtil.getLeftCoralStation());
+	}
+
+	public Command driveToRightCoralStation() {
+		return driveToPose(FieldUtil.getRightCoralStation());
 	}
 
 
