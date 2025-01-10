@@ -16,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +29,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
@@ -118,6 +120,7 @@ public class Swerve extends SubsystemBase {
 					// if (alliance.isPresent()) {
 					// 	return alliance.get() == DriverStation.Alliance.Red;
 					// }
+					// return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
 					return FieldUtil.isRedAlliance();
 				},
 				this // Reference to this subsystem to set requirements
@@ -172,6 +175,16 @@ public class Swerve extends SubsystemBase {
 		Translation2d tmp = new Translation2d(coralScoreOffsetX, coralScoreOffsetY);
 		tmp.rotateBy(reef.getRotation());
 		return reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
+	}
+
+	public Command driveToPose(Supplier<Pose2d> target) {
+		PathConstraints constraints = new PathConstraints( 3.0, 4.0,
+				maxturn, Units.degreesToRadians(720));
+		return AutoBuilder.pathfindToPose(target.get(), constraints, 0.0);
+	}
+
+	public Command driveToClosestReef() {
+		return driveToPose(() -> getReefScoreSpot(getClosestReef()));
 	}
 
 

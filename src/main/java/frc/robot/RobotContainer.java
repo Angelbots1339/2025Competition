@@ -12,16 +12,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
 	private final XboxController m_joystick = new XboxController(0);
-
-	private Swerve swerve = new Swerve();
-
 	private final Supplier<Double> leftX = () -> -m_joystick.getLeftX();
 	private final Supplier<Double> leftY = () -> -m_joystick.getLeftY();
 	private final Supplier<Double> rightX = () -> -m_joystick.getRightX();
+
+	private Swerve swerve = new Swerve();
+
+	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getAButton());
+
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -33,6 +36,8 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
+		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+
 		swerve.setDefaultCommand(Commands.run(() -> {
 			swerve.drive(leftY, leftX, rightX, true);
 		}, swerve));
