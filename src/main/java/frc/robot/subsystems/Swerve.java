@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
@@ -44,6 +45,8 @@ public class Swerve extends SubsystemBase {
 
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	private double coralScoreOffsetX = Units.inchesToMeters(24);
+
+	private Pose2d selectedReef = null;
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
@@ -152,7 +155,9 @@ public class Swerve extends SubsystemBase {
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 
 		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
-		m_field.getObject("closest reef score").setPose(getReefScoreSpot(getClosestReef()));
+		m_field.getObject("closest reef").setPose(getClosestReef());
+		if (selectedReef != null)
+			m_field.getObject("selected reef").setPose(selectedReef);
 	}
 
 	public Pose2d getClosestReef() {
@@ -174,7 +179,17 @@ public class Swerve extends SubsystemBase {
 	public Pose2d getReefScoreSpot(Pose2d reef) {
 		Translation2d tmp = new Translation2d(coralScoreOffsetX, coralScoreOffsetY);
 		tmp.rotateBy(reef.getRotation());
-		return reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
+
+		reef = reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
+		return reef;
+	}
+
+	public void selectReef(int i) {
+		this.selectedReef = FieldUtil.getReef()[i];
+	}
+
+	public Pose2d getSelectCoral() {
+		return this.selectedReef;
 	}
 
 	public Command driveToPose(Pose2d target) {
@@ -185,6 +200,13 @@ public class Swerve extends SubsystemBase {
 
 	public Command driveToClosestReef() {
 		return driveToPose(getReefScoreSpot(getClosestReef()));
+	}
+
+	public Command driveToSelectedReef() {
+		if (selectedReef == null)
+			return Commands.none();
+
+		return driveToPose(getReefScoreSpot(selectedReef));
 	}
 
 	public Command driveToLeftCoralStation() {

@@ -1,9 +1,4 @@
 {
-  "Joysticks": {
-    "window": {
-      "visible": false
-    }
-  },
   "System Joysticks": {
     "window": {
       "visible": false
@@ -41,14 +36,13 @@
       ],
       "povConfig": [
         {
-          "key0": 328,
+          "key0": 49,
           "key135": 323,
-          "key180": 322,
-          "key225": 321,
-          "key270": 324,
-          "key315": 327,
-          "key45": 329,
-          "key90": 326
+          "key180": 52,
+          "key270": 53,
+          "key315": 54,
+          "key45": 50,
+          "key90": 51
         }
       ],
       "povCount": 1
