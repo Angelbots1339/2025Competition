@@ -37,7 +37,7 @@ import frc.lib.util.PoseEstimation;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
-	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.Swerve;
+	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
 	private final Field2d m_field = new Field2d();
 
 	private double maxspeed = 3;
@@ -221,7 +221,7 @@ public class Swerve extends SubsystemBase {
 	@Override
 	public void simulationPeriodic() {
 		/* Assume 20ms update rate, get battery voltage from WPILib */
-		swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
+		//swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
 	}
 
 	public void putSwerveState() {
