@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -27,18 +28,20 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
+import frc.lib.util.logging.LoggedSubsystem;
+import frc.lib.util.logging.loggedObjects.LoggedField;
+import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.LoggingConstants.SwerveLogging;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
-	private final Field2d m_field = new Field2d();
 
 	private double maxspeed = 3;
 	private double maxturn = Math.PI * 2;
@@ -55,13 +58,16 @@ public class Swerve extends SubsystemBase {
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
+	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
+	private LoggedSweveModules logged_modules;
+	private LoggedField logged_field;
+
 	/** Creates a new Swerve. */
 	public Swerve() {
 		configPathPlanner();
 		swerve.getPigeon2().setYaw(0);
 
-		putSwerveState();
-		SmartDashboard.putData("Field", m_field);
+		initlogs();
 	}
 
 	public void drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, boolean fieldRelative) {
@@ -154,14 +160,13 @@ public class Swerve extends SubsystemBase {
 		return swerve.getModule(i).getCurrentState().speedMetersPerSecond;
 	}
 
+	public SwerveModule<TalonFX, TalonFX, CANcoder> getModule(int i) {
+		return swerve.getModule(i);
+	}
+
 	@Override
 	public void periodic() {
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
-
-		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
-		m_field.getObject("closest reef").setPose(getClosestReef());
-		if (selectedReef != null)
-			m_field.getObject("selected reef").setPose(selectedReef);
 	}
 
 	public Pose2d getClosestReef() {
@@ -226,6 +231,20 @@ public class Swerve extends SubsystemBase {
 	public void simulationPeriodic() {
 		/* Assume 20ms update rate, get battery voltage from WPILib */
 		swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
+	}
+
+	public void initlogs() {
+		logged_field = new LoggedField("PoseEstimation", logger, SwerveLogging.Pose, true);
+		logged_modules = new LoggedSweveModules("modules", logger, this, SwerveLogging.Modules);
+
+		logger.add(logged_field);
+		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
+		logged_field.addPose2d("Closest Reef", () -> getClosestReef(), true);
+		logged_field.addPose2d("Selected Reef", () -> selectedReef, true);
+
+
+		logger.add(logged_modules);
+		logger.addDouble("Raw Gyro", () -> swerve.getPigeon2().getYaw().getValueAsDouble(), SwerveLogging.Pose);
 	}
 
 	public void putSwerveState() {
