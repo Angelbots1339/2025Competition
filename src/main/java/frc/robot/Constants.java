@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -135,9 +136,14 @@ public class Constants {
 				.withForwardSoftLimitThreshold(Heights.Max)
 				.withReverseSoftLimitThreshold(Heights.Min);
 
+		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
+			.withMotionMagicAcceleration(1)
+			.withMotionMagicCruiseVelocity(0.1);
+
 		public static final TalonFXConfiguration config = new TalonFXConfiguration()
 				.withSlot0(PID)
-				.withSoftwareLimitSwitch(limits);
+				.withSoftwareLimitSwitch(limits)
+				.withMotionMagic(motionmagic);
 
 		public static final PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(0);
 
