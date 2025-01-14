@@ -52,8 +52,6 @@ public class LoggedSweveModules extends LoggedObject<Swerve> {
 
         ShuffleboardLayout layout0 = getTab().getLayout("Module:0", BuiltInLayouts.kList).withSize(2, 3);
         addDoubleToShuffleboard("CanCoder", () -> object.swerve.getModule(0).getEncoder().getPosition().getValueAsDouble(), layout0);
-
-        addDoubleToShuffleboard("CanCoder", () -> object.swerve.getModule(0).getEncoder().getPosition().getValueAsDouble(), layout0);
         addDoubleToShuffleboard("Angle", () -> currentState.ModuleStates[0].angle.getRotations(), layout0);
         addDoubleToShuffleboard("Speed", () -> currentState.ModuleStates[0].speedMetersPerSecond, layout0);
         addDoubleToShuffleboard("TotalDistance", () -> driveRotsToMeters(object.swerve.getModule(0).getDriveMotor().getPosition().getValueAsDouble()), layout0);

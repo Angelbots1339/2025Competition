@@ -11,7 +11,7 @@ public final class LoggingConstants {
         // Shuffleboard automatically logs to both Onboard and Network Tables
         // Make sure you call everything in Robot.java that needs to be called
         public class SwerveLogging {
-                public static LoggingLevel Modules = LoggingLevel.ONBOARD_ONLY;
+                public static LoggingLevel Modules = LoggingLevel.NETWORK_TABLES;
                 public static LoggingLevel Motors = LoggingLevel.ONBOARD_ONLY;
                 public static LoggingLevel Gyro = LoggingLevel.ONBOARD_ONLY;
                 public static LoggingLevel Pose = LoggingLevel.NETWORK_TABLES;

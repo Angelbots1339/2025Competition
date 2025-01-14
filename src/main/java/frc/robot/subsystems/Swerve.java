@@ -226,6 +226,10 @@ public class Swerve extends SubsystemBase {
 		return driveToPose(FieldUtil.getRightCoralStation());
 	}
 
+	public Pose2d getSelectedReef() {
+		return selectedReef;
+	}
+
 
 	@Override
 	public void simulationPeriodic() {
@@ -237,10 +241,10 @@ public class Swerve extends SubsystemBase {
 		logged_field = new LoggedField("PoseEstimation", logger, SwerveLogging.Pose, true);
 		logged_modules = new LoggedSweveModules("modules", logger, this, SwerveLogging.Modules);
 
-		logger.add(logged_field);
 		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
-		logged_field.addPose2d("Closest Reef", () -> getClosestReef(), true);
-		logged_field.addPose2d("Selected Reef", () -> selectedReef, true);
+		logged_field.addPose2d("Closest Reef", this::getClosestReef, true);
+		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
+		logger.add(logged_field);
 
 
 		logger.add(logged_modules);
