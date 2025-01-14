@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -160,15 +159,6 @@ public class Swerve extends SubsystemBase {
 		return swerve.getModule(i).getCurrentState().speedMetersPerSecond;
 	}
 
-	public SwerveModule<TalonFX, TalonFX, CANcoder> getModule(int i) {
-		return swerve.getModule(i);
-	}
-
-	@Override
-	public void periodic() {
-		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
-	}
-
 	public Pose2d getClosestReef() {
 		double dist = 10000000;
 		int close = 0;
@@ -197,8 +187,8 @@ public class Swerve extends SubsystemBase {
 		this.selectedReef = FieldUtil.getReef()[i];
 	}
 
-	public Pose2d getSelectCoral() {
-		return this.selectedReef;
+	public Pose2d getSelectedReef() {
+		return selectedReef;
 	}
 
 	public Command driveToPose(Pose2d target) {
@@ -226,10 +216,10 @@ public class Swerve extends SubsystemBase {
 		return driveToPose(FieldUtil.getRightCoralStation());
 	}
 
-	public Pose2d getSelectedReef() {
-		return selectedReef;
+	@Override
+	public void periodic() {
+		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 	}
-
 
 	@Override
 	public void simulationPeriodic() {
