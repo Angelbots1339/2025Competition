@@ -155,6 +155,15 @@ public class Constants {
 		}
     }
 
+	public class VisionConstants {
+		public static final String limelightName = "limelight";
+
+		public static double calcStdDev(double metersFromTarget) {
+
+			return 0.08 * Math.pow(metersFromTarget, 2);
+		}
+	}
+
 	public class TuningConstants {
 		public enum TuningSystem {
 			Intake,

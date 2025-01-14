@@ -19,6 +19,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -28,17 +29,21 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.LimelightHelpers;
 import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
+import frc.robot.Robot;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
@@ -269,6 +274,33 @@ public class Swerve extends SubsystemBase {
 	@Override
 	public void periodic() {
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
+	}
+
+	public void updateVision() {
+		if (!Robot.isReal()) {
+			return;
+		}
+
+		double yaw = getYaw().getDegrees();
+
+		LimelightHelpers.SetRobotOrientation(VisionConstants.limelightName, yaw, 0, 0, 0, 0, 0);
+
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(VisionConstants.limelightName);
+
+		if (pose.tagCount < 1)
+			return;
+
+		double xyStdDev2 = VisionConstants.calcStdDev(pose.avgTagDist) * 3;
+
+		double timestamp = Timer.getFPGATimestamp()
+				- (pose.latency) / 1000;
+
+		// TODO Test the rotation value from the limelight pose and see if it's
+		// identical to gyro
+		Pose2d withGyroData = new Pose2d(pose.pose.getTranslation(), getYaw());
+
+		swerve.addVisionMeasurement(withGyroData, timestamp,
+				VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
 	}
 
 	@Override
