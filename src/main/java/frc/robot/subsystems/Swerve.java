@@ -48,7 +48,7 @@ public class Swerve extends SubsystemBase {
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	private double coralScoreOffsetX = Units.inchesToMeters(24);
 
-	private Pose2d selectedReef = null;
+	private Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
@@ -67,6 +67,7 @@ public class Swerve extends SubsystemBase {
 		swerve.getPigeon2().setYaw(0);
 
 		initlogs();
+		putSwerveState();
 	}
 
 	public void drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, boolean fieldRelative) {
@@ -202,7 +203,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Command driveToSelectedReef() {
-		if (selectedReef == null)
+		if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
 			return Commands.none();
 
 		return driveToPose(getReefScoreSpot(selectedReef));
