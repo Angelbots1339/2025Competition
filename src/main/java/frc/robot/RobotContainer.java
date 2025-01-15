@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,8 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getRightX(), SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
+
+	private Trigger resetGyro = new Trigger(() -> m_joystick.getYButtonPressed());
 
 	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getStartButton());
 	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getBackButton());
@@ -44,10 +47,14 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
+
 		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
 		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
+
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
+		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;

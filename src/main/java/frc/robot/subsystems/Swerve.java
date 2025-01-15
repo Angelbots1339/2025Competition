@@ -142,6 +142,10 @@ public class Swerve extends SubsystemBase {
 		swerve.getPigeon2().setYaw(angle.getDegrees());
 	}
 
+	public void resetGyro() {
+		setYaw(FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero);
+	}
+
 	public Rotation2d getModuleAngle(int i) {
 		return swerve.getModule(i).getCurrentState().angle;
 	}
