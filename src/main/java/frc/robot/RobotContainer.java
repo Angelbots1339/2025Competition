@@ -25,10 +25,11 @@ public class RobotContainer {
 
 	private Swerve swerve = new Swerve();
 
-	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getAButton());
-	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getYButton());
-	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getBButton());
-	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getXButton());
+	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getStartButton());
+	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getBackButton());
+
+	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
+	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
 
 	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
 
@@ -37,7 +38,6 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		configureBindings();
-		SmartDashboard.putNumber("leftx", leftX.get());
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData(autoChooser);
@@ -56,19 +56,19 @@ public class RobotContainer {
 							reef = 0;
 							break;
 						case 45:
-							reef = 1;
+							reef = 5;
 							break;
-						case 90:
-							reef = 2;
+						case 135:
+							reef = 4;
 							break;
 						case 180:
 							reef = 3;
 							break;
-						case 270:
-							reef = 4;
+						case 225:
+							reef = 2;
 							break;
 						case 315:
-							reef = 5;
+							reef = 1;
 							break;
 						default:
 							return;
