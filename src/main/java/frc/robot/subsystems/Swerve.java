@@ -65,6 +65,7 @@ public class Swerve extends SubsystemBase {
 	public Swerve() {
 		configPathPlanner();
 		swerve.getPigeon2().setYaw(0);
+		swerve.resetPose(Pose2d.kZero);
 
 		initlogs();
 		putSwerveState();
@@ -239,7 +240,6 @@ public class Swerve extends SubsystemBase {
 
 
 		logger.add(logged_modules);
-		logger.addDouble("Raw Gyro", () -> swerve.getPigeon2().getYaw().getValueAsDouble(), SwerveLogging.Pose);
 	}
 
 	public void putSwerveState() {
