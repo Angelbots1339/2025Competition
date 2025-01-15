@@ -13,13 +13,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
 	private final XboxController m_joystick = new XboxController(0);
-	private final Supplier<Double> leftX = () -> -m_joystick.getLeftX();
-	private final Supplier<Double> leftY = () -> -m_joystick.getLeftY();
-	private final Supplier<Double> rightX = () -> -m_joystick.getRightX();
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftX(), SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftY(), SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getRightX(), SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
 
@@ -35,6 +37,7 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		configureBindings();
+		SmartDashboard.putNumber("leftx", leftX.get());
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData(autoChooser);

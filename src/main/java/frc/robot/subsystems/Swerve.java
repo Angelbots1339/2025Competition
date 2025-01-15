@@ -221,7 +221,7 @@ public class Swerve extends SubsystemBase {
 	@Override
 	public void simulationPeriodic() {
 		/* Assume 20ms update rate, get battery voltage from WPILib */
-		//swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
+		swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
 	}
 
 	public void putSwerveState() {
