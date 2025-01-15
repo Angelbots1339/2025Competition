@@ -27,18 +27,20 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
+import frc.lib.util.logging.LoggedSubsystem;
+import frc.lib.util.logging.loggedObjects.LoggedField;
+import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.LoggingConstants.SwerveLogging;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
-	private final Field2d m_field = new Field2d();
 
 	private double maxspeed = 3;
 	private double maxturn = Math.PI * 2;
@@ -46,7 +48,7 @@ public class Swerve extends SubsystemBase {
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	private double coralScoreOffsetX = Units.inchesToMeters(24);
 
-	private Pose2d selectedReef = null;
+	private Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
@@ -55,13 +57,18 @@ public class Swerve extends SubsystemBase {
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
+	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
+	private LoggedSweveModules logged_modules;
+	private LoggedField logged_field;
+
 	/** Creates a new Swerve. */
 	public Swerve() {
 		configPathPlanner();
 		swerve.getPigeon2().setYaw(0);
+		swerve.resetPose(Pose2d.kZero);
 
+		initlogs();
 		putSwerveState();
-		SmartDashboard.putData("Field", m_field);
 	}
 
 	public void drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, boolean fieldRelative) {
@@ -154,16 +161,6 @@ public class Swerve extends SubsystemBase {
 		return swerve.getModule(i).getCurrentState().speedMetersPerSecond;
 	}
 
-	@Override
-	public void periodic() {
-		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
-
-		m_field.setRobotPose(PoseEstimation.getEstimatedPose());
-		m_field.getObject("closest reef").setPose(getClosestReef());
-		if (selectedReef != null)
-			m_field.getObject("selected reef").setPose(selectedReef);
-	}
-
 	public Pose2d getClosestReef() {
 		double dist = 10000000;
 		int close = 0;
@@ -192,8 +189,8 @@ public class Swerve extends SubsystemBase {
 		this.selectedReef = FieldUtil.getReef()[i];
 	}
 
-	public Pose2d getSelectCoral() {
-		return this.selectedReef;
+	public Pose2d getSelectedReef() {
+		return selectedReef;
 	}
 
 	public Command driveToPose(Pose2d target) {
@@ -207,7 +204,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Command driveToSelectedReef() {
-		if (selectedReef == null)
+		if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
 			return Commands.none();
 
 		return driveToPose(getReefScoreSpot(selectedReef));
@@ -221,11 +218,28 @@ public class Swerve extends SubsystemBase {
 		return driveToPose(FieldUtil.getRightCoralStation());
 	}
 
+	@Override
+	public void periodic() {
+		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
+	}
 
 	@Override
 	public void simulationPeriodic() {
 		/* Assume 20ms update rate, get battery voltage from WPILib */
 		swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
+	}
+
+	public void initlogs() {
+		logged_field = new LoggedField("PoseEstimation", logger, SwerveLogging.Pose, true);
+		logged_modules = new LoggedSweveModules("modules", logger, this, SwerveLogging.Modules);
+
+		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
+		logged_field.addPose2d("Closest Reef", this::getClosestReef, true);
+		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
+		logger.add(logged_field);
+
+
+		logger.add(logged_modules);
 	}
 
 	public void putSwerveState() {
