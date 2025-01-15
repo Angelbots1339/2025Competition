@@ -7,26 +7,32 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
 	private final XboxController m_joystick = new XboxController(0);
-	private final Supplier<Double> leftX = () -> -m_joystick.getLeftX();
-	private final Supplier<Double> leftY = () -> -m_joystick.getLeftY();
-	private final Supplier<Double> rightX = () -> -m_joystick.getRightX();
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftX(), SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftY(), SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getRightX(), SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
 
-	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getAButton());
-	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getYButton());
-	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getBButton());
-	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getXButton());
+	private Trigger resetGyro = new Trigger(() -> m_joystick.getYButtonPressed());
+
+	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getStartButton());
+	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getBackButton());
+
+	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
+	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
 
 	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
 
@@ -41,10 +47,14 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
+
 		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
 		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
+
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
+		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
@@ -53,19 +63,19 @@ public class RobotContainer {
 							reef = 0;
 							break;
 						case 45:
-							reef = 1;
+							reef = 5;
 							break;
-						case 90:
-							reef = 2;
+						case 135:
+							reef = 4;
 							break;
 						case 180:
 							reef = 3;
 							break;
-						case 270:
-							reef = 4;
+						case 225:
+							reef = 2;
 							break;
 						case 315:
-							reef = 5;
+							reef = 1;
 							break;
 						default:
 							return;

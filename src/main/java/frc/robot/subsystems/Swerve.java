@@ -142,6 +142,10 @@ public class Swerve extends SubsystemBase {
 		swerve.getPigeon2().setYaw(angle.getDegrees());
 	}
 
+	public void resetGyro() {
+		setYaw(FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero);
+	}
+
 	public Rotation2d getModuleAngle(int i) {
 		return swerve.getModule(i).getCurrentState().angle;
 	}
@@ -221,7 +225,7 @@ public class Swerve extends SubsystemBase {
 	@Override
 	public void simulationPeriodic() {
 		/* Assume 20ms update rate, get battery voltage from WPILib */
-		//swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
+		swerve.updateSimState(0.020, RobotController.getBatteryVoltage());
 	}
 
 	public void putSwerveState() {
