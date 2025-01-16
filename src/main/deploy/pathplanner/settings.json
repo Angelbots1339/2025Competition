@@ -1,9 +1,13 @@
 {
-  "robotWidth": 0.686,
-  "robotLength": 0.6858,
+  "robotWidth": 0.8382,
+  "robotLength": 0.9398,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
+  "pathFolders": [
+    "Odemetry Tests"
+  ],
+  "autoFolders": [
+    "Odemetry Test"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

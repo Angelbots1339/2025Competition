@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.5484375,
+        "y": 6.298522727272727
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5484374999999995,
+        "y": 6.298522727272727
+      },
+      "isLocked": false,
+      "linkedName": "Test Start"
+    },
+    {
+      "anchor": {
+        "x": 1.548,
+        "y": 6.298522727272727
+      },
+      "prevControl": {
+        "x": 0.548,
+        "y": 6.298522727272727
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Odemetry Tests",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
