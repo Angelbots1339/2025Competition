@@ -46,14 +46,14 @@ public class Swerve extends SubsystemBase {
 	private double maxturn = Math.PI * 2;
 
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
-	private double coralScoreOffsetX = Units.inchesToMeters(24);
+	// private double coralScoreOffsetX = Units.inchesToMeters(32.75);
+	private double coralScoreOffsetX = 0.940;
 
 	private Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 		.withDriveRequestType(DriveRequestType.Velocity);
 	private final SwerveRequest.RobotCentric m_robotRequest = new SwerveRequest.RobotCentric()
-			.withDeadband(maxspeed * 0.1).withRotationalDeadband(Math.PI / 2 * 0.1)
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
