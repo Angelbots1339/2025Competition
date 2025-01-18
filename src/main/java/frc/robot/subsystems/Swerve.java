@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -48,6 +49,8 @@ public class Swerve extends SubsystemBase {
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	// private double coralScoreOffsetX = Units.inchesToMeters(32.75);
 	private double coralScoreOffsetX = 0.940;
+
+	private Translation2d bargeOffset = new Translation2d(Units.inchesToMeters(-24 / 2.0), 0.0);
 
 	private Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
@@ -218,6 +221,16 @@ public class Swerve extends SubsystemBase {
 		return driveToPose(FieldUtil.getRightCoralStation());
 	}
 
+	public Pose2d getClosestBarge() {
+		Pose2d target = PoseEstimation.getEstimatedPose().nearest(List.of(FieldUtil.getAllianceSideBargeCenter(), FieldUtil.getOpponateSideBargeCenter()));
+		return target.plus(new Transform2d(bargeOffset, Rotation2d.kZero));
+	}
+
+	public Command driveToClosestBarge() {
+
+		return driveToPose(getClosestBarge());
+	}
+
 	@Override
 	public void periodic() {
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
@@ -236,6 +249,7 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
 		logged_field.addPose2d("Closest Reef", this::getClosestReef, true);
 		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
+		logged_field.addPose2d("Closest Barge", this::getClosestBarge, true);
 		logger.add(logged_field);
 
 

@@ -35,6 +35,8 @@ public class RobotContainer {
 	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
 	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
 
+	private Trigger alignBargeCenter = new Trigger(() -> m_joystick.getAButton());
+
 	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
 
 	private Trigger moveForward = new Trigger(() -> m_joystick.getPOV() == 0);
@@ -58,11 +60,9 @@ public class RobotContainer {
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
 		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
 
-		moveForward.whileTrue(Commands.run(() -> swerve.drive(() -> 0.1, ()-> 0.0, () -> 0.0, false), swerve));
-		moveBackward.whileTrue(Commands.run(() -> swerve.drive(() -> -0.1, ()-> 0.0, () -> 0.0, false), swerve));
+		alignBargeCenter.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestBarge()));
 
-
-/* 		selectReef.onTrue(
+		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
 					switch (m_joystick.getPOV()) {
@@ -89,7 +89,7 @@ public class RobotContainer {
 					}
 					swerve.selectReef(reef);
 				}, swerve)
-	 	); */
+	 	);
 
 		swerve.setDefaultCommand(Commands.run(() -> {
 			swerve.drive(leftY, leftX, rightX, true);
