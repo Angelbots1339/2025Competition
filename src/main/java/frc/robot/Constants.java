@@ -4,6 +4,15 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import edu.wpi.first.units.measure.Angle;
 
 public class Constants {
 	public class SwerveConstants {
@@ -20,6 +29,38 @@ public class Constants {
 		public static final double width = 0.8;
 	}
 
+	public class IntakeConstants {
+		public static final int angleMotorPort = 7;
+		public static final int wheelMotorPort = 8;
+
+		public static final double angleMotorRatio = 2;
+
+		public static final Angle insideAngle = Degrees.of(90);
+		public static final Angle outsideAngle = Degrees.of(0);
+
+		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
+			.withSlot0(
+				new Slot0Configs()
+					.withGravityType(GravityTypeValue.Arm_Cosine)
+					.withKP(0)
+					.withKI(0)
+					.withKD(0)
+					.withKS(0)
+					.withKG(0)
+			)
+			.withFeedback(
+				new FeedbackConfigs()
+					.withSensorToMechanismRatio(angleMotorRatio)
+			)
+			.withSoftwareLimitSwitch(
+				new SoftwareLimitSwitchConfigs()
+					/* uses 0 as the fully out position and 90 as the completely in / vertical position */
+					.withForwardSoftLimitEnable(true)
+					.withForwardSoftLimitThreshold(outsideAngle)
+					.withReverseSoftLimitEnable(true)
+					.withReverseSoftLimitThreshold(insideAngle)
+			);
+	}
 	public class DriverConstants {
 		public static final int driverPort = 0;
 		public static final int operatorPort = 1;
