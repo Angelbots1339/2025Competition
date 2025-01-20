@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
@@ -46,6 +47,7 @@ public class Constants {
 			.withSlot0(
 				new Slot0Configs()
 					.withGravityType(GravityTypeValue.Arm_Cosine)
+					.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 					.withKP(0)
 					.withKI(0)
 					.withKD(0)
