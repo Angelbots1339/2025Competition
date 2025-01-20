@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
@@ -39,12 +40,18 @@ public class Intake extends SubsystemBase {
 		angleMotor.setPosition(angle.get());
 	}
 
-	public Command changeAngleCommand(Supplier<Angle> angle) {
-		return run(() -> changeAngle(angle));
+	public Command runIntake(Supplier<Angle> angle) {
+		return run(
+			() -> {
+				changeAngle(angle);
+				runWheelsVolts(IntakeConstants.intakeVolts);
+			}
+		);
 	}
 
 	public void home() {
 		changeAngle(() -> IntakeConstants.insideAngle);
+		runWheelsVolts(Volts.of(0));
 	}
 
 	public void runWheelsVolts(Voltage volts) {

@@ -62,7 +62,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.changeAngleCommand(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getLeftTriggerAxis()))));
+		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getLeftTriggerAxis()))));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
