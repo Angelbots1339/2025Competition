@@ -35,6 +35,7 @@ public class RobotContainer {
 			SwerveConstants.maxturn);
 
 	private final Intake intake = new Intake();
+	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
