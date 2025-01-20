@@ -55,6 +55,10 @@ public class Intake extends SubsystemBase {
 		return angleMotor.getPosition().getValue();
 	}
 
+	public Angle getAngleError() {
+		return Degrees.of(angleMotor.getClosedLoopError().getValueAsDouble());
+	}
+
 	@Override
 	public void periodic() {
 	}
@@ -62,6 +66,9 @@ public class Intake extends SubsystemBase {
 	public void initLogging() {
 		logger.addDouble("Current Angle", () -> getAngle().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Target Angle", () -> angle.in(Degrees), IntakeLogging.Angle);
+		logger.addDouble("Angle Error", () -> getAngleError().in(Degrees), IntakeLogging.Angle);
+
+
 		logger.addDouble("Wheel Volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), IntakeLogging.Wheel);
 
 
