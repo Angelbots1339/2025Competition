@@ -93,7 +93,7 @@ public class RobotContainer {
 
 
 
-		extendElevator.whileTrue(elevator.setHeightCommand(Units.feetToMeters(8)));
+		extendElevator.whileTrue(elevator.setHeightCommand(Units.feetToMeters(6)));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
