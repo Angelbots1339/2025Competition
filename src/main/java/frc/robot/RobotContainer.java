@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -38,6 +40,7 @@ public class RobotContainer {
 			SwerveConstants.maxturn);
 
 	// private final Intake intake = new Intake();
+	private Elevator elevator = new Elevator();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
@@ -51,6 +54,7 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
 
 	private Trigger openIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.1);
 
@@ -88,6 +92,9 @@ public class RobotContainer {
 		alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
 
 
+
+		extendElevator.whileTrue(elevator.setHeightCommand(Units.feetToMeters(8)));
+
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
@@ -124,6 +131,7 @@ public class RobotContainer {
 		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		elevator.setDefaultCommand(elevator.setHeightCommand(0));
 	}
 
 	public void stopDefaultCommands() {
