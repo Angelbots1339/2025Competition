@@ -62,9 +62,9 @@ public class Constants {
 				new SoftwareLimitSwitchConfigs()
 					/* uses 0 as the fully out position and 90 as the completely in / vertical position */
 					.withForwardSoftLimitEnable(true)
-					.withForwardSoftLimitThreshold(outsideAngle)
+					.withForwardSoftLimitThreshold(insideAngle)
 					.withReverseSoftLimitEnable(true)
-					.withReverseSoftLimitThreshold(insideAngle)
+					.withReverseSoftLimitThreshold(outsideAngle)
 			);
 	}
 	public class DriverConstants {
