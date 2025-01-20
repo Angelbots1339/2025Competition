@@ -7,6 +7,10 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degree;
 
 import java.util.Map;
+import static edu.wpi.first.units.Units.Feet;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -93,7 +97,7 @@ public class RobotContainer {
 
 
 
-		extendElevator.whileTrue(elevator.setHeightCommand(Units.feetToMeters(6)));
+		extendElevator.whileTrue(elevator.setHeightCommand(Meters.of(2.229)));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
@@ -131,7 +135,7 @@ public class RobotContainer {
 		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		elevator.setDefaultCommand(elevator.setHeightCommand(0));
+		elevator.setDefaultCommand(elevator.setHeightCommand(Inches.of(0)));
 	}
 
 	public void stopDefaultCommands() {

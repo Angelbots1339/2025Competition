@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import static edu.wpi.first.units.Units.Meters;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -15,16 +16,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.units.measure.Distance;
 
 public class Constants {
 	public class SwerveConstants {
@@ -106,6 +104,7 @@ public class Constants {
 	}
 
     public static final class ElevatorConstants {
+		public static final Distance BaseHeight = Meters.of(0.895);
 		/* all units are in meters */
 		public static final int MotorPort = 14;
 		private static final double Radius = 0.1;

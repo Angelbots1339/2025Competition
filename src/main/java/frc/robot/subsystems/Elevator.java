@@ -6,10 +6,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
@@ -22,28 +25,29 @@ public class Elevator extends SubsystemBase {
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Elevator");
 
-	private Mechanism2d mech = new Mechanism2d(Units.inchesToMeters(10), Units.feetToMeters(8));
-	private MechanismLigament2d elevator;
+	private Mechanism2d mech = new Mechanism2d(Units.inchesToMeters(20), Units.feetToMeters(8));
+	private MechanismLigament2d base;
+	private MechanismLigament2d stage1;
 
 	public Elevator() {
 		motor.getConfigurator().apply(ElevatorConstants.config);
 
 		motor.setPosition(0);
 
-		elevator = mech.getRoot("Origin", Units.inchesToMeters(5), 0).append(new MechanismLigament2d("Base", Units.inchesToMeters(8 * 12.0 / 3.0), 90))
-			.append(new MechanismLigament2d("Stage 1", 0, 0));
-		SmartDashboard.putData("Elevator", mech);
 
+		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight.in(Meters), 90));
+		stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
+		SmartDashboard.putData("Elevator Mech", mech);
 		initLogging();
 	}
 
-	public void setHeight(double meters) {
-		motor.setPosition(ElevatorConstants.metersToRotations(meters));
-		targetHeight = Meters.of(meters);
+	public void setHeight(Distance dist) {
+		motor.setPosition(ElevatorConstants.metersToRotations(dist.in(Meters)));
+		targetHeight = dist;
 	}
 
-	public Command setHeightCommand(double meters) {
-		return run(() -> setHeight(meters));
+	public Command setHeightCommand(Distance dist) {
+		return run(() -> setHeight(dist));
 	}
 
 	public double getHeight() {
@@ -56,8 +60,7 @@ public class Elevator extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		elevator.setLength(targetHeight.in(Meters));
-		elevator.setAngle(Rotation2d.kCW_90deg);
+		stage1.setLength(targetHeight.minus(ElevatorConstants.BaseHeight).in(Meters));
 	}
 
 	public void initLogging() {
