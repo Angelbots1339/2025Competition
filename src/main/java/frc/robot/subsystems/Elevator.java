@@ -1,13 +1,8 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,7 +16,7 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 	private TalonFX motor = new TalonFX(ElevatorConstants.MotorPort);
-	private Distance targetHeight = Meters.zero();
+	private double targetHeight = 0.0;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Elevator");
 
@@ -35,19 +30,19 @@ public class Elevator extends SubsystemBase {
 		motor.setPosition(0);
 
 
-		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight.in(Meters), 90));
+		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
 		stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
 		SmartDashboard.putData("Elevator Mech", mech);
 		initLogging();
 	}
 
-	public void setHeight(Distance dist) {
-		motor.setPosition(ElevatorConstants.metersToRotations(dist.in(Meters)));
-		targetHeight = dist;
+	public void setHeight(double meters) {
+		motor.setPosition(ElevatorConstants.metersToRotations(meters));
+		targetHeight = meters;
 	}
 
-	public Command setHeightCommand(Distance dist) {
-		return run(() -> setHeight(dist));
+	public Command setHeightCommand(double meters) {
+		return run(() -> setHeight(meters));
 	}
 
 	public double getHeight() {
@@ -60,11 +55,11 @@ public class Elevator extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		stage1.setLength(targetHeight.minus(ElevatorConstants.BaseHeight).in(Meters));
+		stage1.setLength(targetHeight - ElevatorConstants.BaseHeight);
 	}
 
 	public void initLogging() {
-		logger.addDouble("Target Height", () -> targetHeight.in(Meters), LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("Target Height", () -> targetHeight, LoggingLevel.NETWORK_TABLES);
 		logger.addDouble("Actual Height", this::getHeight, LoggingLevel.NETWORK_TABLES);
 	}
 }

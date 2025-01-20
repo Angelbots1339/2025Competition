@@ -104,8 +104,8 @@ public class Constants {
 	}
 
     public static final class ElevatorConstants {
-		public static final Distance BaseHeight = Meters.of(0.895);
 		/* all units are in meters */
+		public static final double BaseHeight = 0.895;
 		public static final int MotorPort = 14;
 		private static final double Radius = 0.1;
 		public static final double ErrorTolerence = 0.01; // 1 cm

@@ -4,31 +4,20 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degree;
-
 import java.util.Map;
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.tuning.IntakeTuning;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 
@@ -97,7 +86,7 @@ public class RobotContainer {
 
 
 
-		extendElevator.whileTrue(elevator.setHeightCommand(Meters.of(2.229)));
+		extendElevator.whileTrue(elevator.setHeightCommand(2.229));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
@@ -135,7 +124,7 @@ public class RobotContainer {
 		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		elevator.setDefaultCommand(elevator.setHeightCommand(Inches.of(0)));
+		elevator.setDefaultCommand(elevator.setHeightCommand(0));
 	}
 
 	public void stopDefaultCommands() {
