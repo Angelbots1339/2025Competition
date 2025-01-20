@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
+
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -13,9 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -29,7 +34,8 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
 			SwerveConstants.maxturn);
 
-	private Swerve swerve = new Swerve();
+	private final Intake intake = new Intake();
+	private final Swerve swerve = new Swerve();
 
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
@@ -41,17 +47,22 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.1);
+
 
 	private final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
 		configureBindings();
+		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData(autoChooser);
 	}
 
 	private void configureBindings() {
+		openIntake.whileTrue(intake.changeAngleCommand(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getLeftTriggerAxis()))));
+
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
@@ -92,6 +103,11 @@ public class RobotContainer {
 					// TODO: there has to be a better way
 					swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
 				}, swerve));
+
+	}
+
+	public void setDefaultCommands() {
+		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
