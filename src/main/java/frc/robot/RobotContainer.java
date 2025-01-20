@@ -48,7 +48,8 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
-	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.1);
+
+	private Trigger openIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.1);
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -62,7 +63,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getLeftTriggerAxis()))));
+		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getRightTriggerAxis()))));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
