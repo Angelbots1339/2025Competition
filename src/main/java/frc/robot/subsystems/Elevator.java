@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -28,8 +29,12 @@ public class Elevator extends SubsystemBase {
 
 	public Elevator() {
 		leader.getConfigurator().apply(ElevatorConstants.config);
+		follower.getConfigurator().apply(ElevatorConstants.config);
+
+		follower.setControl(new Follower(leader.getDeviceID(), true));
 
 		leader.setPosition(0);
+		follower.setPosition(0);
 
 
 		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
