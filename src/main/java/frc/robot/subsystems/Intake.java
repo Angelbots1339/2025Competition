@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -42,7 +43,6 @@ public class Intake extends SubsystemBase {
 		initLogging();
 
 		setMech();
-
 	}
 
 	public void setMech() {
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
 
 	public void changeAngle(Supplier<Angle> angle) {
 		this.angle = angle.get();
-		angleMotor.setPosition(angle.get());
+		angleMotor.setControl(new PositionVoltage(angle.get()));
 	}
 
 	public Command runIntake(Supplier<Angle> angle) {
