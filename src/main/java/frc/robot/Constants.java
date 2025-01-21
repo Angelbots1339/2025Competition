@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
-import static edu.wpi.first.units.Units.Meters;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -106,14 +105,15 @@ public class Constants {
     public static final class ElevatorConstants {
 		/* all units are in meters */
 		public static final double BaseHeight = 0.895;
-		public static final int MotorPort = 14;
+		public static final int LeaderPort = 14;
+		public static final int FollowerPort = 15;
 		private static final double Radius = 0.1;
 		public static final double ErrorTolerence = 0.01; // 1 cm
 
 		/* heights are in meters */
 		public class Heights {
 			/* TODO: Tune */
-			public static final double Max = 5;
+			public static final double Max = Units.inchesToMeters(89);
 			public static final double Min = 0;
 			public static final double L1 = 1;
 			public static final double L2 = 2;

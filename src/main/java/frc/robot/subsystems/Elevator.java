@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
@@ -15,7 +16,8 @@ import frc.lib.util.logging.Logger.LoggingLevel;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-	private TalonFX motor = new TalonFX(ElevatorConstants.MotorPort);
+	private TalonFX leader = new TalonFX(ElevatorConstants.LeaderPort);
+	private TalonFX follower = new TalonFX(ElevatorConstants.FollowerPort);
 	private double targetHeight = 0.0;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Elevator");
@@ -25,9 +27,9 @@ public class Elevator extends SubsystemBase {
 	private MechanismLigament2d stage1;
 
 	public Elevator() {
-		motor.getConfigurator().apply(ElevatorConstants.config);
+		leader.getConfigurator().apply(ElevatorConstants.config);
 
-		motor.setPosition(0);
+		leader.setPosition(0);
 
 
 		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
@@ -37,7 +39,7 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void setHeight(double meters) {
-		motor.setPosition(ElevatorConstants.metersToRotations(meters));
+		leader.setControl(new PositionVoltage(meters));
 		targetHeight = meters;
 	}
 
@@ -50,7 +52,7 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public double getRotations() {
-		return motor.getPosition().getValueAsDouble();
+		return leader.getPosition().getValueAsDouble();
 	}
 
 	@Override
