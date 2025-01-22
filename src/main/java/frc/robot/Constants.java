@@ -8,10 +8,12 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -33,17 +35,30 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int angleMotorPort = 7;
-		public static final int wheelMotorPort = 8;
+		public static final int angleMotorPort = 13;
+		public static final int angleMotorFollowerPort = 14;
+		public static final int wheelMotorPort = 15;
 
-		public static final double angleMotorRatio = 2;
+		public static final double angleMotorRatio = 2.60225;
+		public static final double angleMotorOffset = 0;
+		public static final double angleFollowerMotorOffset = 0;
 
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
 
 		public static final Voltage intakeVolts = Volts.of(1.0);
 
+		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+					.withInverted(InvertedValue.CounterClockwise_Positive)
+			);
+
 		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+					.withInverted(InvertedValue.Clockwise_Positive)
+			)
 			.withSlot0(
 				new Slot0Configs()
 					.withGravityType(GravityTypeValue.Arm_Cosine)
@@ -57,6 +72,7 @@ public class Constants {
 			.withFeedback(
 				new FeedbackConfigs()
 					.withSensorToMechanismRatio(angleMotorRatio)
+					.withFeedbackRotorOffset(angleMotorOffset)
 			)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
@@ -66,6 +82,8 @@ public class Constants {
 					.withReverseSoftLimitEnable(true)
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
+
+		public static final FeedbackConfigs angleFollwerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
 	}
 	public class DriverConstants {
 		public static final int driverPort = 0;

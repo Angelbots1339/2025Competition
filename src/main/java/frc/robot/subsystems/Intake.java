@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -23,7 +24,9 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.LoggingConstants.IntakeLogging;
 
 public class Intake extends SubsystemBase {
+	/* left Motor (intake is on front) */
 	private TalonFX angleMotor = new TalonFX(IntakeConstants.angleMotorPort);
+	private TalonFX angleFollowerMotor = new TalonFX(IntakeConstants.angleMotorFollowerPort);
 	private TalonFX wheelMotor = new TalonFX(IntakeConstants.wheelMotorPort);
 
 	private Angle angle = IntakeConstants.insideAngle;
@@ -37,6 +40,9 @@ public class Intake extends SubsystemBase {
 
 	public Intake() {
 		angleMotor.getConfigurator().apply(IntakeConstants.angleConfigs);
+		angleFollowerMotor.getConfigurator().apply(IntakeConstants.angleConfigs.withFeedback(IntakeConstants.angleFollwerConfiguration));
+
+		angleFollowerMotor.setControl(new Follower(angleMotor.getDeviceID(), true));
 
 		changeAngle(() -> IntakeConstants.insideAngle);
 
@@ -83,7 +89,7 @@ public class Intake extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		slapdown.setAngle(-90 + getAngle().in(Degrees));
+		slapdown.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
 	}
 
 	public void initLogging() {
