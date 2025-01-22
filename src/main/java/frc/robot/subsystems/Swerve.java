@@ -87,7 +87,7 @@ public class Swerve extends SubsystemBase {
 		swerve.setControl(req);
 	}
 
-	void resetPose(Pose2d pose) {
+	public void resetPose(Pose2d pose) {
 		swerve.resetPose(pose);
 	}
 
