@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.736290322580645,
-        "y": 7.530645161290323
+        "x": 0.5484375,
+        "y": 6.298522727272727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.746529609466541,
-        "y": 7.538626549871934
+        "x": 1.5484374999999995,
+        "y": 6.298522727272727
       },
       "isLocked": false,
-      "linkedName": "Wall Start"
+      "linkedName": "Test Start"
     },
     {
       "anchor": {
-        "x": 6.421704545454545,
-        "y": 7.531
+        "x": 5.548,
+        "y": 6.298522727272727
       },
       "prevControl": {
-        "x": 7.437147737217338,
-        "y": 7.5280989277529375
+        "x": 4.548,
+        "y": 6.298522727272727
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,10 +45,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Odemetry Tests",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

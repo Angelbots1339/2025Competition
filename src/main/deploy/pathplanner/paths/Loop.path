@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.5484375,
+        "y": 6.298522727272727
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6820687514275425,
+        "y": 6.216486338143896
+      },
+      "isLocked": false,
+      "linkedName": "Test Start"
+    },
+    {
+      "anchor": {
+        "x": 6.551335227272728,
+        "y": 5.700227272727273
+      },
+      "prevControl": {
+        "x": 6.607499726088456,
+        "y": 7.035360637889891
+      },
+      "nextControl": {
+        "x": 6.518873648939781,
+        "y": 4.928555892548948
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.8910669975186103,
+        "y": 5.263461538461538
+      },
+      "prevControl": {
+        "x": 4.997719261917026,
+        "y": 4.939149041039441
+      },
+      "nextControl": {
+        "x": 2.281299304005855,
+        "y": 5.735215672752612
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.5484375,
+        "y": 6.298522727272727
+      },
+      "prevControl": {
+        "x": 1.6768121463683134,
+        "y": 6.021293985244329
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Test Start"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 0.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Odemetry Tests",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
