@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.736290322580645,
-        "y": 7.530645161290323
+        "x": 2.9914772727272725,
+        "y": 4.064886363636362
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.578842393351409,
-        "y": 6.550913478358391
+        "x": 1.395591414044215,
+        "y": 6.448216596923993
       },
       "isLocked": false,
-      "linkedName": "Wall Start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.119540942928039,
-        "y": 5.063709677419355
+        "x": 1.106846590909091,
+        "y": 7.09625
       },
       "prevControl": {
-        "x": 6.252135494135902,
-        "y": 6.205213609510893
+        "x": 1.247674633508521,
+        "y": 6.8896889620049
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef 1"
+      "linkedName": "LCS"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5984042553191503,
+      "rotationDegrees": -54.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "LCS Align",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
