@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9914772727272725,
-        "y": 4.064886363636362
+        "x": 1.4059943181818182,
+        "y": 6.757215909090909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7192225841730804,
-        "y": 4.423887374362085
+        "x": 1.2244967679001855,
+        "y": 6.929142170150022
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LCS Align Pont"
     },
     {
       "anchor": {
@@ -20,26 +20,21 @@
         "y": 7.116193181818181
       },
       "prevControl": {
-        "x": 1.2817786822640516,
-        "y": 6.8980954850582865
+        "x": 1.4047016920706432,
+        "y": 6.880351458642641
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "LCS"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.6410256410256396,
-      "rotationDegrees": -54.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Vision",
-      "waypointRelativePos": 0.6503115264797473,
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": 1.0,
       "command": null
     }
@@ -59,8 +54,8 @@
   "reversed": false,
   "folder": "LCS Align",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": 0.0
+    "velocity": 0,
+    "rotation": -54.0
   },
   "useDefaultConstraints": true
 }

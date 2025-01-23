@@ -4,10 +4,11 @@
   "holonomicMode": true,
   "pathFolders": [
     "LCS Align",
-    "Odometry Testing"
+    "Odometry Tests"
   ],
   "autoFolders": [
-    "Odometry Testing"
+    "2 Coral",
+    "Odometry Tests"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 3.0,

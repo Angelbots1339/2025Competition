@@ -1,11 +1,18 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
 	public class SwerveConstants {
 		public static final double maxspeed = 5;
 		public static final double maxturn = 2 * Math.PI;
+
+
+		public static final PathConstraints PathPlannerConstraints = new PathConstraints( 3.0, 4.0,
+				maxturn, Units.degreesToRadians(720));
 	}
 
 	public class RobotConstants {
