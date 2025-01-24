@@ -39,9 +39,6 @@ public class RobotContainer {
 
 	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
 
-	private Trigger moveForward = new Trigger(() -> m_joystick.getPOV() == 0);
-	private Trigger moveBackward = new Trigger(() -> m_joystick.getPOV() == 180);
-
 	private final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
@@ -52,7 +49,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve).andThen(Commands.runOnce(() -> swerve.resetPose(Pose2d.kZero), swerve)));
+		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
 		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
