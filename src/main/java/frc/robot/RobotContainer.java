@@ -35,10 +35,9 @@ public class RobotContainer {
 	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
 	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
 
-	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
+	private Trigger alignBargeCenter = new Trigger(() -> m_joystick.getAButton());
 
-	private Trigger moveForward = new Trigger(() -> m_joystick.getPOV() == 0);
-	private Trigger moveBackward = new Trigger(() -> m_joystick.getPOV() == 180);
+	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -50,7 +49,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve).andThen(Commands.runOnce(() -> swerve.resetPose(Pose2d.kZero), swerve)));
+		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
 		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
@@ -58,11 +57,9 @@ public class RobotContainer {
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
 		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
 
-		moveForward.whileTrue(Commands.run(() -> swerve.drive(() -> 0.1, ()-> 0.0, () -> 0.0, false), swerve));
-		moveBackward.whileTrue(Commands.run(() -> swerve.drive(() -> -0.1, ()-> 0.0, () -> 0.0, false), swerve));
+		alignBargeCenter.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestBarge()));
 
-
-/* 		selectReef.onTrue(
+		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
 					switch (m_joystick.getPOV()) {
@@ -89,7 +86,7 @@ public class RobotContainer {
 					}
 					swerve.selectReef(reef);
 				}, swerve)
-	 	); */
+	 	);
 
 		swerve.setDefaultCommand(Commands.run(() -> {
 			swerve.drive(leftY, leftX, rightX, true);

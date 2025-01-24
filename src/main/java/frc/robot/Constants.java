@@ -7,6 +7,7 @@ public class Constants {
 		public static final double maxspeed = 5;
 		public static final double maxturn = 2 * Math.PI;
 	}
+
 	public class DriverConstants {
 		public static final double joystickDeadband = 0.2;
 
