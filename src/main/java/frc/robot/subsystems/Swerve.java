@@ -73,20 +73,22 @@ public class Swerve extends SubsystemBase {
 		putSwerveState();
 	}
 
-	public void drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, boolean fieldRelative) {
-		ChassisSpeeds speeds = new ChassisSpeeds(x.get() * maxspeed, y.get() * maxspeed, turn.get() * maxturn);
-		SwerveRequest req;
+	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, Supplier<Boolean> fieldRelative) {
+		return run(() -> {
+			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * maxspeed, y.get() * maxspeed, turn.get() * maxturn);
+			SwerveRequest req;
 
-		if (fieldRelative) {
-			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
-		}
+			if (fieldRelative.get()) {
+				speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+			}
 
-		req = m_robotRequest
-			.withVelocityX(speeds.vxMetersPerSecond)
-			.withVelocityY(speeds.vyMetersPerSecond)
-			.withRotationalRate(speeds.omegaRadiansPerSecond);
+			req = m_robotRequest
+					.withVelocityX(speeds.vxMetersPerSecond)
+					.withVelocityY(speeds.vyMetersPerSecond)
+					.withRotationalRate(speeds.omegaRadiansPerSecond);
 
-		swerve.setControl(req);
+			swerve.setControl(req);
+		});
 	}
 
 	public void resetPose(Pose2d pose) {
@@ -225,8 +227,16 @@ public class Swerve extends SubsystemBase {
 		return target.plus(new Transform2d(bargeOffset, Rotation2d.kZero));
 	}
 
-	public Command driveToClosestBarge() {
+	public Pose2d getClosestCoralStations() {
+		Pose2d target = PoseEstimation.getEstimatedPose().nearest(List.of(FieldUtil.getLeftCoralStation(), FieldUtil.getRightCoralStation()));
+		return target;
+	}
 
+	public Command driveToClosestCoralStation() {
+		return driveToPose(getClosestCoralStations());
+	}
+
+	public Command driveToClosestBarge() {
 		return driveToPose(getClosestBarge());
 	}
 

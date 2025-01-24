@@ -23,20 +23,21 @@ public class RobotContainer {
 	private final XboxController driver = new XboxController(DriverConstants.driverPort);
 	private final XboxController operator = new XboxController(DriverConstants.operatorPort);
 
-	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(), SwerveConstants.maxspeed);
-	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(), SwerveConstants.maxspeed);
-	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(), SwerveConstants.maxturn);
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
+			SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
 
 	private Trigger resetGyro = new Trigger(() -> driver.getYButtonPressed());
 
-	private Trigger moveToClosestReef = new Trigger(() -> driver.getStartButton());
-	private Trigger moveToSelectedReef = new Trigger(() -> driver.getBackButton());
+	private Trigger moveToClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger moveToSelectedReef = new Trigger(() -> driver.getBButton());
 
-	private Trigger leftCoralStation = new Trigger(() -> driver.getLeftBumperButton());
-	private Trigger rightCoralStation = new Trigger(() -> driver.getRightBumperButton());
-
+	private Trigger alignCoralStation = new Trigger(() -> driver.getRightTriggerAxis() > 0);
 
 	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
 
@@ -54,13 +55,10 @@ public class RobotContainer {
 	private void configureBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
-		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
-
-
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
 		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
 
+		alignCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestCoralStation()));
 		alignBargeCenter.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestBarge()));
 
 		selectReef.onTrue(
@@ -89,12 +87,9 @@ public class RobotContainer {
 							return;
 					}
 					swerve.selectReef(reef);
-				}, swerve)
-	 	);
+				}, swerve));
 
-		swerve.setDefaultCommand(Commands.run(() -> {
-			swerve.drive(leftY, leftX, rightX, true);
-		}, swerve));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
 
 	public Command getAutonomousCommand() {
