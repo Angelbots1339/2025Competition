@@ -9,6 +9,8 @@ public class Constants {
 	}
 
 	public class DriverConstants {
+		public static final int driverPort = 0;
+		public static final int operatorPort = 1;
 		public static final double joystickDeadband = 0.2;
 
 		public static double deadbandJoystickValues(double val, double max) {

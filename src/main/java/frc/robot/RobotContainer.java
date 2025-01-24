@@ -20,24 +20,27 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
-	private final XboxController m_joystick = new XboxController(0);
-	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftX(), SwerveConstants.maxspeed);
-	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftY(), SwerveConstants.maxspeed);
-	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getRightX(), SwerveConstants.maxturn);
+	private final XboxController driver = new XboxController(DriverConstants.driverPort);
+	private final XboxController operator = new XboxController(DriverConstants.operatorPort);
+
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(), SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(), SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(), SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
 
-	private Trigger resetGyro = new Trigger(() -> m_joystick.getYButtonPressed());
+	private Trigger resetGyro = new Trigger(() -> driver.getYButtonPressed());
 
-	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getStartButton());
-	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getBackButton());
+	private Trigger moveToClosestReef = new Trigger(() -> driver.getStartButton());
+	private Trigger moveToSelectedReef = new Trigger(() -> driver.getBackButton());
 
-	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
-	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
+	private Trigger leftCoralStation = new Trigger(() -> driver.getLeftBumperButton());
+	private Trigger rightCoralStation = new Trigger(() -> driver.getRightBumperButton());
 
-	private Trigger alignBargeCenter = new Trigger(() -> m_joystick.getAButton());
 
-	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
+	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
+
+	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -54,6 +57,7 @@ public class RobotContainer {
 		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
 		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
 
+
 		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
 		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
 
@@ -62,7 +66,7 @@ public class RobotContainer {
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
-					switch (m_joystick.getPOV()) {
+					switch (driver.getPOV()) {
 						case 0:
 							reef = 0;
 							break;
