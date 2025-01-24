@@ -68,5 +68,8 @@ public class Elevator extends SubsystemBase {
 	public void initLogging() {
 		logger.addDouble("Target Height", () -> targetHeight, LoggingLevel.NETWORK_TABLES);
 		logger.addDouble("Actual Height", this::getHeight, LoggingLevel.NETWORK_TABLES);
+
+		logger.addDouble("Target Rotations", () -> ElevatorConstants.metersToRotations(targetHeight), LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("Actual Rotations", () -> ElevatorConstants.metersToRotations(getHeight()), LoggingLevel.NETWORK_TABLES);
 	}
 }
