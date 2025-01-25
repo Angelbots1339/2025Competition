@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,11 +54,12 @@ public class RobotContainer {
 	private void configureBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
-		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+		moveToSelectedReef.whileTrue(swerve.defer(() -> swerve.driveToSelectedReef()));
+		moveToClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
 
-		alignCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestCoralStation()));
-		alignBargeCenter.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestBarge()));
+		alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
+		alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
+
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
