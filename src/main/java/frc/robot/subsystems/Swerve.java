@@ -76,7 +76,7 @@ public class Swerve extends SubsystemBase {
 		swerve.getPigeon2().setYaw(0);
 
 		initlogs();
-		putSwerveState();
+		//putSwerveState();
 	}
 
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
