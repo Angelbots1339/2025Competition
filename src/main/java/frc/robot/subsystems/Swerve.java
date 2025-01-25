@@ -37,6 +37,7 @@ import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
 import frc.robot.generated.TunerConstants;
 
@@ -49,6 +50,9 @@ public class Swerve extends SubsystemBase {
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	// private double coralScoreOffsetX = Units.inchesToMeters(32.75);
 	private double coralScoreOffsetX = 0.940;
+
+	/* offset is relative to robot */
+	private Translation2d processorOffset = new Translation2d(RobotConstants.length / 2, 0);
 
 	private Translation2d bargeOffset = new Translation2d(Units.inchesToMeters(-24 / 2.0), 0.0);
 
@@ -251,6 +255,15 @@ public class Swerve extends SubsystemBase {
 
 	public Command driveToClosestBarge() {
 		return driveToPose(getClosestBarge());
+	}
+
+	public Command driveToProcessor() {
+		Translation2d tmp = processorOffset;
+		tmp.rotateBy(FieldUtil.getProcessor().getRotation());
+
+		Pose2d processorScorePos = FieldUtil.getProcessor().plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
+
+		return driveToPose(processorScorePos);
 	}
 
 	@Override

@@ -8,6 +8,11 @@ public class Constants {
 		public static final double maxturn = 2 * Math.PI;
 	}
 
+	public class RobotConstants {
+		public static final double length = 0.938;
+		public static final double width = 0.8;
+	}
+
 	public class DriverConstants {
 		public static final int driverPort = 0;
 		public static final int operatorPort = 1;
