@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,24 +19,26 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
-	private final XboxController m_joystick = new XboxController(0);
-	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftX(), SwerveConstants.maxspeed);
-	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getLeftY(), SwerveConstants.maxspeed);
-	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-m_joystick.getRightX(), SwerveConstants.maxturn);
+	private final XboxController driver = new XboxController(DriverConstants.driverPort);
+	private final XboxController operator = new XboxController(DriverConstants.operatorPort);
+
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
+			SwerveConstants.maxturn);
 
 	private Swerve swerve = new Swerve();
 
-	private Trigger resetGyro = new Trigger(() -> m_joystick.getYButtonPressed());
+	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
-	private Trigger moveToClosestReef = new Trigger(() -> m_joystick.getStartButton());
-	private Trigger moveToSelectedReef = new Trigger(() -> m_joystick.getBackButton());
+	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
+	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
+	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
 
-	private Trigger leftCoralStation = new Trigger(() -> m_joystick.getLeftBumperButton());
-	private Trigger rightCoralStation = new Trigger(() -> m_joystick.getRightBumperButton());
-
-	private Trigger alignBargeCenter = new Trigger(() -> m_joystick.getAButton());
-
-	private Trigger selectReef = new Trigger(() -> m_joystick.getPOV() != -1);
+	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -51,18 +52,17 @@ public class RobotContainer {
 	private void configureBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		leftCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToLeftCoralStation()));
-		rightCoralStation.whileTrue(Commands.deferredProxy(() -> swerve.driveToRightCoralStation()));
+		alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
+		alignSelectedReef.whileTrue(swerve.defer(swerve::driveToSelectedReef));
 
-		moveToSelectedReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToSelectedReef()));
-		moveToClosestReef.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestReef()));
+		alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
+		alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
 
-		alignBargeCenter.whileTrue(Commands.deferredProxy(() -> swerve.driveToClosestBarge()));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
 					int reef = 0;
-					switch (m_joystick.getPOV()) {
+					switch (driver.getPOV()) {
 						case 0:
 							reef = 0;
 							break;
@@ -85,12 +85,11 @@ public class RobotContainer {
 							return;
 					}
 					swerve.selectReef(reef);
-				}, swerve)
-	 	);
+					// TODO: there has to be a better way
+					swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
+				}, swerve));
 
-		swerve.setDefaultCommand(Commands.run(() -> {
-			swerve.drive(leftY, leftX, rightX, true);
-		}, swerve));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
 
 	public Command getAutonomousCommand() {
