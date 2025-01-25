@@ -38,6 +38,8 @@ public class RobotContainer {
 	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
 	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
 
+	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
 	private final SendableChooser<Command> autoChooser;
@@ -57,6 +59,8 @@ public class RobotContainer {
 
 		alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
 		alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
+
+		alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
 
 
 		selectReef.onTrue(
