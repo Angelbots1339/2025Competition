@@ -13,12 +13,6 @@
                 "data": {
                   "pathName": "R1 LCS"
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LCS Align"
-                }
               }
             ]
           }

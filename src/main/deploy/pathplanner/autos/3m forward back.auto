@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3m forward"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3m back"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Odometry Tests",
+  "choreoAuto": false
+}

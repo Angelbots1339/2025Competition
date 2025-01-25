@@ -49,7 +49,7 @@ public class Swerve extends SubsystemBase {
 
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	// private double coralScoreOffsetX = Units.inchesToMeters(32.75);
-	private double coralScoreOffsetX = 0.940;
+	private double coralScoreOffsetX = 0.938 / 2;
 
 	/* offset is relative to robot */
 	private Translation2d processorOffset = new Translation2d(RobotConstants.length / 2, 0);
