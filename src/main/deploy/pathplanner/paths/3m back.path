@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.736290322580645,
-        "y": 7.530645161290323
+        "x": 3.548,
+        "y": 6.299
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.578842393351409,
-        "y": 6.550913478358391
+        "x": 2.7320828378475785,
+        "y": 6.3021424131494195
       },
       "isLocked": false,
-      "linkedName": "Wall Start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.119540942928039,
-        "y": 5.063709677419355
+        "x": 0.5484375,
+        "y": 6.298522727272727
       },
       "prevControl": {
-        "x": 6.252135494135902,
-        "y": 6.205213609510893
+        "x": 1.0792058248248502,
+        "y": 6.3000644365798175
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef 1"
+      "linkedName": "Test Start"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Odometry Tests",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

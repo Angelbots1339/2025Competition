@@ -3,40 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5484375,
-        "y": 6.298522727272727
+        "x": 2.9914772727272725,
+        "y": 4.064886363636362
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5484375,
-        "y": 6.298522727272727
+        "x": 2.7192225841730804,
+        "y": 4.423887374362085
       },
       "isLocked": false,
-      "linkedName": "Test Start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.548,
-        "y": 6.298522727272727
+        "x": 1.1567045454545453,
+        "y": 7.116193181818181
       },
       "prevControl": {
-        "x": 4.548,
-        "y": 6.298522727272727
+        "x": 1.2817786822640516,
+        "y": 6.8980954850582865
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LCS"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 0.6410256410256396,
+      "rotationDegrees": -54.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Vision",
+      "waypointRelativePos": 0.6503115264797473,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
@@ -47,12 +54,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -54.0
   },
   "reversed": false,
-  "folder": "Odometry Tests",
+  "folder": "LCS Align",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

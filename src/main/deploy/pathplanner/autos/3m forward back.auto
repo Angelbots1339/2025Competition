@@ -9,6 +9,12 @@
           "data": {
             "pathName": "3m forward"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3m back"
+          }
         }
       ]
     }
