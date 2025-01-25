@@ -55,7 +55,7 @@ public class Swerve extends SubsystemBase {
 	private Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
-		.withDriveRequestType(DriveRequestType.Velocity);
+			.withDriveRequestType(DriveRequestType.Velocity);
 	private final SwerveRequest.RobotCentric m_robotRequest = new SwerveRequest.RobotCentric()
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
@@ -63,6 +63,8 @@ public class Swerve extends SubsystemBase {
 	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
 	private LoggedSweveModules logged_modules;
 	private LoggedField logged_field;
+
+	private int selectedReefindex = -1;
 
 	/** Creates a new Swerve. */
 	public Swerve() {
@@ -73,7 +75,8 @@ public class Swerve extends SubsystemBase {
 		putSwerveState();
 	}
 
-	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, Supplier<Boolean> fieldRelative) {
+	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
+			Supplier<Boolean> fieldRelative) {
 		return run(() -> {
 			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * maxspeed, y.get() * maxspeed, turn.get() * maxturn);
 			SwerveRequest req;
@@ -116,8 +119,8 @@ public class Swerve extends SubsystemBase {
 				this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 				(speeds, feedforwards) -> setChassisSpeeds(speeds), // Method that will drive the robot given ROBOT
-																		// RELATIVE ChassisSpeeds. Also optionally
-																		// outputs individual module feedforwards
+																	// RELATIVE ChassisSpeeds. Also optionally
+																	// outputs individual module feedforwards
 				new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
 												// holonomic drive trains
 						new PIDConstants(4.285, 0.0, 0.0), // Translation PID constants
@@ -132,7 +135,7 @@ public class Swerve extends SubsystemBase {
 
 					// var alliance = DriverStation.getAlliance();
 					// if (alliance.isPresent()) {
-					// 	return alliance.get() == DriverStation.Alliance.Red;
+					// return alliance.get() == DriverStation.Alliance.Red;
 					// }
 					// return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
 					return FieldUtil.isRedAlliance();
@@ -190,7 +193,8 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void selectReef(int i) {
-		this.selectedReef = FieldUtil.getReef()[i];
+		selectedReef = FieldUtil.getReef()[i];
+		selectedReefindex = i;
 	}
 
 	public Pose2d getSelectedReef() {
@@ -198,7 +202,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Command driveToPose(Pose2d target) {
-		PathConstraints constraints = new PathConstraints( 3.0, 4.0,
+		PathConstraints constraints = new PathConstraints(3.0, 4.0,
 				maxturn, Units.degreesToRadians(720));
 		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
@@ -208,6 +212,13 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Command driveToSelectedReef() {
+		return driveToSelectedReef(selectedReefindex);
+	}
+
+	public Command driveToSelectedReef(int i) {
+		if (i < 0 || i > 5)
+			return Commands.none();
+		selectReef(i);
 		if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
 			return Commands.none();
 
@@ -223,12 +234,14 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Pose2d getClosestBarge() {
-		Pose2d target = PoseEstimation.getEstimatedPose().nearest(List.of(FieldUtil.getAllianceSideBargeCenter(), FieldUtil.getOpponateSideBargeCenter()));
+		Pose2d target = PoseEstimation.getEstimatedPose()
+				.nearest(List.of(FieldUtil.getAllianceSideBargeCenter(), FieldUtil.getOpponateSideBargeCenter()));
 		return target.plus(new Transform2d(bargeOffset, Rotation2d.kZero));
 	}
 
 	public Pose2d getClosestCoralStations() {
-		Pose2d target = PoseEstimation.getEstimatedPose().nearest(List.of(FieldUtil.getLeftCoralStation(), FieldUtil.getRightCoralStation()));
+		Pose2d target = PoseEstimation.getEstimatedPose()
+				.nearest(List.of(FieldUtil.getLeftCoralStation(), FieldUtil.getRightCoralStation()));
 		return target;
 	}
 
@@ -260,7 +273,6 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
 		logged_field.addPose2d("Closest Barge", this::getClosestBarge, true);
 		logger.add(logged_field);
-
 
 		logger.add(logged_modules);
 	}

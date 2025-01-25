@@ -33,8 +33,8 @@ public class RobotContainer {
 
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
-	private Trigger alignToClosestReef = new Trigger(() -> driver.getXButton());
-	private Trigger alignToSelectedReef = new Trigger(() -> driver.getBButton());
+	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
 	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
 	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
 
@@ -52,8 +52,8 @@ public class RobotContainer {
 	private void configureBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		alignToSelectedReef.whileTrue(swerve.defer(() -> swerve.driveToSelectedReef()));
-		alignToClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
+		alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
+		alignSelectedReef.whileTrue(swerve.defer(swerve::driveToSelectedReef));
 
 		alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
 		alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
@@ -85,6 +85,8 @@ public class RobotContainer {
 							return;
 					}
 					swerve.selectReef(reef);
+					// TODO: there has to be a better way
+					swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
 				}, swerve));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
