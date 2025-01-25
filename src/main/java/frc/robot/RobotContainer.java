@@ -31,11 +31,11 @@ public class RobotContainer {
 
 	private Swerve swerve = new Swerve();
 
-	private Trigger resetGyro = new Trigger(() -> driver.getYButtonPressed());
+	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
 	private Trigger alignToClosestReef = new Trigger(() -> driver.getXButton());
 	private Trigger alignToSelectedReef = new Trigger(() -> driver.getBButton());
-	private Trigger alignCoralStation = new Trigger(() -> driver.getRightTriggerAxis() > 0);
+	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
 	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
