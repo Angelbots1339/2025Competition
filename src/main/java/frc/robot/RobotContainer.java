@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.subsystems.Elevator;
@@ -85,8 +86,7 @@ public class RobotContainer {
 		alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
 
 
-
-		extendElevator.whileTrue(elevator.setHeightCommand(2.229));
+		extendElevator.whileTrue(elevator.setHeightCommand(ElevatorConstants.Heights.Max));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
@@ -124,7 +124,7 @@ public class RobotContainer {
 		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		elevator.setDefaultCommand(elevator.setHeightCommand(0));
+		elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
 	public void stopDefaultCommands() {

@@ -104,7 +104,8 @@ public class Constants {
 
     public static final class ElevatorConstants {
 		/* all units are in meters */
-		public static final double BaseHeight = 0.895;
+		public static final double BaseHeight = Units.inchesToMeters(40);
+		public static final double StageHeight = Units.inchesToMeters(49);
 		public static final int LeaderPort = 14;
 		public static final int FollowerPort = 15;
 		private static final double Radius = 0.1;
@@ -114,7 +115,7 @@ public class Constants {
 		public class Heights {
 			/* TODO: Tune */
 			public static final double Max = Units.inchesToMeters(89);
-			public static final double Min = 0;
+			public static final double Min = Units.inchesToMeters(0);
 			public static final double L1 = 1;
 			public static final double L2 = 2;
 			public static final double L3 = 3;

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,7 +38,7 @@ public class Elevator extends SubsystemBase {
 		follower.setPosition(0);
 
 
-		base = mech.getRoot("Elevator", Units.inchesToMeters(10.5), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
+		base = mech.getRoot("Elevator", Units.inchesToMeters(13.970), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
 		stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
 		SmartDashboard.putData("Elevator Mech", mech);
 		initLogging();
@@ -53,6 +54,8 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public double getHeight() {
+		if (RobotBase.isSimulation())
+			return targetHeight;
 		return ElevatorConstants.rotationToMeters(getRotations());
 	}
 
@@ -62,7 +65,12 @@ public class Elevator extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		stage1.setLength(targetHeight - ElevatorConstants.BaseHeight);
+		double length = targetHeight - ElevatorConstants.BaseHeight;
+		// if (length < ElevatorConstants.BaseHeight) {
+		// 	stage1.setLength(Units.inchesToMeters(1));
+		// } else {
+			stage1.setLength(length);
+		// }
 	}
 
 	public void initLogging() {
