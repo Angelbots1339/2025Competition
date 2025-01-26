@@ -156,10 +156,14 @@ public class Constants {
     }
 
 	public class VisionConstants {
+		/* offset for outrunner
+		 * up: 0.367821
+		 * forward: -0.213700
+		 * pitch: 24.45
+		 */
 		public static final String limelightName = "limelight";
 
 		public static double calcStdDev(double metersFromTarget) {
-
 			return 0.08 * Math.pow(metersFromTarget, 2);
 		}
 	}

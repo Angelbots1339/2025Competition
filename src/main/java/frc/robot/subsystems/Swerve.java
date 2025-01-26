@@ -273,6 +273,7 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		updateVision();
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 	}
 
@@ -285,7 +286,7 @@ public class Swerve extends SubsystemBase {
 
 		LimelightHelpers.SetRobotOrientation(VisionConstants.limelightName, yaw, 0, 0, 0, 0, 0);
 
-		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(VisionConstants.limelightName);
+		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.limelightName);
 
 		if (pose.tagCount < 1)
 			return;
