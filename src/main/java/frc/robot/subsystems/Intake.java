@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.awt.Color;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.SlotConfigs;

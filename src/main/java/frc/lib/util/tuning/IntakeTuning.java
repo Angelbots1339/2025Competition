@@ -4,9 +4,12 @@
 
 package frc.lib.util.tuning;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import java.util.Map;
+
 import com.ctre.phoenix6.configs.SlotConfigs;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -14,13 +17,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Swerve;
 
 public class IntakeTuning extends Command {
 	Intake intake;
@@ -29,25 +31,28 @@ public class IntakeTuning extends Command {
 	private static ShuffleboardLayout pid = tab.getLayout("PID", BuiltInLayouts.kList);
 	private static XboxController test = new XboxController(DriverConstants.testPort);
 
-	private static GenericEntry p, i, d, g, s;
+	private static GenericEntry target = tab.add("target", IntakeConstants.pid.kS)
+			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withProperties(Map.of("min", 0, "max", 90))
+			.getEntry();
 
-	static {
-		p = pid.add("P", IntakeConstants.pid.kP)
+	private static GenericEntry p = pid.add("P", IntakeConstants.pid.kP)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
-		i = pid.add("I", IntakeConstants.pid.kI)
+	private static GenericEntry i = pid.add("I", IntakeConstants.pid.kI)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
-		d = pid.add("D", IntakeConstants.pid.kD)
+	private static GenericEntry d = pid.add("D", IntakeConstants.pid.kD)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
-		g = pid.add("G", IntakeConstants.pid.kG)
+	private static GenericEntry g = pid.add("G", IntakeConstants.pid.kG)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
-		s = pid.add("S", IntakeConstants.pid.kS)
+	private static GenericEntry s = pid.add("S", IntakeConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
-	}
+
+	private static Trigger intakeRun = new Trigger(() -> test.getBButton());
 
 	public IntakeTuning(Intake intake) {
 		this.intake = intake;
@@ -55,20 +60,19 @@ public class IntakeTuning extends Command {
 
 	@Override
 	public void initialize() {
+		intakeRun.onTrue(intake.runIntake(() -> Degrees.of(target.getDouble(0))));
 	}
 
 	@Override
 	public void execute() {
 		SlotConfigs tmp = IntakeConstants.pid
-			.withKP(p.getDouble(0))
-			.withKI(i.getDouble(0))
-			.withKD(d.getDouble(0))
-			.withKG(g.getDouble(0))
-			.withKS(s.getDouble(0));
+				.withKP(p.getDouble(0))
+				.withKI(i.getDouble(0))
+				.withKD(d.getDouble(0))
+				.withKG(g.getDouble(0))
+				.withKS(s.getDouble(0));
 
 		intake.setPID(tmp);
-
-		SmartDashboard.putNumber("p", intake.getPID());
 	}
 
 	@Override
