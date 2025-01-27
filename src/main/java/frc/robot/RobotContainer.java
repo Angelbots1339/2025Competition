@@ -10,7 +10,9 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
@@ -54,12 +57,20 @@ public class RobotContainer {
 
 	private final SendableChooser<Command> autoChooser;
 
+	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
+
 	public RobotContainer() {
 		configureBindings();
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		SmartDashboard.putData(autoChooser);
+		SmartDashboard.putData("Auto", autoChooser);
+
+		for (TuningSystem system : TuningSystem.values()) {
+			tuningChooser.addOption(system.toString(), system);
+		}
+		SmartDashboard.putData("Tuning System", tuningChooser);
+
 	}
 
 	private void configureBindings() {
@@ -116,5 +127,9 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 		return autoChooser.getSelected();
+	}
+
+	public void tuning() {
+		Commands.select(null, null);
 	}
 }

@@ -85,14 +85,22 @@ public class Constants {
 
 		public static final FeedbackConfigs angleFollwerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
 	}
+
 	public class DriverConstants {
 		public static final int driverPort = 0;
 		public static final int operatorPort = 1;
+		public static final int testPort = 2;
 		public static final double joystickDeadband = 0.2;
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
 					joystickDeadband) * max * Math.signum(val);
+		}
+	}
+
+	public class TuningConstants {
+		public enum TuningSystem {
+			Intake,
 		}
 	}
 }
