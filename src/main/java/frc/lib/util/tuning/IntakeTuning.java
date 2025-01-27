@@ -5,12 +5,16 @@
 package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volt;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -31,9 +35,16 @@ public class IntakeTuning extends Command {
 	private static ShuffleboardLayout pid = tab.getLayout("PID", BuiltInLayouts.kList);
 	private static XboxController test = new XboxController(DriverConstants.testPort);
 
+	private static Voltage volt_target = Volt.zero();
+	private static Angle targetAngle = Degrees.zero();
+
 	private static GenericEntry target = tab.add("target", IntakeConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", 0, "max", 90))
+			.getEntry();
+
+	private static GenericEntry volts = tab.add("volts", 1)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
 	private static GenericEntry p = pid.add("P", IntakeConstants.pid.kP)
@@ -52,9 +63,10 @@ public class IntakeTuning extends Command {
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.getEntry();
 
-	private static Trigger intakeRun = new Trigger(() -> test.getBButton());
+	private static Trigger intakeAngle = new Trigger(() -> test.getBButton());
 	private static Trigger angleUp = new Trigger(() -> test.getPOV() == 0);
 	private static Trigger angleDown = new Trigger(() -> test.getPOV() == 180);
+	private static Trigger intakeRun = new Trigger(() -> test.getAButton());
 
 	public IntakeTuning(Intake intake) {
 		this.intake = intake;
@@ -62,13 +74,19 @@ public class IntakeTuning extends Command {
 
 	@Override
 	public void initialize() {
-		intakeRun.whileTrue(Commands.run(() -> intake.changeAngle(() -> Degrees.of(target.getDouble(0)))));
+		intakeAngle.whileTrue(Commands.run(() -> intake.changeAngle(() -> targetAngle)));
 		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.insideAngle.in(Degrees)))));
 		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.outsideAngle.in(Degrees)))));
+
+		intakeRun.whileTrue(Commands.run(() -> intake.runWheelsVolts(volt_target))).whileFalse(Commands.run(() -> intake.runWheelsVolts(Volt.zero())));
 	}
 
 	@Override
 	public void execute() {
+		targetAngle = Degrees.of(target.getDouble(0));
+
+		volt_target = Volts.of(volts.getDouble(0));
+
 		SlotConfigs tmp = IntakeConstants.pid
 				.withKP(p.getDouble(0))
 				.withKI(i.getDouble(0))
