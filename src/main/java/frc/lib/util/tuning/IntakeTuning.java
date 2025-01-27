@@ -53,6 +53,8 @@ public class IntakeTuning extends Command {
 			.getEntry();
 
 	private static Trigger intakeRun = new Trigger(() -> test.getBButton());
+	private static Trigger angleUp = new Trigger(() -> test.getPOV() == 0);
+	private static Trigger angleDown = new Trigger(() -> test.getPOV() == 180);
 
 	public IntakeTuning(Intake intake) {
 		this.intake = intake;
@@ -61,6 +63,8 @@ public class IntakeTuning extends Command {
 	@Override
 	public void initialize() {
 		intakeRun.whileTrue(Commands.run(() -> intake.changeAngle(() -> Degrees.of(target.getDouble(0)))));
+		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.insideAngle.in(Degrees)))));
+		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.outsideAngle.in(Degrees)))));
 	}
 
 	@Override
