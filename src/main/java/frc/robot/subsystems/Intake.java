@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Volts;
 import java.awt.Color;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -53,6 +54,10 @@ public class Intake extends SubsystemBase {
 		setMech();
 	}
 
+	public int getPID() {
+		return angleMotor.getClosedLoopSlot().getValue();
+	}
+
 	public void setMech() {
 		slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
 			.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
@@ -94,6 +99,11 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 		slapdown.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
+	}
+
+	public void setPID(SlotConfigs angle) {
+		angleMotor.getConfigurator().apply(angle);
+		angleFollowerMotor.getConfigurator().apply(angle);
 	}
 
 	public void initLogging() {

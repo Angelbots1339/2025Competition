@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -54,20 +55,22 @@ public class Constants {
 					.withInverted(InvertedValue.CounterClockwise_Positive)
 			);
 
-		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
-			.withMotorOutput(
-				new MotorOutputConfigs()
-					.withInverted(InvertedValue.Clockwise_Positive)
-			)
-			.withSlot0(
-				new Slot0Configs()
+		public static final SlotConfigs pid = new SlotConfigs()
 					.withGravityType(GravityTypeValue.Arm_Cosine)
 					.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 					.withKP(0)
 					.withKI(0)
 					.withKD(0)
 					.withKS(0)
-					.withKG(0)
+					.withKG(0);
+
+		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+					.withInverted(InvertedValue.Clockwise_Positive)
+			)
+			.withSlot0(
+				Slot0Configs.from(pid)
 			)
 			.withFeedback(
 				new FeedbackConfigs()
@@ -101,6 +104,7 @@ public class Constants {
 	public class TuningConstants {
 		public enum TuningSystem {
 			Intake,
+			None,
 		}
 	}
 }

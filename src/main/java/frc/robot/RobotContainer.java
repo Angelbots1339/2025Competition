@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degree;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -18,7 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.tuning.IntakeTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -125,11 +129,21 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
 
+	public void stopDefaultCommands() {
+		intake.removeDefaultCommand();
+		swerve.removeDefaultCommand();
+	}
+
 	public Command getAutonomousCommand() {
 		return autoChooser.getSelected();
 	}
 
-	public void tuning() {
-		Commands.select(null, null);
+	public Command getTuningCommand() {
+		return Commands.select(
+			Map.ofEntries(
+				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
+				Map.entry(TuningSystem.None, Commands.none())
+			),
+			() -> tuningChooser.getSelected());
 	}
 }
