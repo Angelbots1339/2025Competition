@@ -3,15 +3,17 @@
   "robotLength": 0.937895,
   "holonomicMode": true,
   "pathFolders": [
-    "LCS Align",
-    "Odometry Tests"
+    "LCS Left Coral",
+    "LCS Right Coral",
+    "Odometry Tests",
+    "Start"
   ],
   "autoFolders": [
     "2 Coral",
     "Odometry Tests"
   ],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 1.5,
+  "defaultMaxVel": 5.0,
+  "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
@@ -19,7 +21,7 @@
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.049811,
-  "driveGearing": 6.75,
+  "driveGearing": 6.125,
   "maxDriveSpeed": 5.5,
   "driveMotorType": "krakenX60",
   "driveCurrentLimit": 60.0,

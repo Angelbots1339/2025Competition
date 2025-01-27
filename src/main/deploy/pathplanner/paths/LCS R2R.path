@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5156818181818184,
-        "y": 6.617613636363636
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.2464488636363638,
-        "y": 7.036420454545453
-      },
-      "isLocked": false,
-      "linkedName": "LCS Align"
-    },
-    {
-      "anchor": {
         "x": 1.2165340909090911,
         "y": 7.036420454545453
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.4971144550593307,
+        "y": 6.770306846566132
+      },
+      "isLocked": false,
+      "linkedName": "LCS"
+    },
+    {
+      "anchor": {
+        "x": 3.6695454545454544,
+        "y": 5.091960227272727
+      },
       "prevControl": {
-        "x": 1.3661079545454546,
-        "y": 6.77715909090909
+        "x": 3.4798614676615585,
+        "y": 5.258597149364632
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LCS"
+      "linkedName": "R2R"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Coral Place",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 3.5,
@@ -42,10 +49,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "LCS Right Coral",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -54.0
