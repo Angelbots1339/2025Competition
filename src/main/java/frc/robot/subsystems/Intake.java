@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
@@ -53,10 +54,6 @@ public class Intake extends SubsystemBase {
 		setMech();
 	}
 
-	public int getPID() {
-		return angleMotor.getClosedLoopSlot().getValue();
-	}
-
 	public void setMech() {
 		slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
 			.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
@@ -92,7 +89,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Angle getAngleError() {
-		return Degrees.of(angleMotor.getClosedLoopError().getValueAsDouble());
+		return Rotations.of(angleMotor.getClosedLoopError().getValueAsDouble());
 	}
 
 	@Override

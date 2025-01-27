@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
@@ -25,7 +24,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
 public class IntakeTuning extends Command {
-	Intake intake;
+	private Intake intake;
 
 	private static ShuffleboardTab tab = Shuffleboard.getTab("Intake Tuning");
 	private static ShuffleboardLayout pid = tab.getLayout("PID", BuiltInLayouts.kList);
@@ -60,7 +59,7 @@ public class IntakeTuning extends Command {
 
 	@Override
 	public void initialize() {
-		intakeRun.onTrue(intake.runIntake(() -> Degrees.of(target.getDouble(0))));
+		intakeRun.whileTrue(intake.runIntake(() -> Degrees.of(target.getDouble(0))));
 	}
 
 	@Override

@@ -56,27 +56,25 @@ public class Constants {
 			);
 
 		public static final SlotConfigs pid = new SlotConfigs()
-					.withGravityType(GravityTypeValue.Arm_Cosine)
-					.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-					.withKP(0)
-					.withKI(0)
-					.withKD(0)
-					.withKS(0)
-					.withKG(0);
+			.withGravityType(GravityTypeValue.Arm_Cosine)
+			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+			.withKP(0)
+			.withKI(0)
+			.withKD(0)
+			.withKS(0)
+			.withKG(0);
+
+		public static final FeedbackConfigs feedback = new FeedbackConfigs()
+			.withSensorToMechanismRatio(angleMotorRatio)
+			.withFeedbackRotorOffset(angleMotorOffset);
 
 		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
 				new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
 			)
-			.withSlot0(
-				Slot0Configs.from(pid)
-			)
-			.withFeedback(
-				new FeedbackConfigs()
-					.withSensorToMechanismRatio(angleMotorRatio)
-					.withFeedbackRotorOffset(angleMotorOffset)
-			)
+			.withSlot0(Slot0Configs.from(pid))
+			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
 					/* uses 0 as the fully out position and 90 as the completely in / vertical position */
