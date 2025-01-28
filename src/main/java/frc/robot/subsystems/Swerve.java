@@ -274,30 +274,29 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (DriverStation.isDisabled()) {
 			updateVision();
-		}
-		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
+		// PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 	}
 
 	public void updateVision() {
-        if (Robot.isReal()) {
-
-            if (LimelightHelpers.getFiducialID(VisionConstants.limelightName) < 0) {
+            if (LimelightHelpers.getFiducialID("limelight") < 0) {
                 return;
             }
 
-            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.limelightName)
+			LimelightHelpers.SetRobotOrientation("limelight", getYaw().getDegrees(), 0, 0, 0, 0, 0);
+            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace("limelight")
                     .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
-            Pose2d poseFromVision = LimelightHelpers.getBotPose2d_wpiBlue(VisionConstants.limelightName);
-            double poseFromVisionTimestamp = Timer.getFPGATimestamp()
-                    - (LimelightHelpers.getLatency_Capture(VisionConstants.limelightName)
-                            + LimelightHelpers.getLatency_Pipeline(VisionConstants.limelightName)) / 1000;
+            // Pose2d poseFromVision = new Pose2d(LimelightHelpers.getBotPose2d_wpiBlue("limelight").getTranslation(), getYaw());
+			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+            Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
 
-            swerve.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
-        }
+            double poseFromVisionTimestamp = Timer.getFPGATimestamp()
+                    - (LimelightHelpers.getLatency_Capture("limelight")
+                            + LimelightHelpers.getLatency_Pipeline("limelight")) / 1000;
+            swerve.addVisionMeasurement(poseFromVision, mt2.timestampSeconds, VecBuilder.fill(0.0002, 0.0002, 0.5));
+			PoseEstimation.updateEstimatedPose(poseFromVision, this);
 	}
 
 	@Override
@@ -315,7 +314,7 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
 		logged_field.addPose2d("Closest Barge", this::getClosestBarge, true);
 		logged_field.addPose2d("Iner pose", () -> swerve.getState().Pose, true);
-		logged_field.addPose2d("Limelight Pose", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("").pose, true);
+		logged_field.addPose2d("limelight pose", () -> LimelightHelpers.getBotPose2d_wpiBlue("limelight"), true);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);
