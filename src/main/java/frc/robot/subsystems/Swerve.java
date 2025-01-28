@@ -292,6 +292,7 @@ public class Swerve extends SubsystemBase {
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
 			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
 			if (mt2.tagCount < 1 && Math.abs(swerve.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) > 720) {
 				return;
 			}
@@ -301,7 +302,8 @@ public class Swerve extends SubsystemBase {
             double poseFromVisionTimestamp = Timer.getFPGATimestamp()
                     - (LimelightHelpers.getLatency_Capture("limelight")
                             + LimelightHelpers.getLatency_Pipeline("limelight")) / 1000;
-            pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(0.0002, 0.0002, 0.5));
+
+            pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
 	}
 
 	@Override
