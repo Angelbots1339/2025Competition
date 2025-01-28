@@ -20,6 +20,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -49,6 +50,7 @@ import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
+	SwerveDrivePoseEstimator pose = new SwerveDrivePoseEstimator(swerve.getKinematics(), getRelativeYaw(), swerve.getState().ModulePositions, Pose2d.kZero);
 
 	private double maxspeed = 3;
 	private double maxturn = Math.PI * 2;
@@ -275,7 +277,8 @@ public class Swerve extends SubsystemBase {
 	@Override
 	public void periodic() {
 			updateVision();
-		// PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
+		pose.update(getYaw(), swerve.getState().ModulePositions);
+		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
 
 	public void updateVision() {
@@ -289,14 +292,13 @@ public class Swerve extends SubsystemBase {
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
             // Pose2d poseFromVision = new Pose2d(LimelightHelpers.getBotPose2d_wpiBlue("limelight").getTranslation(), getYaw());
-			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
             Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
 
             double poseFromVisionTimestamp = Timer.getFPGATimestamp()
                     - (LimelightHelpers.getLatency_Capture("limelight")
                             + LimelightHelpers.getLatency_Pipeline("limelight")) / 1000;
-            swerve.addVisionMeasurement(poseFromVision, mt2.timestampSeconds, VecBuilder.fill(0.0002, 0.0002, 0.5));
-			PoseEstimation.updateEstimatedPose(poseFromVision, this);
+            pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(0.0002, 0.0002, 0.5));
 	}
 
 	@Override
