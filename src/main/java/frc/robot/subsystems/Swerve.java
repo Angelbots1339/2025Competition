@@ -291,11 +291,11 @@ public class Swerve extends SubsystemBase {
                     .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
-            // Pose2d poseFromVision = new Pose2d(LimelightHelpers.getBotPose2d_wpiBlue("limelight").getTranslation(), getYaw());
 			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-			if (mt2.tagCount < 1) {
+			if (mt2.tagCount < 1 && Math.abs(swerve.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) > 720) {
 				return;
 			}
+
             Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
 
             double poseFromVisionTimestamp = Timer.getFPGATimestamp()
