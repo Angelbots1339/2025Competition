@@ -28,6 +28,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -273,35 +274,30 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		updateVision();
+		if (DriverStation.isDisabled()) {
+			updateVision();
+		}
 		PoseEstimation.updateEstimatedPose(swerve.getState().Pose, this);
 	}
 
 	public void updateVision() {
-		if (!Robot.isReal()) {
-			return;
-		}
+        if (Robot.isReal()) {
 
-		double yaw = getYaw().getDegrees();
+            if (LimelightHelpers.getFiducialID(VisionConstants.limelightName) < 0) {
+                return;
+            }
 
-		LimelightHelpers.SetRobotOrientation(VisionConstants.limelightName, yaw, 0, 0, 0, 0, 0);
+            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.limelightName)
+                    .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
+            double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
-		LimelightHelpers.PoseEstimate pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.limelightName);
+            Pose2d poseFromVision = LimelightHelpers.getBotPose2d_wpiBlue(VisionConstants.limelightName);
+            double poseFromVisionTimestamp = Timer.getFPGATimestamp()
+                    - (LimelightHelpers.getLatency_Capture(VisionConstants.limelightName)
+                            + LimelightHelpers.getLatency_Pipeline(VisionConstants.limelightName)) / 1000;
 
-		if (pose.tagCount < 1)
-			return;
-
-		double xyStdDev2 = VisionConstants.calcStdDev(pose.avgTagDist) * 3;
-
-		double timestamp = Timer.getFPGATimestamp()
-				- (pose.latency) / 1000;
-
-		// TODO Test the rotation value from the limelight pose and see if it's
-		// identical to gyro
-		Pose2d withGyroData = new Pose2d(pose.pose.getTranslation(), getYaw());
-
-		swerve.addVisionMeasurement(withGyroData, timestamp,
-				VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
+            swerve.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
+        }
 	}
 
 	@Override
@@ -318,6 +314,8 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Closest Reef", this::getClosestReef, true);
 		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
 		logged_field.addPose2d("Closest Barge", this::getClosestBarge, true);
+		logged_field.addPose2d("Iner pose", () -> swerve.getState().Pose, true);
+		logged_field.addPose2d("Limelight Pose", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("").pose, true);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);
