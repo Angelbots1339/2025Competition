@@ -280,16 +280,16 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void updateVision() {
-            if (LimelightHelpers.getFiducialID("limelight") < 0) {
+            if (LimelightHelpers.getFiducialID(VisionConstants.LimelightName) < 0) {
                 return;
             }
 
-			LimelightHelpers.SetRobotOrientation("limelight", getYaw().getDegrees(), 0, 0, 0, 0, 0);
-            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace("limelight")
+			LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName, getYaw().getDegrees(), 0, 0, 0, 0, 0);
+            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.LimelightName)
                     .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 
-			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightName);
 
 			if (mt2.tagCount < 1 && Math.abs(swerve.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) > 720) {
 				return;
@@ -298,8 +298,8 @@ public class Swerve extends SubsystemBase {
             Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
 
             double poseFromVisionTimestamp = Timer.getFPGATimestamp()
-                    - (LimelightHelpers.getLatency_Capture("limelight")
-                            + LimelightHelpers.getLatency_Pipeline("limelight")) / 1000;
+                    - (LimelightHelpers.getLatency_Capture(VisionConstants.LimelightName)
+                            + LimelightHelpers.getLatency_Pipeline(VisionConstants.LimelightName)) / 1000;
 
             pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(xyStdDev2, xyStdDev2, 0));
 	}
