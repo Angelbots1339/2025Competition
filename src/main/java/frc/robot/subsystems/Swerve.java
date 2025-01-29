@@ -29,7 +29,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,7 +43,6 @@ import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
-import frc.robot.Robot;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 
