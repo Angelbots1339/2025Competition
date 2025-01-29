@@ -318,7 +318,6 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Closest Reef", this::getClosestReef, true);
 		logged_field.addPose2d("Selected Reef", this::getSelectedReef, true);
 		logged_field.addPose2d("Closest Barge", this::getClosestBarge, true);
-		logged_field.addPose2d("Iner pose", () -> swerve.getState().Pose, true);
 		logged_field.addPose2d("limelight pose", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight").pose, true);
 		logger.add(logged_field);
 
