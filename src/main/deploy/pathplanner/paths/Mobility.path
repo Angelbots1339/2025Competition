@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.736290322580645,
-        "y": 7.530645161290323
+        "x": 7.718011363636363,
+        "y": 7.574886363636363
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.746529609466541,
-        "y": 7.538626549871934
+        "x": 6.728250650522259,
+        "y": 7.5828677522179735
       },
       "isLocked": false,
       "linkedName": "Wall Start"
     },
     {
       "anchor": {
-        "x": 6.421704545454545,
-        "y": 7.531
+        "x": 6.501477272727272,
+        "y": 7.574886363636363
       },
       "prevControl": {
-        "x": 7.437147737217338,
-        "y": 7.5280989277529375
+        "x": 7.516920464490066,
+        "y": 7.571985291389301
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

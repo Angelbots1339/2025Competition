@@ -3,38 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.119540942928039,
-        "y": 5.063709677419355
+        "x": 3.958721590909091,
+        "y": 5.261477272727273
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.366541209890226,
-        "y": 5.380052458383491
+        "x": 2.8373269428400043,
+        "y": 6.028921242567114
       },
       "isLocked": false,
-      "linkedName": "Reef 1"
+      "linkedName": "R2L"
     },
     {
       "anchor": {
-        "x": 1.1944168734491314,
-        "y": 7.1511166253101734
+        "x": 1.2165340909090911,
+        "y": 7.036420454545453
       },
       "prevControl": {
-        "x": 2.01637744852329,
-        "y": 6.7015691693182005
+        "x": 1.6158337092433688,
+        "y": 6.766376331826284
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral Station Left"
+      "linkedName": "LCS"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5345744680851238,
+      "rotationDegrees": -54.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.211026540816704
+    "rotation": -54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "LCS Left Coral",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -119.99999999999999
+    "velocity": 0.0,
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }

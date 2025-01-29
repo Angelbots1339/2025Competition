@@ -3,50 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.255028409090909,
-        "y": 5.35122159090909
+        "x": 7.718011363636363,
+        "y": 7.574886363636363
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9592181184055124,
-        "y": 6.8064219370240675
+        "x": 6.937545497173836,
+        "y": 7.006469650604022
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Wall Start"
     },
     {
       "anchor": {
-        "x": 1.1567045454545453,
-        "y": 7.116193181818181
+        "x": 5.314857954545454,
+        "y": 5.121875
       },
       "prevControl": {
-        "x": 1.3758322936934322,
-        "y": 6.995847720949252
+        "x": 5.751972057659234,
+        "y": 5.9196018671114485
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LCS"
+      "linkedName": "R1L"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3617021276595716,
-      "rotationDegrees": -36.61345552746856
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Vision",
-      "waypointRelativePos": 0.36,
-      "endWaypointRelativePos": 1.0,
+      "name": "Coral Place",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -54,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "LCS Align",
+  "folder": "Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
