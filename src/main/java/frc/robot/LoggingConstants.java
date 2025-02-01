@@ -20,6 +20,11 @@ public final class LoggingConstants {
                 public static LoggingLevel Main = LoggingLevel.ONBOARD_ONLY;
         }
 
+		public class IntakeLogging {
+			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
+		}
+
         public class RobotContainerLogging {
                 public static LoggingLevel StickValues = LoggingLevel.ONBOARD_ONLY;
         }
