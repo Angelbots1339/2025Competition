@@ -34,7 +34,7 @@ public class RobotContainer {
 			SwerveConstants.maxturn);
 
 	// private final Intake intake = new Intake();
-	private Elevator elevator = new Elevator();
+	// private Elevator elevator = new Elevator();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
@@ -86,7 +86,7 @@ public class RobotContainer {
 		alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
 
 
-		extendElevator.whileTrue(elevator.setHeightCommand(ElevatorConstants.Heights.Max));
+		// extendElevator.whileTrue(elevator.setHeightCommand(ElevatorConstants.Heights.Max));
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
@@ -124,7 +124,7 @@ public class RobotContainer {
 		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
+		// elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
 	public void stopDefaultCommands() {

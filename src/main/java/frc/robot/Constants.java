@@ -21,7 +21,6 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.units.measure.Distance;
 
 public class Constants {
 	public class SwerveConstants {
