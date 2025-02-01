@@ -161,7 +161,9 @@ public class Constants {
 		 * forward: -0.213700
 		 * pitch: 24.45
 		 */
-		public static final String LimelightName = "limelight-center";
+		public static final String LimelightCenterName = "limelight-center";
+		public static final String LimelightLeftName = "limelight-left";
+		public static final String LimelightRightName = "limelight-right";
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
