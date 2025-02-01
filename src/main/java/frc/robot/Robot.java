@@ -20,14 +20,14 @@ import frc.lib.util.logging.Logger;
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
-	private final RobotContainer m_robotContainer;
+	// private final RobotContainer m_robotContainer;
 
 	private AddressableLED led = new AddressableLED(0);
 	private AddressableLEDBuffer buf = new AddressableLEDBuffer(16);
 	private LEDPattern red = LEDPattern.solid(Color.kRed);
 
 	public Robot() {
-		m_robotContainer = new RobotContainer();
+		// m_robotContainer = new RobotContainer();
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
 
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		// m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.schedule();
