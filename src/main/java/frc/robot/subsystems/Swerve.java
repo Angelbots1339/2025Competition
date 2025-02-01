@@ -29,6 +29,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -106,6 +107,7 @@ public class Swerve extends SubsystemBase {
 
 	public void resetPose(Pose2d pose) {
 		swerve.resetPose(pose);
+		this.pose.resetPose(pose);
 	}
 
 	void setChassisSpeeds(ChassisSpeeds speeds) {
@@ -143,12 +145,11 @@ public class Swerve extends SubsystemBase {
 					// This will flip the path being followed to the red side of the field.
 					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-					// var alliance = DriverStation.getAlliance();
-					// if (alliance.isPresent()) {
-					// return alliance.get() == DriverStation.Alliance.Red;
-					// }
-					// return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
-					return FieldUtil.isRedAlliance();
+					var alliance = DriverStation.getAlliance();
+					if (alliance.isPresent()) {
+					return alliance.get() == DriverStation.Alliance.Red;
+					}
+					return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
 				},
 				this // Reference to this subsystem to set requirements
 		);
@@ -274,7 +275,7 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-			updateVision();
+			//updateVision();
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
