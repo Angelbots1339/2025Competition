@@ -1,6 +1,12 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
@@ -9,11 +15,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
@@ -98,6 +100,60 @@ public class Constants {
 					joystickDeadband) * max * Math.signum(val);
 		}
 	}
+
+    public static final class ElevatorConstants {
+		/* all units are in meters */
+		public static final double BaseHeight = Units.inchesToMeters(40);
+		public static final double StageHeight = Units.inchesToMeters(49);
+		public static final int LeaderPort = 14;
+		public static final int FollowerPort = 15;
+		private static final double Radius = 0.1;
+		public static final double ErrorTolerence = 0.01; // 1 cm
+
+		/* heights are in meters */
+		public class Heights {
+			/* TODO: Tune */
+			public static final double Max = Units.inchesToMeters(89);
+			public static final double Min = Units.inchesToMeters(0);
+			public static final double L1 = 1;
+			public static final double L2 = 2;
+			public static final double L3 = 3;
+			public static final double L4 = 4;
+		}
+
+		public static final Slot0Configs PID = new Slot0Configs()
+				.withKP(0)
+				.withKI(0)
+				.withKD(0)
+				.withGravityType(GravityTypeValue.Elevator_Static)
+				.withKG(0)
+				.withKS(0);
+
+		public static final SoftwareLimitSwitchConfigs limits = new SoftwareLimitSwitchConfigs()
+				.withForwardSoftLimitEnable(true)
+				.withReverseSoftLimitEnable(true)
+				.withForwardSoftLimitThreshold(Heights.Max)
+				.withReverseSoftLimitThreshold(Heights.Min);
+
+		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
+			.withMotionMagicAcceleration(1)
+			.withMotionMagicCruiseVelocity(0.1);
+
+		public static final TalonFXConfiguration config = new TalonFXConfiguration()
+				.withSlot0(PID)
+				.withSoftwareLimitSwitch(limits)
+				.withMotionMagic(motionmagic);
+
+		public static final PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(0);
+
+		public static final double rotationToMeters(double rotations) {
+			return rotations * 2 * Math.PI * Radius;
+		}
+
+		public static final double metersToRotations(double meters) {
+			return meters / (2.0 * Math.PI * Radius);
+		}
+    }
 
 	public class TuningConstants {
 		public enum TuningSystem {
