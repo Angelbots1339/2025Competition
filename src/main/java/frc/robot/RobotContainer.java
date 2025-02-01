@@ -77,46 +77,44 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
-		alignSelectedReef.whileTrue(swerve.defer(swerve::driveToSelectedReef));
+		// alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
+		// alignSelectedReef.whileTrue(swerve.defer(swerve::driveToSelectedReef));
 
-		alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
-		alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
+		// alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
+		// alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
 
-		alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
+		// alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
 
 
-		// extendElevator.whileTrue(elevator.setHeightCommand(ElevatorConstants.Heights.Max));
-
-		selectReef.onTrue(
-				Commands.runOnce(() -> {
-					int reef = 0;
-					switch (driver.getPOV()) {
-						case 0:
-							reef = 0;
-							break;
-						case 45:
-							reef = 5;
-							break;
-						case 135:
-							reef = 4;
-							break;
-						case 180:
-							reef = 3;
-							break;
-						case 225:
-							reef = 2;
-							break;
-						case 315:
-							reef = 1;
-							break;
-						default:
-							return;
-					}
-					swerve.selectReef(reef);
-					// TODO: there has to be a better way
-					swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
-				}, swerve));
+		// selectReef.onTrue(
+		// 		Commands.runOnce(() -> {
+		// 			int reef = 0;
+		// 			switch (driver.getPOV()) {
+		// 				case 0:
+		// 					reef = 0;
+		// 					break;
+		// 				case 45:
+		// 					reef = 5;
+		// 					break;
+		// 				case 135:
+		// 					reef = 4;
+		// 					break;
+		// 				case 180:
+		// 					reef = 3;
+		// 					break;
+		// 				case 225:
+		// 					reef = 2;
+		// 					break;
+		// 				case 315:
+		// 					reef = 1;
+		// 					break;
+		// 				default:
+		// 					return;
+		// 			}
+		// 			swerve.selectReef(reef);
+		// 			// TODO: there has to be a better way
+		// 			swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
+		// 		}, swerve));
 
 	}
 

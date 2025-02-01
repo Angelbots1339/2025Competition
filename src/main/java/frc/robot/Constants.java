@@ -155,6 +155,21 @@ public class Constants {
 		}
     }
 
+	public class VisionConstants {
+		/* offset for outrunner
+		 * up: 0.367821
+		 * forward: -0.213700
+		 * pitch: 24.45
+		 */
+		public static final String LimelightCenterName = "limelight-center";
+		public static final String LimelightLeftName = "limelight-left";
+		public static final String LimelightRightName = "limelight-right";
+
+		public static double calcStdDev(double metersFromTarget) {
+			return 0.08 * Math.pow(metersFromTarget, 2);
+		}
+	}
+
 	public class TuningConstants {
 		public enum TuningSystem {
 			Intake,
