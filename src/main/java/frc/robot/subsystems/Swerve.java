@@ -275,7 +275,7 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-			//updateVision();
+			updateVision();
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
