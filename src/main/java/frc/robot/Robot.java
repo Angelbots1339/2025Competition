@@ -6,9 +6,13 @@ package frc.robot;
 
 import java.util.concurrent.CompletableFuture;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.logging.Logger;
@@ -18,10 +22,23 @@ public class Robot extends TimedRobot {
 
 	private final RobotContainer m_robotContainer;
 
+	private AddressableLED led = new AddressableLED(0);
+	private AddressableLEDBuffer buf = new AddressableLEDBuffer(16);
+	private LEDPattern red = LEDPattern.solid(Color.kRed);
+
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
+
+		led.setLength(buf.getLength());
+
+		led.setData(buf);
+		led.start();
+
+		red.applyTo(buf);
+
+		led.setData(buf);
 	}
 
 	@Override
