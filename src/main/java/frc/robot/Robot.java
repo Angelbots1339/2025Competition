@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.Leds;
 import frc.lib.util.logging.Logger;
 
 public class Robot extends TimedRobot {
@@ -22,23 +23,12 @@ public class Robot extends TimedRobot {
 
 	// private final RobotContainer m_robotContainer;
 
-	private AddressableLED led = new AddressableLED(0);
-	private AddressableLEDBuffer buf = new AddressableLEDBuffer(16);
-	private LEDPattern red = LEDPattern.solid(Color.kRed);
-
 	public Robot() {
 		// m_robotContainer = new RobotContainer();
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
 
-		led.setLength(buf.getLength());
-
-		led.setData(buf);
-		led.start();
-
-		red.applyTo(buf);
-
-		led.setData(buf);
+		Leds.getInstance().intaking = true;
 	}
 
 	@Override
@@ -97,8 +87,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
-		m_robotContainer.stopDefaultCommands();
-		m_robotContainer.getTuningCommand().schedule();;
+		// m_robotContainer.stopDefaultCommands();
+		// m_robotContainer.getTuningCommand().schedule();;
 	}
 
 	@Override
@@ -107,6 +97,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testExit() {
-		m_robotContainer.setDefaultCommands();
+		// m_robotContainer.setDefaultCommands();
 	}
 }
