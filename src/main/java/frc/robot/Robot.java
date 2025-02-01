@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,13 +24,18 @@ public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
 	// private final RobotContainer m_robotContainer;
+	private static final double lowBatteryVoltage = 12.3;
+	private static final double lowBatteryDisabledTime = 1.5;
+
+	private final Timer disabledTimer = new Timer();
 
 	public Robot() {
 		// m_robotContainer = new RobotContainer();
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
 
-		Leds.getInstance().intaking = true;
+		disabledTimer.reset();
+		disabledTimer.start();
 	}
 
 	@Override
@@ -38,6 +45,14 @@ public class Robot extends TimedRobot {
 		CompletableFuture.runAsync(() -> {
 			Logger.getInstance().log(0);
 		});
+
+		if (DriverStation.isEnabled()) {
+			disabledTimer.reset();
+		}
+		if (RobotController.getBatteryVoltage() < lowBatteryVoltage
+				&& disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
+			Leds.getInstance().lowBatteryAlert = true;
+		}
 	}
 
 	@Override
