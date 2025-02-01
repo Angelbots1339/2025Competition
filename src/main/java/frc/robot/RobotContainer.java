@@ -37,7 +37,7 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
 			SwerveConstants.maxturn);
 
-	private final Intake intake = new Intake();
+	// private final Intake intake = new Intake();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
@@ -75,7 +75,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getRightTriggerAxis()))));
+		// openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getRightTriggerAxis()))));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -121,13 +121,13 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
+		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
 
 	public void stopDefaultCommands() {
-		intake.removeDefaultCommand();
+		// intake.removeDefaultCommand();
 		swerve.removeDefaultCommand();
 	}
 
@@ -138,7 +138,7 @@ public class RobotContainer {
 	public Command getTuningCommand() {
 		return Commands.select(
 			Map.ofEntries(
-				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
+				// Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
 				Map.entry(TuningSystem.None, Commands.none())
 			),
 			() -> tuningChooser.getSelected());
