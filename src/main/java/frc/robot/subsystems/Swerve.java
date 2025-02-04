@@ -80,7 +80,6 @@ public class Swerve extends SubsystemBase {
 	/** Creates a new Swerve. */
 	public Swerve() {
 		configPathPlanner();
-		swerve.getPigeon2().setYaw(0);
 
 		initlogs();
 		//putSwerveState();
