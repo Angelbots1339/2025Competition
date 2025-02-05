@@ -51,11 +51,11 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int angleMotorPort = 13;
-		public static final int angleMotorFollowerPort = 14;
+		public static final int leftAngleMotorPort = 13;
+		public static final int rightAngleMotorPort = 14;
 		public static final int wheelMotorPort = 15;
 
-		public static final double angleMotorRatio = 2.60225;
+		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final double angleMotorOffset = 0;
 		public static final double angleFollowerMotorOffset = 0;
 
@@ -99,7 +99,8 @@ public class Constants {
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
 
-		public static final FeedbackConfigs angleFollwerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
+		// TODO: most likely need to invert the encoder on follower
+		public static final FeedbackConfigs angleFollowerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
 	}
 
 	public class DriverConstants {

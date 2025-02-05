@@ -28,24 +28,25 @@ import frc.robot.LoggingConstants.IntakeLogging;
 
 public class Intake extends SubsystemBase {
 	/* left Motor (intake is on front) */
-	private TalonFX angleMotor = new TalonFX(IntakeConstants.angleMotorPort);
-	private TalonFX angleFollowerMotor = new TalonFX(IntakeConstants.angleMotorFollowerPort);
+	private TalonFX leftAngleMotor = new TalonFX(IntakeConstants.leftAngleMotorPort);
+	private TalonFX rightAngleMotor = new TalonFX(IntakeConstants.rightAngleMotorPort);
 	private TalonFX wheelMotor = new TalonFX(IntakeConstants.wheelMotorPort);
 
 	private Angle angle = IntakeConstants.insideAngle;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Intake");
-	private LoggedFalcon loggedAngle;
+	private LoggedFalcon loggedLeftAngle;
+	private LoggedFalcon loggedRightAngle;
 	private LoggedFalcon loggedWheel;
 
 	private Mechanism2d intake = new Mechanism2d(Units.inchesToMeters(26), Units.inchesToMeters(35));
 	private MechanismLigament2d slapdown;
 
 	public Intake() {
-		angleMotor.getConfigurator().apply(IntakeConstants.angleConfigs);
-		angleFollowerMotor.getConfigurator().apply(IntakeConstants.angleConfigs.withFeedback(IntakeConstants.angleFollwerConfiguration));
+		leftAngleMotor.getConfigurator().apply(IntakeConstants.angleConfigs);
+		rightAngleMotor.getConfigurator().apply(IntakeConstants.angleConfigs.withFeedback(IntakeConstants.angleFollowerConfiguration));
 
-		angleFollowerMotor.setControl(new Follower(angleMotor.getDeviceID(), true));
+		rightAngleMotor.setControl(new Follower(leftAngleMotor.getDeviceID(), true));
 
 		changeAngle(() -> IntakeConstants.insideAngle);
 
@@ -63,7 +64,7 @@ public class Intake extends SubsystemBase {
 
 	public void changeAngle(Supplier<Angle> angle) {
 		this.angle = angle.get();
-		angleMotor.setControl(new PositionVoltage(angle.get()));
+		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
 	}
 
 	public Command runIntake(Supplier<Angle> angle) {
@@ -85,11 +86,11 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Angle getAngle() {
-		return angleMotor.getPosition().getValue();
+		return leftAngleMotor.getPosition().getValue();
 	}
 
 	public Angle getAngleError() {
-		return Rotations.of(angleMotor.getClosedLoopError().getValueAsDouble());
+		return Rotations.of(leftAngleMotor.getClosedLoopError().getValueAsDouble());
 	}
 
 	@Override
@@ -98,23 +99,23 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void setPID(SlotConfigs angle) {
-		angleMotor.getConfigurator().apply(angle);
-		angleFollowerMotor.getConfigurator().apply(angle);
+		leftAngleMotor.getConfigurator().apply(angle);
+		rightAngleMotor.getConfigurator().apply(angle);
 	}
 
 	public void initLogging() {
 		logger.addDouble("Current Angle", () -> getAngle().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Target Angle", () -> angle.in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Angle Error", () -> getAngleError().in(Degrees), IntakeLogging.Angle);
-
-
 		logger.addDouble("Wheel Volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), IntakeLogging.Wheel);
 
+		logger.addDouble("Right Angle", () -> rightAngleMotor.getPosition().getValue().in(Degrees), IntakeLogging.Angle);
 
-		loggedAngle = new LoggedFalcon("Angle Motor", logger, angleMotor, IntakeLogging.Angle);
-		loggedAngle = new LoggedFalcon("Follower Motor", logger, angleFollowerMotor, IntakeLogging.Angle);
+		loggedLeftAngle = new LoggedFalcon("Left Angle Motor", logger, leftAngleMotor, IntakeLogging.Angle);
+		loggedRightAngle = new LoggedFalcon("Right Angle Motor", logger, rightAngleMotor, IntakeLogging.Angle);
 		loggedWheel = new LoggedFalcon("wheel Motor", logger, wheelMotor, IntakeLogging.Wheel);
-		logger.add(loggedAngle);
+		logger.add(loggedLeftAngle);
+		logger.add(loggedRightAngle);
 		logger.add(loggedWheel);
 	}
 }
