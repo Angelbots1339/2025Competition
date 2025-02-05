@@ -38,7 +38,7 @@ public class IntakeTuning extends Command {
 	private static Voltage volt_target = Volt.zero();
 	private static Angle targetAngle = Degrees.zero();
 
-	private static GenericEntry target = tab.add("target", IntakeConstants.pid.kS)
+	private static GenericEntry target = tab.add("target", IntakeConstants.outsideAngle.in(Degrees))
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", 0, "max", 90))
 			.getEntry();

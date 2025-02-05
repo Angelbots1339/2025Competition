@@ -101,6 +101,9 @@ public class Constants {
 
 		// TODO: most likely need to invert the encoder on follower
 		public static final FeedbackConfigs angleFollowerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
+		public static final MotorOutputConfigs angleFollowerMotorConfig = angleConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+
+		public static final TalonFXConfiguration angleFollowerConfigs = angleConfigs.withMotorOutput(angleFollowerMotorConfig).withFeedback(angleFollowerConfiguration);
 	}
 
 	public class DriverConstants {
