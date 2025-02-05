@@ -17,6 +17,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -56,8 +57,8 @@ public class Constants {
 		public static final int wheelMotorPort = 15;
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
-		public static final double angleMotorOffset = 0;
-		public static final double angleFollowerMotorOffset = 0;
+		public static final Angle angleMotorOffset = Degrees.of(0);
+		public static final Angle angleFollowerMotorOffset = Degrees.of(0);
 
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
@@ -98,12 +99,6 @@ public class Constants {
 					.withReverseSoftLimitEnable(true)
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
-
-		// TODO: most likely need to invert the encoder on follower
-		public static final FeedbackConfigs angleFollowerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
-		public static final MotorOutputConfigs angleFollowerMotorConfig = angleConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
-
-		public static final TalonFXConfiguration angleFollowerConfigs = angleConfigs.withMotorOutput(angleFollowerMotorConfig).withFeedback(angleFollowerConfiguration);
 	}
 
 	public class DriverConstants {
