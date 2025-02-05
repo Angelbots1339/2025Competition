@@ -53,18 +53,6 @@ public class Intake extends SubsystemBase {
 		setMech();
 	}
 
-	public void setMech() {
-		slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
-			.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
-			.append(new MechanismLigament2d("Slapdown", Units.inchesToMeters(20.012), 0, 6, new Color8Bit(edu.wpi.first.wpilibj.util.Color.kRed)));
-		SmartDashboard.putData("Intake Mech", intake);
-	}
-
-	public void changeAngle(Supplier<Angle> angle) {
-		this.angle = angle.get();
-		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
-	}
-
 	public Command runIntake(Supplier<Angle> angle) {
 		return run(
 			() -> {
@@ -81,6 +69,11 @@ public class Intake extends SubsystemBase {
 
 	public void runWheelsVolts(Voltage volts) {
 		wheelMotor.setControl(new VoltageOut(volts));
+	}
+
+	public void changeAngle(Supplier<Angle> angle) {
+		this.angle = angle.get();
+		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
 	}
 
 	public Angle getAngle() {
@@ -100,8 +93,16 @@ public class Intake extends SubsystemBase {
 		leftAngleMotor.getConfigurator().apply(newPID);
 	}
 
+	public void setMech() {
+		slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
+			.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
+			.append(new MechanismLigament2d("Slapdown", Units.inchesToMeters(20.012), 0, 6, new Color8Bit(edu.wpi.first.wpilibj.util.Color.kRed)));
+		SmartDashboard.putData("Intake Mech", intake);
+	}
+
 	public void initLogging() {
 		logger.addDouble("Current Angle", () -> getAngle().in(Degrees), IntakeLogging.Angle);
+		logger.addDouble("Right Angle", () -> leftAngleMotor.getPosition().getValue().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Target Angle", () -> angle.in(Degrees), IntakeLogging.Angle);
 
 		logger.addDouble("Angle Error", () -> getAngleError().in(Degrees), IntakeLogging.Angle);
