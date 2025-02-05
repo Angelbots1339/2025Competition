@@ -172,6 +172,7 @@ public class Constants {
 
 	public class TuningConstants {
 		public enum TuningSystem {
+			Swerve,
 			Intake,
 			None,
 		}

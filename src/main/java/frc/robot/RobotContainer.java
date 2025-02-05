@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -138,6 +139,7 @@ public class RobotContainer {
 		return Commands.select(
 			Map.ofEntries(
 				// Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
+				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
 				Map.entry(TuningSystem.None, Commands.none())
 			),
 			() -> tuningChooser.getSelected());
