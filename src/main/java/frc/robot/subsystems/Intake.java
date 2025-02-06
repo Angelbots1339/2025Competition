@@ -43,6 +43,7 @@ public class Intake extends SubsystemBase {
 
 	public Intake() {
 		leftAngleMotor.getConfigurator().apply(IntakeConstants.angleConfigs);
+		rightAngleMotor.getConfigurator().apply(IntakeConstants.baseAngleConfigs);
 
 		rightAngleMotor.setControl(new Follower(leftAngleMotor.getDeviceID(), true));
 

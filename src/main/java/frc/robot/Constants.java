@@ -58,7 +58,6 @@ public class Constants {
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Degrees.of(0);
-		public static final Angle angleFollowerMotorOffset = Degrees.of(0);
 
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
@@ -84,21 +83,23 @@ public class Constants {
 			.withSensorToMechanismRatio(angleMotorRatio)
 			.withFeedbackRotorOffset(angleMotorOffset);
 
-		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
+		public static final TalonFXConfiguration baseAngleConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
 				new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
+					.withNeutralMode(NeutralModeValue.Brake)
 			)
-			.withSlot0(Slot0Configs.from(pid))
-			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
-					/* uses 0 as the fully out position and 90 as the completely in / vertical position */
 					.withForwardSoftLimitEnable(true)
 					.withForwardSoftLimitThreshold(insideAngle)
 					.withReverseSoftLimitEnable(true)
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
+
+		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
+			.withSlot0(Slot0Configs.from(pid))
+			.withFeedback(feedback);
 	}
 
 	public class DriverConstants {
