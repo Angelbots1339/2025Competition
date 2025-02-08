@@ -24,7 +24,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class Constants {
 	public class SwerveConstants {
-		public static final double maxspeed = 5;
+		public static final double maxspeed = 4;
 		public static final double maxturn = 2 * Math.PI;
 
 
@@ -93,11 +93,11 @@ public class Constants {
 		public static final int driverPort = 0;
 		public static final int operatorPort = 1;
 		public static final int testPort = 2;
-		public static final double joystickDeadband = 0.2;
+		public static final double joystickDeadband = 0.1;
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
-					joystickDeadband) * max * Math.signum(val);
+					joystickDeadband) * Math.signum(val);
 		}
 	}
 

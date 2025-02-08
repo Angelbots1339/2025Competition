@@ -43,6 +43,7 @@ import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
@@ -50,9 +51,6 @@ import frc.robot.generated.TunerConstants;
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
 	SwerveDrivePoseEstimator pose = new SwerveDrivePoseEstimator(swerve.getKinematics(), getRelativeYaw(), swerve.getState().ModulePositions, Pose2d.kZero);
-
-	private double maxspeed = 3;
-	private double maxturn = Math.PI * 2;
 
 	private double coralScoreOffsetY = Units.inchesToMeters(0);
 	// private double coralScoreOffsetX = Units.inchesToMeters(32.75);
@@ -88,7 +86,7 @@ public class Swerve extends SubsystemBase {
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
 			Supplier<Boolean> fieldRelative) {
 		return run(() -> {
-			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * maxspeed, y.get() * maxspeed, turn.get() * maxturn);
+			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * SwerveConstants.maxspeed, y.get() * SwerveConstants.maxspeed, turn.get() * SwerveConstants.maxturn);
 			SwerveRequest req;
 
 			if (fieldRelative.get()) {
@@ -212,8 +210,8 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public Command driveToPose(Pose2d target) {
-		PathConstraints constraints = new PathConstraints(3.0, 4.0,
-				maxturn, Units.degreesToRadians(720));
+		PathConstraints constraints = new PathConstraints(SwerveConstants.maxspeed, 4.0,
+				SwerveConstants.maxturn, Units.degreesToRadians(720));
 		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
@@ -304,8 +302,8 @@ public class Swerve extends SubsystemBase {
                     .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
             double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
 			addVision(VisionConstants.LimelightCenterName, xyStdDev2);
-			addVision(VisionConstants.LimelightRightName, xyStdDev2);
-			addVision(VisionConstants.LimelightLeftName, xyStdDev2);
+			// addVision(VisionConstants.LimelightRightName, xyStdDev2);
+			// addVision(VisionConstants.LimelightLeftName, xyStdDev2);
 	}
 
 	@Override
