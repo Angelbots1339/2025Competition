@@ -26,11 +26,11 @@ public class FieldUtil {
 		Units.inchesToMeters(25.80), Rotation2d.fromDegrees(126));
 
 	/* center of our barge and edge of the net we can score in from our side */
-	public static final Pose2d AllianceSideBlueBargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(0));
-	public static final Pose2d OpponateSideBlueBargeCenter = new Pose2d(Units.inchesToMeters(365.20), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(180));
+	public static final Pose2d AllianceSideBlueBargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(180));
+	public static final Pose2d OpponateSideBlueBargeCenter = new Pose2d(Units.inchesToMeters(365.20), Units.inchesToMeters(241.64), Rotation2d.fromDegrees(0));
 
-	public static final Pose2d AllianceSideRedBargeCenter = new Pose2d(Units.inchesToMeters(365.20), Units.inchesToMeters(75.39), Rotation2d.fromDegrees(180));
-	public static final Pose2d OpponateSideRedBargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(75.39), Rotation2d.fromDegrees(0));
+	public static final Pose2d AllianceSideRedBargeCenter = new Pose2d(Units.inchesToMeters(365.20), Units.inchesToMeters(75.39), Rotation2d.fromDegrees(0));
+	public static final Pose2d OpponateSideRedBargeCenter = new Pose2d(Units.inchesToMeters(325.68), Units.inchesToMeters(75.39), Rotation2d.fromDegrees(180));
 	public static final double BargeWidth = Units.inchesToMeters(146.50);
 
 	/* reef locations starting from farthest reef and going counter clockwise

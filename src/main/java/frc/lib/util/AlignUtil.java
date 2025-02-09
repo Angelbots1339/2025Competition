@@ -16,10 +16,10 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveConstants;
 
 public class AlignUtil {
-	/* offset is relative to robot */
-	private static Transform2d coralOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.k180deg);
-	private static Transform2d processorOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.k180deg);
-	private static Transform2d stationOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.kZero);
+	/* relative to robot */
+	private static Transform2d coralOffset = new Transform2d(-RobotConstants.length / 2, 0, Rotation2d.kZero);
+	private static Transform2d processorOffset = new Transform2d(-RobotConstants.length / 2, 0, Rotation2d.kZero);
+	private static Transform2d stationOffset = new Transform2d(-RobotConstants.length / 2, 0, Rotation2d.k180deg);
 	private static Transform2d bargeOffset = new Transform2d(-RobotConstants.length / 2, 0.0, Rotation2d.kZero);
 
 	private static int selectedReefindex = -1;
@@ -109,7 +109,7 @@ public class AlignUtil {
 		Translation2d tmp = offset.getTranslation();
 		tmp.rotateBy(target.getRotation());
 
-		target = target.plus(new Transform2d(tmp.getX(), tmp.getY(), offset.getRotation()));
+		target = target.plus(new Transform2d(tmp.getX(), tmp.getY(), offset.getRotation().rotateBy(Rotation2d.k180deg)).times(-1));
 		return target;
 
 	}

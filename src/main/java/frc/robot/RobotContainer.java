@@ -114,6 +114,7 @@ public class RobotContainer {
 							return;
 					}
 					AlignUtil.selectReef(reef);
+
 					// TODO: there has to be a better way
 					if (alignSelectedReef.getAsBoolean()) {
 						AlignUtil.driveToSelectedReef(reef).schedule();
