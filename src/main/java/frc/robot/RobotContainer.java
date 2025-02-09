@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -78,44 +79,68 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		// alignClosestReef.whileTrue(swerve.defer(() -> swerve.driveToClosestReef()));
-		// alignSelectedReef.whileTrue(swerve.defer(swerve::driveToSelectedReef));
+		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 
-		// alignCoralStation.whileTrue(swerve.defer(() -> swerve.driveToClosestCoralStation()));
-		// alignBargeCenter.whileTrue(swerve.defer(() -> swerve.driveToClosestBarge()));
+		alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
+		alignBargeCenter.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge()));
 
-		// alignProcessor.whileTrue(swerve.defer(() -> swerve.driveToProcessor()));
+		alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
 
-		// selectReef.onTrue(
-		// 		Commands.runOnce(() -> {
-		// 			int reef = 0;
-		// 			switch (driver.getPOV()) {
-		// 				case 0:
-		// 					reef = 0;
-		// 					break;
-		// 				case 45:
-		// 					reef = 5;
-		// 					break;
-		// 				case 135:
-		// 					reef = 4;
-		// 					break;
-		// 				case 180:
-		// 					reef = 3;
-		// 					break;
-		// 				case 225:
-		// 					reef = 2;
-		// 					break;
-		// 				case 315:
-		// 					reef = 1;
-		// 					break;
-		// 				default:
-		// 					return;
-		// 			}
-		// 			swerve.selectReef(reef);
-		// 			// TODO: there has to be a better way
-		// 			swerve.driveToSelectedReef(reef).onlyWhile(alignSelectedReef).schedule();
-		// 		}, swerve));
+		selectReef.onTrue(
+				Commands.runOnce(() -> {
+					int reef = 0;
+					switch (driver.getPOV()) {
+						case 0:
+							reef = 0;
+							break;
+						case 45:
+							reef = 5;
+							break;
+						case 135:
+							reef = 4;
+							break;
+						case 180:
+							reef = 3;
+							break;
+						case 225:
+							reef = 2;
+							break;
+						case 315:
+							reef = 1;
+							break;
+						default:
+							return;
+					}
+					AlignUtil.selectReef(reef);
+					// TODO: there has to be a better way
+					if (alignSelectedReef.getAsBoolean()) {
+						AlignUtil.driveToSelectedReef(reef).schedule();
+						return;
+					}
+
+					if (alignClosestReef.getAsBoolean()) {
+						AlignUtil.driveToClosestReef().schedule();
+						return;
+					}
+
+					if (alignCoralStation.getAsBoolean()) {
+						AlignUtil.driveToClosestCoralStation().schedule();
+						return;
+					}
+
+					if (alignProcessor.getAsBoolean()) {
+						AlignUtil.driveToProcessor().schedule();
+						return;
+					}
+
+					if (alignBargeCenter.getAsBoolean()) {
+						AlignUtil.driveToClosestBarge().schedule();
+						return;
+					}
+
+				}, swerve));
 
 	}
 

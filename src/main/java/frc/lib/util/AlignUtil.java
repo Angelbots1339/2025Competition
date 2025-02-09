@@ -17,71 +17,64 @@ import frc.robot.Constants.SwerveConstants;
 
 public class AlignUtil {
 	/* offset is relative to robot */
-	private static Translation2d coralOffset = new Translation2d(RobotConstants.length / 2, 0);
-	private static Translation2d processorOffset = new Translation2d(RobotConstants.length / 2, 0);
-	private static Translation2d bargeOffset = new Translation2d(Units.inchesToMeters(-24 / 2.0), 0.0);
+	private static Transform2d coralOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.k180deg);
+	private static Transform2d processorOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.k180deg);
+	private static Transform2d stationOffset = new Transform2d(RobotConstants.length / 2, 0, Rotation2d.kZero);
+	private static Transform2d bargeOffset = new Transform2d(-RobotConstants.length / 2, 0.0, Rotation2d.kZero);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
-
-	public Command driveToPose(Pose2d target) {
+	public static Command driveToPose(Pose2d target) {
 		PathConstraints constraints = new PathConstraints(SwerveConstants.maxspeed, 4.0,
 				SwerveConstants.maxturn, Units.degreesToRadians(720));
 		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
-	public Command driveToClosestReef() {
-		return driveToPose(getReefScoreSpot(getClosestReef()));
+	public static Command driveToClosestReef() {
+		return driveToPose(offsetPose(getClosestReef(), coralOffset));
 	}
 
-	public Command driveToSelectedReef() {
+	public static Command driveToSelectedReef() {
 		return driveToSelectedReef(selectedReefindex);
 	}
 
-	public Command driveToSelectedReef(int i) {
+	public static Command driveToSelectedReef(int i) {
 		if (i < 0 || i > 5)
 			return Commands.none();
 		selectReef(i);
 		if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
 			return Commands.none();
 
-		return driveToPose(getReefScoreSpot(selectedReef));
+		return driveToPose(offsetPose(selectedReef, coralOffset));
 	}
 
-	public Command driveToLeftCoralStation() {
-		return driveToPose(FieldUtil.getLeftCoralStation());
+	public static Command driveToLeftCoralStation() {
+		return driveToPose(offsetPose(FieldUtil.getLeftCoralStation(), stationOffset));
 	}
 
-	public Command driveToRightCoralStation() {
-		return driveToPose(FieldUtil.getRightCoralStation());
+	public static Command driveToRightCoralStation() {
+		return driveToPose(offsetPose(FieldUtil.getRightCoralStation(), stationOffset));
 	}
 
-	public Command driveToClosestCoralStation() {
-		return driveToPose(getClosestCoralStations());
+	public static Command driveToClosestCoralStation() {
+		return driveToPose(offsetPose(getClosestCoralStation(), stationOffset));
 	}
 
-	public Command driveToClosestBarge() {
-		return driveToPose(getClosestBarge());
+	public static Command driveToClosestBarge() {
+		return driveToPose(offsetPose(getClosestBarge(), bargeOffset));
 	}
 
-	public Command driveToProcessor() {
-		Translation2d tmp = processorOffset;
-		tmp.rotateBy(FieldUtil.getProcessor().getRotation());
-
-		Pose2d processorScorePos = FieldUtil.getProcessor()
-				.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
-
-		return driveToPose(processorScorePos);
+	public static Command driveToProcessor() {
+		return driveToPose(offsetPose(FieldUtil.getProcessor(), processorOffset));
 	}
 
 	public static Pose2d getClosestBarge() {
-		Pose2d target = PoseEstimation.getEstimatedPose()
+		return PoseEstimation.getEstimatedPose()
 				.nearest(List.of(FieldUtil.getAllianceSideBargeCenter(), FieldUtil.getOpponateSideBargeCenter()));
-		return target.plus(new Transform2d(bargeOffset, Rotation2d.kZero));
 	}
 
-	public static Pose2d getClosestCoralStations() {
+	public static Pose2d getClosestCoralStation() {
 		Pose2d target = PoseEstimation.getEstimatedPose()
 				.nearest(List.of(FieldUtil.getLeftCoralStation(), FieldUtil.getRightCoralStation()));
 		return target;
@@ -103,14 +96,6 @@ public class AlignUtil {
 		return reefs[close];
 	}
 
-	public Pose2d getReefScoreSpot(Pose2d reef) {
-		Translation2d tmp = coralOffset;
-		tmp.rotateBy(reef.getRotation());
-
-		reef = reef.plus(new Transform2d(tmp.getX(), tmp.getY(), Rotation2d.k180deg));
-		return reef;
-	}
-
 	public static void selectReef(int i) {
 		selectedReef = FieldUtil.getReef()[i];
 		selectedReefindex = i;
@@ -118,5 +103,14 @@ public class AlignUtil {
 
 	public static Pose2d getSelectedReef() {
 		return selectedReef;
+	}
+
+	public static Pose2d offsetPose(Pose2d target, Transform2d offset) {
+		Translation2d tmp = offset.getTranslation();
+		tmp.rotateBy(target.getRotation());
+
+		target = target.plus(new Transform2d(tmp.getX(), tmp.getY(), offset.getRotation()));
+		return target;
+
 	}
 }
