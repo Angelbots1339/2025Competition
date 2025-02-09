@@ -79,8 +79,8 @@ public class Swerve extends SubsystemBase {
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
 			Supplier<Boolean> fieldRelative) {
 		return run(() -> {
-			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * SwerveConstants.maxspeed,
-					y.get() * SwerveConstants.maxspeed, turn.get() * SwerveConstants.maxturn);
+			ChassisSpeeds speeds = new ChassisSpeeds(x.get(),
+					y.get(), turn.get());
 			SwerveRequest req;
 
 			if (fieldRelative.get()) {
@@ -142,12 +142,12 @@ public class Swerve extends SubsystemBase {
         double x = -MathUtil.clamp(
                 pidToPoseXController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getX(),
                         target.getX())
-                        + Math.signum(pidToPoseXController.getPositionError()) * Math.abs(SwerveConstants.pidToPoseKS),
+                        + Math.signum(pidToPoseXController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
                 -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
         double y = -MathUtil.clamp(
                 pidToPoseYController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getY(),
                         target.getY())
-                        + Math.signum(pidToPoseXController.getPositionError()) * Math.abs(SwerveConstants.pidToPoseKS),
+                        + Math.signum(pidToPoseXController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
                 -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
 
         // SmartDashboard.putNumber("PidXError",

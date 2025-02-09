@@ -109,7 +109,7 @@ public class Constants {
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
-					joystickDeadband) * Math.signum(val);
+					joystickDeadband) * max * Math.signum(val);
 		}
 	}
 
