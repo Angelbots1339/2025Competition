@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -52,17 +53,17 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int leftAngleMotorPort = 13;
-		public static final int rightAngleMotorPort = 14;
-		public static final int wheelMotorPort = 15;
+		public static final int leftAngleMotorPort = 1;
+		public static final int rightAngleMotorPort = 0;
+		public static final int wheelMotorPort = 2;
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
-		public static final Angle angleMotorOffset = Degrees.of(0);
+		public static final Angle angleMotorOffset = Rotations.of(-0.26);
 
-		public static final Angle insideAngle = Degrees.of(90);
+		public static final Angle insideAngle = Degrees.of(100);
 		public static final Angle outsideAngle = Degrees.of(0);
 
-		public static final Voltage intakeVolts = Volts.of(1.0);
+		public static final Voltage intakeVolts = Volts.of(2.0);
 
 		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
@@ -73,11 +74,11 @@ public class Constants {
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(0)
+			.withKP(4.5)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKG(0);
+			.withKS(0.15)
+			.withKG(0.3);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
 			.withSensorToMechanismRatio(angleMotorRatio)
