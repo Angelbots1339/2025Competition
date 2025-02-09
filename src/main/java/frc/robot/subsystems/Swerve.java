@@ -17,6 +17,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,6 +52,15 @@ public class Swerve extends SubsystemBase {
 	private final SwerveRequest.RobotCentric m_robotRequest = new SwerveRequest.RobotCentric()
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
+
+
+	private PIDController angularDrivePID = new PIDController(SwerveConstants.angularDriveKP,
+            SwerveConstants.angularDriveKI, SwerveConstants.angularDriveKD);
+
+    private PIDController pidToPoseXController = new PIDController(SwerveConstants.pidToPoseKP, 0,
+            SwerveConstants.pidToPoseKD);
+    private PIDController pidToPoseYController = new PIDController(SwerveConstants.pidToPoseKP, 0,
+            SwerveConstants.pidToPoseKD);
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
 	private LoggedSweveModules logged_modules;
