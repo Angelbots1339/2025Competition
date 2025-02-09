@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
 	/* relative to robot */
@@ -25,6 +26,11 @@ public class AlignUtil {
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
+	private static Swerve swerve;
+
+	public static void setSwerve(Swerve swerveSubsystem) {
+		swerve = swerveSubsystem;
+	}
 	public static Command driveToPose(Pose2d target) {
 		PathConstraints constraints = new PathConstraints(SwerveConstants.maxspeed, 4.0,
 				SwerveConstants.maxturn, Units.degreesToRadians(720));

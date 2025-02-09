@@ -16,6 +16,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -37,6 +39,7 @@ import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
 import frc.robot.Constants.VisionConstants;
@@ -53,14 +56,13 @@ public class Swerve extends SubsystemBase {
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
-
 	private PIDController angularDrivePID = new PIDController(SwerveConstants.angularDriveKP,
-            SwerveConstants.angularDriveKI, SwerveConstants.angularDriveKD);
+			SwerveConstants.angularDriveKI, SwerveConstants.angularDriveKD);
 
-    private PIDController pidToPoseXController = new PIDController(SwerveConstants.pidToPoseKP, 0,
-            SwerveConstants.pidToPoseKD);
-    private PIDController pidToPoseYController = new PIDController(SwerveConstants.pidToPoseKP, 0,
-            SwerveConstants.pidToPoseKD);
+	private PIDController pidToPoseXController = new PIDController(SwerveConstants.pidToPoseKP, 0,
+			SwerveConstants.pidToPoseKD);
+	private PIDController pidToPoseYController = new PIDController(SwerveConstants.pidToPoseKP, 0,
+			SwerveConstants.pidToPoseKD);
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
 	private LoggedSweveModules logged_modules;
@@ -94,9 +96,112 @@ public class Swerve extends SubsystemBase {
 		});
 	}
 
+	/**
+     *
+     * @param translationX  Meters/second
+     * @param translationY  Meters/second
+     * @param rotation      Rad/second
+     * @param fieldOriented Use field oriented drive?
+     * @param skewReduction Use Skew Reduction?
+     * @return Drive Command
+     */
+    public Command angularDrive(Supplier<Double> translationX, Supplier<Double> translationY,
+            Supplier<Rotation2d> desiredRotation,
+            Supplier<Boolean> fieldOriented) {
+
+        return run(() -> {
+
+            ChassisSpeeds speeds = angularPIDCalc(translationX, translationY, desiredRotation);
+            SwerveRequest req;
+
+            if (fieldOriented.get()) {
+                ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+
+                req = new SwerveRequest.RobotCentric()
+                        .withDriveRequestType(DriverConstants.openLoopDrive ? DriveRequestType.OpenLoopVoltage
+                                : DriveRequestType.Velocity)
+                        .withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
+                        .withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with negative X (left)
+                        .withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
+
+            } else {
+                req = new SwerveRequest.RobotCentric()
+                        .withDriveRequestType(DriverConstants.openLoopDrive ? DriveRequestType.OpenLoopVoltage
+                                : DriveRequestType.Velocity)
+                        .withVelocityX(translationX.get())
+                        .withVelocityY(translationY.get())
+                        .withRotationalRate(speeds.omegaRadiansPerSecond);
+            }
+
+            swerve.setControl(req);
+        });
+    }
+
+
+    public void pidToPose(Pose2d target) {
+        double x = -MathUtil.clamp(
+                pidToPoseXController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getX(),
+                        target.getX())
+                        + Math.signum(pidToPoseXController.getPositionError()) * Math.abs(SwerveConstants.pidToPoseKS),
+                -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
+        double y = -MathUtil.clamp(
+                pidToPoseYController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getY(),
+                        target.getY())
+                        + Math.signum(pidToPoseXController.getPositionError()) * Math.abs(SwerveConstants.pidToPoseKS),
+                -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
+
+        // SmartDashboard.putNumber("PidXError",
+        // pidToPoseXController.getPositionError());
+        // SmartDashboard.putNumber("PidYError",
+        // pidToPoseYController.getPositionError());
+
+        angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
+                () -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.getRotation());
+	}
+
+
+	public void angularDriveRequest(Supplier<Double> translationX, Supplier<Double> translationY,
+			Supplier<Rotation2d> desiredRotation) {
+
+		ChassisSpeeds speeds = angularPIDCalc(translationX, translationY, desiredRotation);
+
+		SwerveRequest req;
+
+		ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+
+		req = new SwerveRequest.RobotCentric()
+				.withDriveRequestType(DriverConstants.openLoopDrive ? DriveRequestType.OpenLoopVoltage
+						: DriveRequestType.Velocity)
+				.withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
+				.withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with negative X (left)
+				.withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
+
+		swerve.setControl(req);
+	}
+
+	public boolean isAngularDriveAtSetpoint() {
+        return angularDrivePID.atSetpoint();
+	}
+
+	public boolean isAtPose() {
+        return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && isAngularDriveAtSetpoint();
+    }
+
 	public void resetPose(Pose2d pose) {
 		swerve.resetPose(pose);
 		this.pose.resetPose(pose);
+	}
+
+	private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX, Supplier<Double> translationY,
+			Supplier<Rotation2d> desiredRotation) {
+		double pid = angularDrivePID.calculate(getYaw().getDegrees(), desiredRotation.get().getDegrees());
+
+		ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(), translationY.get(),
+				MathUtil.clamp(
+						angularDrivePID.atSetpoint() ? 0 : pid + (SwerveConstants.angularDriveKS * Math.signum(pid)),
+						-SwerveConstants.maxturn, SwerveConstants.maxturn));
+
+		return speeds;
 	}
 
 	void setChassisSpeeds(ChassisSpeeds speeds) {

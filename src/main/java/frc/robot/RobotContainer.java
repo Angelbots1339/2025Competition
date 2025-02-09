@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,7 +46,7 @@ public class RobotContainer {
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
 	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
 	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
-	private Trigger alignBargeCenter = new Trigger(() -> driver.getAButton());
+	private Trigger alignBarge = new Trigger(() -> driver.getAButton());
 
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
@@ -62,6 +63,8 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureBindings();
 		setDefaultCommands();
+
+		AlignUtil.setSwerve(swerve);
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
@@ -83,7 +86,7 @@ public class RobotContainer {
 		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 
 		alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
-		alignBargeCenter.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge()));
+		alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, leftX, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
 
 		alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
@@ -136,7 +139,7 @@ public class RobotContainer {
 						return;
 					}
 
-					if (alignBargeCenter.getAsBoolean()) {
+					if (alignBarge.getAsBoolean()) {
 						AlignUtil.driveToClosestBarge().schedule();
 						return;
 					}

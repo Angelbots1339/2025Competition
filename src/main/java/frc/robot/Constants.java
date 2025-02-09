@@ -105,6 +105,7 @@ public class Constants {
 		public static final int operatorPort = 1;
 		public static final int testPort = 2;
 		public static final double joystickDeadband = 0.1;
+		public static final boolean openLoopDrive = true;
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
