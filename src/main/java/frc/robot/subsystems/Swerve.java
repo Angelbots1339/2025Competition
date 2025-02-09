@@ -43,8 +43,8 @@ import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SubsystemBase {
 	public SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve = TunerConstants.swerve;
-	SwerveDrivePoseEstimator pose = new SwerveDrivePoseEstimator(swerve.getKinematics(), getRelativeYaw(), swerve.getState().ModulePositions, Pose2d.kZero);
-
+	SwerveDrivePoseEstimator pose = new SwerveDrivePoseEstimator(swerve.getKinematics(), getRelativeYaw(),
+			swerve.getState().ModulePositions, Pose2d.kZero);
 
 	private final SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds()
 			.withDriveRequestType(DriveRequestType.Velocity);
@@ -61,13 +61,14 @@ public class Swerve extends SubsystemBase {
 		configPathPlanner();
 
 		initlogs();
-		//putSwerveState();
+		// putSwerveState();
 	}
 
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
 			Supplier<Boolean> fieldRelative) {
 		return run(() -> {
-			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * SwerveConstants.maxspeed, y.get() * SwerveConstants.maxspeed, turn.get() * SwerveConstants.maxturn);
+			ChassisSpeeds speeds = new ChassisSpeeds(x.get() * SwerveConstants.maxspeed,
+					y.get() * SwerveConstants.maxspeed, turn.get() * SwerveConstants.maxturn);
 			SwerveRequest req;
 
 			if (fieldRelative.get()) {
@@ -125,7 +126,7 @@ public class Swerve extends SubsystemBase {
 
 					var alliance = DriverStation.getAlliance();
 					if (alliance.isPresent()) {
-					return alliance.get() == DriverStation.Alliance.Red;
+						return alliance.get() == DriverStation.Alliance.Red;
 					}
 					return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
 				},
@@ -159,38 +160,38 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-			updateVision();
+		updateVision();
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
 
 	public void addVision(String limelightname, double std) {
-			LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightname);
+		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightname);
 
-			if (mt2 == null)
-				return;
+		if (mt2 == null)
+			return;
 
-			if (mt2.tagCount < 1 || Math.abs(swerve.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) > 720) {
-				return;
-			}
+		if (mt2.tagCount < 1 || Math.abs(swerve.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) > 720) {
+			return;
+		}
 
-            Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
+		Pose2d poseFromVision = new Pose2d(mt2.pose.getTranslation(), getYaw());
 
-            double poseFromVisionTimestamp = Timer.getFPGATimestamp()
-                    - (LimelightHelpers.getLatency_Capture(limelightname)
-                            + LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
+		double poseFromVisionTimestamp = Timer.getFPGATimestamp()
+				- (LimelightHelpers.getLatency_Capture(limelightname)
+						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
-            pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+		pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
 	}
 
 	public void updateVision() {
-			LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightCenterName, getYaw().getDegrees(), 0, 0, 0, 0, 0);
-            double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.LimelightCenterName)
-                    .getTranslation().getNorm(); // Find direct distance to target for std dev calculation
-            double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
-			addVision(VisionConstants.LimelightCenterName, xyStdDev2);
-			// addVision(VisionConstants.LimelightRightName, xyStdDev2);
-			// addVision(VisionConstants.LimelightLeftName, xyStdDev2);
+		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightCenterName, getYaw().getDegrees(), 0, 0, 0, 0, 0);
+		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.LimelightCenterName)
+				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
+		double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
+		addVision(VisionConstants.LimelightCenterName, xyStdDev2);
+		// addVision(VisionConstants.LimelightRightName, xyStdDev2);
+		// addVision(VisionConstants.LimelightLeftName, xyStdDev2);
 	}
 
 	@Override
