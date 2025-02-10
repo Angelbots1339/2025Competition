@@ -27,14 +27,27 @@ public class Constants {
 		public static final double maxspeed = 4;
 		public static final double maxturn = 2 * Math.PI;
 
+		public static final double angularDriveKP = 0.075;
+		public static final double angularDriveKI = 0;
+		public static final double angularDriveKD = 0.005;
+		public static final double angularDriveKS = 0.4; // radians per sec
+		public static final double angularDriveTolerance = 1.5; // Degrees
 
-		public static final PathConstraints PathPlannerConstraints = new PathConstraints( 3.0, 4.0,
+		public static final double pidToPoseKP = 2.5;
+		public static final double pidToPoseKD = 0;
+		public static final double pidToPoseKS = 0.15;
+		public static final double pidToPoseTolerance = 0.03; // Meters
+		public static final double pidToPoseMaxSpeed = 1; // Meters per second
+
+		public static final PathConstraints PathPlannerConstraints = new PathConstraints(maxspeed, 4.0,
 				maxturn, Units.degreesToRadians(720));
 	}
 
 	public class RobotConstants {
-		public static final double length = 0.938;
-		public static final double width = 0.8;
+		public static final double backLength = Units.inchesToMeters(15.970);
+		public static final double frontLength = Units.inchesToMeters(16.280);
+		public static final double length = Units.inchesToMeters(32.25);
+		public static final double width = Units.inchesToMeters(32.5);
 	}
 
 	public class IntakeConstants {
@@ -94,10 +107,11 @@ public class Constants {
 		public static final int operatorPort = 1;
 		public static final int testPort = 2;
 		public static final double joystickDeadband = 0.1;
+		public static final boolean openLoopDrive = true;
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
-					joystickDeadband) * Math.signum(val);
+					joystickDeadband) * max * Math.signum(val);
 		}
 	}
 
