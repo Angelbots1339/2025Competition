@@ -44,8 +44,10 @@ public class Constants {
 	}
 
 	public class RobotConstants {
-		public static final double length = 0.938;
-		public static final double width = 0.8;
+		public static final double backLength = Units.inchesToMeters(15.970);
+		public static final double frontLength = Units.inchesToMeters(16.280);
+		public static final double length = Units.inchesToMeters(32.25);
+		public static final double width = Units.inchesToMeters(32.5);
 	}
 
 	public class IntakeConstants {
