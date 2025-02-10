@@ -88,8 +88,12 @@ public class Constants {
 			.withMotorOutput(
 				new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
-					.withNeutralMode(NeutralModeValue.Brake)
-			)
+					.withNeutralMode(NeutralModeValue.Coast)
+			);
+
+		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
+			.withSlot0(Slot0Configs.from(pid))
+			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
 					.withForwardSoftLimitEnable(true)
@@ -97,10 +101,6 @@ public class Constants {
 					.withReverseSoftLimitEnable(true)
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
-
-		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
-			.withSlot0(Slot0Configs.from(pid))
-			.withFeedback(feedback);
 	}
 
 	public class DriverConstants {
