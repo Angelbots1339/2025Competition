@@ -56,9 +56,10 @@ public class Constants {
 		public static final int leftAngleMotorPort = 1;
 		public static final int rightAngleMotorPort = 3;
 		public static final int wheelMotorPort = 2;
+		public static final Angle angleErrorTolerence = Degrees.of(1.0);
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
-		public static final Angle angleMotorOffset = Rotations.of(-0.26);
+		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
 		public static final Angle insideAngle = Degrees.of(100);
 		public static final Angle outsideAngle = Degrees.of(0);
@@ -71,14 +72,15 @@ public class Constants {
 					.withInverted(InvertedValue.CounterClockwise_Positive)
 			);
 
+		// TODO: MOTION MAGIC
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(4.5)
+			.withKP(32)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.15)
-			.withKG(0.3);
+			.withKS(0)
+			.withKG(0.2);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
 			.withSensorToMechanismRatio(angleMotorRatio)

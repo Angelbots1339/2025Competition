@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
+import frc.lib.util.logging.Logger.LoggingLevel;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.LoggingConstants.IntakeLogging;
@@ -86,6 +87,10 @@ public class Intake extends SubsystemBase {
 		return Rotations.of(leftAngleMotor.getClosedLoopError().getValueAsDouble());
 	}
 
+	public boolean isAtSetpoint() {
+		return Math.abs(getAngleError().in(Degrees)) < IntakeConstants.angleErrorTolerence.in(Degrees);
+	}
+
 	@Override
 	public void periodic() {
 		slapdown.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
@@ -107,6 +112,7 @@ public class Intake extends SubsystemBase {
 		logger.addDouble("Right Angle", () -> leftAngleMotor.getPosition().getValue().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Target Angle", () -> angle.in(Degrees), IntakeLogging.Angle);
 
+		logger.addBoolean("At Setpoitn", () -> isAtSetpoint(), IntakeLogging.Angle);
 		logger.addDouble("Angle Error", () -> getAngleError().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Wheel Volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), IntakeLogging.Wheel);
 
