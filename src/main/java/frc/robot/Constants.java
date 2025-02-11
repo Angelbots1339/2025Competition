@@ -120,23 +120,21 @@ public class Constants {
 	}
 
     public static final class ElevatorConstants {
+		// TODO: figure the motor polarity and gear ratio
 		/* all units are in meters */
 		public static final double BaseHeight = Units.inchesToMeters(40);
 		public static final double StageHeight = Units.inchesToMeters(49);
 		public static final int LeaderPort = 14;
 		public static final int FollowerPort = 15;
+		// TODO: change to pitch diameter
 		private static final double Radius = 0.1;
-		public static final double ErrorTolerence = 0.01; // 1 cm
+		public static final double ErrorTolerence = 0.02; // 1 cm
 
 		/* heights are in meters */
 		public class Heights {
 			/* TODO: Tune */
-			public static final double Max = Units.inchesToMeters(89);
+			public static final double Max = Units.inchesToMeters(12);
 			public static final double Min = Units.inchesToMeters(0);
-			public static final double L1 = 1;
-			public static final double L2 = 2;
-			public static final double L3 = 3;
-			public static final double L4 = 4;
 		}
 
 		public static final Slot0Configs PID = new Slot0Configs()
@@ -154,8 +152,8 @@ public class Constants {
 				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(1)
-			.withMotionMagicCruiseVelocity(0.1);
+			.withMotionMagicAcceleration(metersToRotations(0.01))
+			.withMotionMagicCruiseVelocity(metersToRotations(0.1));
 
 		public static final TalonFXConfiguration config = new TalonFXConfiguration()
 				.withSlot0(PID)

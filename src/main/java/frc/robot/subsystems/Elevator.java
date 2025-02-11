@@ -63,6 +63,14 @@ public class Elevator extends SubsystemBase {
 		return leader.getPosition().getValueAsDouble();
 	}
 
+	public double getErrorMeters() {
+		return ElevatorConstants.rotationToMeters(leader.getClosedLoopError().getValueAsDouble());
+	}
+
+	public boolean isAtSetpoint() {
+		return Math.abs(getErrorMeters()) <= ElevatorConstants.ErrorTolerence;
+	}
+
 	@Override
 	public void periodic() {
 		double length = targetHeight - ElevatorConstants.BaseHeight;
@@ -79,5 +87,8 @@ public class Elevator extends SubsystemBase {
 
 		logger.addDouble("Target Rotations", () -> ElevatorConstants.metersToRotations(targetHeight), LoggingLevel.NETWORK_TABLES);
 		logger.addDouble("Actual Rotations", () -> ElevatorConstants.metersToRotations(getHeight()), LoggingLevel.NETWORK_TABLES);
+
+		logger.addDouble("Error", () -> getErrorMeters(), LoggingLevel.NETWORK_TABLES);
+		logger.addBoolean("At Setpoint", () -> isAtSetpoint(), LoggingLevel.NETWORK_TABLES);
 	}
 }
