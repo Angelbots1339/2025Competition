@@ -54,7 +54,7 @@ public class Constants {
 
 	public class IntakeConstants {
 		public static final int leftAngleMotorPort = 1;
-		public static final int rightAngleMotorPort = 0;
+		public static final int rightAngleMotorPort = 3;
 		public static final int wheelMotorPort = 2;
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;

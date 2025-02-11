@@ -153,9 +153,9 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
+		// intake.setDefaultCogmand(new InstantCommand(intake::home, intake));
 
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		// swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		// elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
