@@ -150,8 +150,8 @@ public class Constants {
 		public static final SoftwareLimitSwitchConfigs limits = new SoftwareLimitSwitchConfigs()
 				.withForwardSoftLimitEnable(true)
 				.withReverseSoftLimitEnable(true)
-				.withForwardSoftLimitThreshold(Heights.Max)
-				.withReverseSoftLimitThreshold(Heights.Min);
+				.withForwardSoftLimitThreshold(metersToRotations(Heights.Max))
+				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
 			.withMotionMagicAcceleration(1)
