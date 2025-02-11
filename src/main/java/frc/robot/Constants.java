@@ -61,7 +61,7 @@ public class Constants {
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
-		public static final Angle insideAngle = Degrees.of(100);
+		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
 
 		public static final Voltage intakeVolts = Volts.of(2.0);
