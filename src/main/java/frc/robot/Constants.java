@@ -74,7 +74,6 @@ public class Constants {
 					.withInverted(InvertedValue.CounterClockwise_Positive)
 			);
 
-		// TODO: MOTION MAGIC
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)

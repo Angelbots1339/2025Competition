@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
-import frc.lib.util.logging.Logger.LoggingLevel;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.LoggingConstants.IntakeLogging;
@@ -115,10 +114,9 @@ public class Intake extends SubsystemBase {
 
 	public void initLogging() {
 		logger.addDouble("Current Angle", () -> getAngle().in(Degrees), IntakeLogging.Angle);
-		logger.addDouble("Right Angle", () -> leftAngleMotor.getPosition().getValue().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Target Angle", () -> angle.in(Degrees), IntakeLogging.Angle);
 
-		logger.addBoolean("At Setpoitn", () -> isAtSetpoint(), IntakeLogging.Angle);
+		logger.addBoolean("At Setpoint", () -> isAtSetpoint(), IntakeLogging.Angle);
 		logger.addDouble("Angle Error", () -> getAngleError().in(Degrees), IntakeLogging.Angle);
 		logger.addDouble("Wheel Volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), IntakeLogging.Wheel);
 
