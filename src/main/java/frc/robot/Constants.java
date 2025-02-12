@@ -11,12 +11,14 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -51,18 +53,20 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int angleMotorPort = 13;
-		public static final int angleMotorFollowerPort = 14;
-		public static final int wheelMotorPort = 15;
+		public static final int leftAngleMotorPort = 1;
+		public static final int rightAngleMotorPort = 3;
+		public static final int wheelMotorPort = 2;
+		public static final Angle angleErrorTolerence = Degrees.of(2.0);
 
-		public static final double angleMotorRatio = 2.60225;
-		public static final double angleMotorOffset = 0;
-		public static final double angleFollowerMotorOffset = 0;
+		public static final double angleMotorRatio = 9 * 32.0/14.0;
+		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
+		public static final Angle startingAngle = Degrees.of(90);
 
-		public static final Voltage intakeVolts = Volts.of(1.0);
+
+		public static final Voltage intakeVolts = Volts.of(2.0);
 
 		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
@@ -73,33 +77,33 @@ public class Constants {
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(0)
+			.withKP(8)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKG(0);
+			.withKG(0.25)
+			.withKS(0.13);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
 			.withSensorToMechanismRatio(angleMotorRatio)
 			.withFeedbackRotorOffset(angleMotorOffset);
 
-		public static final TalonFXConfiguration angleConfigs = new TalonFXConfiguration()
+		public static final TalonFXConfiguration baseAngleConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
 				new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
-			)
+					.withNeutralMode(NeutralModeValue.Coast)
+			);
+
+		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
 			.withSlot0(Slot0Configs.from(pid))
 			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
-					/* uses 0 as the fully out position and 90 as the completely in / vertical position */
 					.withForwardSoftLimitEnable(true)
 					.withForwardSoftLimitThreshold(insideAngle)
 					.withReverseSoftLimitEnable(true)
 					.withReverseSoftLimitThreshold(outsideAngle)
 			);
-
-		public static final FeedbackConfigs angleFollwerConfiguration = angleConfigs.Feedback.withFeedbackRotorOffset(angleFollowerMotorOffset);
 	}
 
 	public class DriverConstants {

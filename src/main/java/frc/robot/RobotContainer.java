@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -15,14 +17,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
+import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -36,7 +42,7 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
 			SwerveConstants.maxturn);
 
-	// private final Intake intake = new Intake();
+	private final Intake intake = new Intake();
 	// private Elevator elevator = new Elevator();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
@@ -53,7 +59,7 @@ public class RobotContainer {
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
 
-	private Trigger openIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.1);
+	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -76,7 +82,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		// openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degree.of(90 * driver.getRightTriggerAxis()))));
+		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -147,14 +153,14 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		// intake.setDefaultCommand(new InstantCommand(intake::home, intake));
+		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		// elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
 	public void stopDefaultCommands() {
-		// intake.removeDefaultCommand();
+		intake.removeDefaultCommand();
 		swerve.removeDefaultCommand();
 	}
 
@@ -165,7 +171,7 @@ public class RobotContainer {
 	public Command getTuningCommand() {
 		return Commands.select(
 			Map.ofEntries(
-				// Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
+				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
 				Map.entry(TuningSystem.None, Commands.none())
 			),
