@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -45,6 +46,14 @@ public class EndEffector extends SubsystemBase {
 		return encoder.getAbsolutePosition().getValue();
 	}
 
+	public Angle getAngleError() {
+		return Rotations.of(angleMotor.getClosedLoopError().getValue());
+	}
+
+	public boolean isAtSetpoint() {
+		return getAngleError().abs(Degrees) < EndEffectorConstants.errorTolerence.in(Degrees);
+	}
+
 	@Override
 	public void periodic() {
 	}
@@ -52,6 +61,8 @@ public class EndEffector extends SubsystemBase {
 	public void initLogs() {
 		logger.addDouble("current angle", () -> getAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("target angle", () -> targetAngle.in(Degrees), EndEffectorLogging.Angle);
+		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);
+		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), EndEffectorLogging.Wheel);
 

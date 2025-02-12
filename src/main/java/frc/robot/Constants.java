@@ -241,6 +241,7 @@ public class Constants {
 
 		public static final Angle maxAngle = Degrees.of(90);
 		public static final Angle minAngle = Degrees.of(0);
+		public static final Angle errorTolerence = Degrees.of(2);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
