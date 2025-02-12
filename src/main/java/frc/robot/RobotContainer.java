@@ -59,7 +59,7 @@ public class RobotContainer {
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
 
-	private Trigger openIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.1);
+	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -82,7 +82,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * driver.getRightTriggerAxis()))));
+		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -155,7 +155,7 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
-		// swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		// elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 

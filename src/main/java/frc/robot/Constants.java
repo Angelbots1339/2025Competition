@@ -56,13 +56,15 @@ public class Constants {
 		public static final int leftAngleMotorPort = 1;
 		public static final int rightAngleMotorPort = 3;
 		public static final int wheelMotorPort = 2;
-		public static final Angle angleErrorTolerence = Degrees.of(1.0);
+		public static final Angle angleErrorTolerence = Degrees.of(2.0);
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(0);
+		public static final Angle startingAngle = Degrees.of(90);
+
 
 		public static final Voltage intakeVolts = Volts.of(2.0);
 
@@ -76,11 +78,11 @@ public class Constants {
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(32)
+			.withKP(8)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKG(0.2);
+			.withKG(0.25)
+			.withKS(0.13);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
 			.withSensorToMechanismRatio(angleMotorRatio)

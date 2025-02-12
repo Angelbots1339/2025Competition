@@ -48,12 +48,18 @@ public class Intake extends SubsystemBase {
 		wheelMotor.getConfigurator().apply(IntakeConstants.wheelConfigs);
 
 		rightAngleMotor.setControl(new Follower(leftAngleMotor.getDeviceID(), true));
+		leftAngleMotor.setPosition(IntakeConstants.startingAngle);
 
 		// changeAngle(() -> IntakeConstants.insideAngle);
+		resetAngle(IntakeConstants.startingAngle);
 
 		initLogging();
 
 		setMech();
+	}
+
+	public void resetAngle(Angle angle) {
+		leftAngleMotor.setPosition(angle);
 	}
 
 	public Command runIntake(Supplier<Angle> angle) {

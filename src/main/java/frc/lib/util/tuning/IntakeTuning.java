@@ -48,25 +48,27 @@ public class IntakeTuning extends Command {
 			.getEntry();
 
 	private static GenericEntry p = pid.add("P", IntakeConstants.pid.kP)
-			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 	private static GenericEntry i = pid.add("I", IntakeConstants.pid.kI)
-			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 	private static GenericEntry d = pid.add("D", IntakeConstants.pid.kD)
-			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 	private static GenericEntry g = pid.add("G", IntakeConstants.pid.kG)
-			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 	private static GenericEntry s = pid.add("S", IntakeConstants.pid.kS)
-			.withWidget(BuiltInWidgets.kNumberSlider)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
 	private static Trigger intakeAngle = new Trigger(() -> test.getBButton());
 	private static Trigger angleUp = new Trigger(() -> test.getPOV() == 0);
 	private static Trigger angleDown = new Trigger(() -> test.getPOV() == 180);
 	private static Trigger intakeRun = new Trigger(() -> test.getAButton());
+
+	private static Trigger resetAngle = new Trigger(() -> test.getXButtonPressed());
 
 	public IntakeTuning(Intake intake) {
 		this.intake = intake;
@@ -79,6 +81,7 @@ public class IntakeTuning extends Command {
 		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.outsideAngle.in(Degrees)))));
 
 		intakeRun.whileTrue(Commands.run(() -> intake.runWheelsVolts(volt_target))).whileFalse(Commands.run(() -> intake.runWheelsVolts(Volt.zero())));
+		resetAngle.onTrue(Commands.runOnce(() -> intake.resetAngle(IntakeConstants.insideAngle), intake));
 	}
 
 	@Override
