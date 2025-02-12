@@ -32,6 +32,11 @@ public final class LoggingConstants {
 			public static LoggingLevel LeaderMotor = LoggingLevel.NONE;
 		}
 
+		public class EndEffectorLogging {
+			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
+		}
+
         public class RobotContainerLogging {
                 public static LoggingLevel StickValues = LoggingLevel.NONE;
         }

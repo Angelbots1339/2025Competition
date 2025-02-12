@@ -1,5 +1,16 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
@@ -221,6 +232,54 @@ public class Constants {
 		}
 	}
 
+	public class EndEffectorConstants {
+		public static final int anglePort = 5;
+		public static final int wheelPort = 6;
+		public static final int encoderPort = 7;
+
+		public static final double gearRatio = 32.0 / 16.0;
+
+		public static final Angle maxAngle = Degrees.of(90);
+		public static final Angle minAngle = Degrees.of(0);
+
+		public static final SlotConfigs pid = new SlotConfigs()
+			.withGravityType(GravityTypeValue.Arm_Cosine)
+			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+			.withKP(0)
+			.withKI(0)
+			.withKD(0)
+			.withKS(0)
+			.withKG(0);
+
+		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+					.withNeutralMode(NeutralModeValue.Brake)
+					.withInverted(InvertedValue.Clockwise_Positive)
+			)
+			.withSoftwareLimitSwitch(
+				new SoftwareLimitSwitchConfigs()
+					.withForwardSoftLimitEnable(true)
+					.withReverseSoftLimitEnable(true)
+					.withForwardSoftLimitThreshold(maxAngle)
+					.withReverseSoftLimitThreshold(minAngle)
+			)
+			.withFeedback(
+				new FeedbackConfigs()
+					.withRemoteCANcoder(new CANcoder(encoderPort))
+					.withSensorToMechanismRatio(gearRatio)
+			);
+
+		public static final TalonFXConfiguration angleConfig = baseAngleConfig.withSlot0(Slot0Configs.from(pid));
+
+		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+				.withNeutralMode(NeutralModeValue.Brake)
+				.withInverted(InvertedValue.Clockwise_Positive)
+			);
+	}
+
 	public class VisionConstants {
 		/* offset for new bot
 		 * left:
@@ -251,7 +310,9 @@ public class Constants {
 		public enum TuningSystem {
 			Swerve,
 			Intake,
-			None, Elevator,
+			Elevator,
+			EndEffector,
+			None
 		}
 	}
 }
