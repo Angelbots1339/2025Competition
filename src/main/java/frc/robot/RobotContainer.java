@@ -84,6 +84,7 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
+		extendElevator.whileTrue(elevator.setHeightCommand(0.5));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
