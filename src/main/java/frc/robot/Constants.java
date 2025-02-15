@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
@@ -166,7 +167,7 @@ public class Constants {
 
 		public static final TalonFXConfiguration leaderConfigs = baseConfig.withSoftwareLimitSwitch(limits);
 
-		public static final PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(0);
+		public static final MotionMagicVoltage PositionRequest = new MotionMagicVoltage(0);
 
 		public static final double rotationToMeters(double rotations) {
 			return rotations * 2 * Math.PI * Radius;

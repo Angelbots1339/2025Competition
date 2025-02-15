@@ -49,7 +49,7 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void setHeight(double meters) {
-		leader.setControl(new PositionVoltage(meters));
+		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters)));
 		targetHeight = meters;
 	}
 
