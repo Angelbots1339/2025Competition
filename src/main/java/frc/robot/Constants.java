@@ -178,8 +178,8 @@ public class Constants {
 		 * left:
 		 * - pitch -45
 		 * - roll: 0
-		 * - yaw: 0
-		 * - left: 0.293231
+		 * - yaw: 180
+		 * - right: -0.293231
 		 * - Forward: 0.032436
 		 * - Up: 0.706252
 		 *
@@ -187,7 +187,7 @@ public class Constants {
 		 * - pitch 45
 		 * - roll: 0
 		 * - yaw: 0
-		 * - left: -0.293231
+		 * - right: 0.293231
 		 * - Forward: 0.027740
 		 * - Up: 0.851537
 		 */
