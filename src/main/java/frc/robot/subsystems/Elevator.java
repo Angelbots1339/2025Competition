@@ -39,14 +39,17 @@ public class Elevator extends SubsystemBase {
 
 		follower.setControl(new Follower(leader.getDeviceID(), true));
 
-		leader.setPosition(0);
-		follower.setPosition(0);
-
+		reset();
 
 		base = mech.getRoot("Elevator", Units.inchesToMeters(13.970), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
 		stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
 		SmartDashboard.putData("Elevator Mech", mech);
 		initLogging();
+	}
+
+	public void reset() {
+		leader.setPosition(0);
+		follower.setPosition(0);
 	}
 
 	public void setHeight(double meters) {

@@ -33,6 +33,10 @@ public class ElevatorTuning extends Command {
 	private static double targetHeight = 0;
 	private static double step = 0.05;
 
+	private static GenericEntry resetElevator = tab.add("Reset", false)
+		.withWidget(BuiltInWidgets.kToggleButton)
+		.getEntry();
+
 	private static GenericEntry target = tab.add("target", ElevatorConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", ElevatorConstants.Heights.Min, "max", ElevatorConstants.Heights.Max))
@@ -79,6 +83,11 @@ public class ElevatorTuning extends Command {
 	@Override
 	public void execute() {
 		targetHeight = target.getDouble(0);
+
+		if (resetElevator.getBoolean(false)) {
+			elevator.reset();
+			resetElevator.setBoolean(false);
+		}
 
 		Slot0Configs tmp = ElevatorConstants.pid
 				.withKP(p.getDouble(0))
