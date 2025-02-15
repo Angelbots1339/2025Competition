@@ -267,6 +267,7 @@ public class Constants {
 			)
 			.withFeedback(
 				new FeedbackConfigs()
+					/* TODO: Set rotation in talonfx to counterclockwise positive */
 					.withRemoteCANcoder(new CANcoder(encoderPort))
 					.withSensorToMechanismRatio(gearRatio)
 			);
