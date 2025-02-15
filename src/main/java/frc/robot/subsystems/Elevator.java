@@ -117,5 +117,7 @@ public class Elevator extends SubsystemBase {
 
 		loggedLeader = new LoggedFalcon("leader", logger, leader, ElevatorLogging.Leader);
 		loggedFollower = new LoggedFalcon("follower", logger, follower, ElevatorLogging.Follower);
+		logger.add(loggedLeader);
+		logger.add(loggedFollower);
 	}
 }
