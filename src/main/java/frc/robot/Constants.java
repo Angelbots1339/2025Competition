@@ -138,7 +138,7 @@ public class Constants {
 			public static final double Min = Units.inchesToMeters(0);
 		}
 
-		public static final Slot0Configs PID = new Slot0Configs()
+		public static final Slot0Configs pid = new Slot0Configs()
 				.withKP(0)
 				.withKI(0)
 				.withKD(0)
@@ -162,7 +162,7 @@ public class Constants {
 					.withInverted(InvertedValue.Clockwise_Positive)
 					.withNeutralMode(NeutralModeValue.Brake)
 				)
-				.withSlot0(PID)
+				.withSlot0(pid)
 				.withMotionMagic(motionmagic);
 
 		public static final TalonFXConfiguration leaderConfigs = baseConfig.withSoftwareLimitSwitch(limits);
@@ -208,7 +208,7 @@ public class Constants {
 		public enum TuningSystem {
 			Swerve,
 			Intake,
-			None,
+			None, Elevator,
 		}
 	}
 }

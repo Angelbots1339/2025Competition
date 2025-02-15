@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -53,13 +58,22 @@ public class Elevator extends SubsystemBase {
 		targetHeight = meters;
 	}
 
+	public void setHeight(Supplier<Double> meters) {
+		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters.get())));
+		targetHeight = meters.get();
+	}
+
 	public Command setHeightCommand(double meters) {
 		return run(() -> setHeight(meters));
 	}
 
+	public Command setHeightCommand(Supplier<Double> meters) {
+		return run(() -> setHeight(meters));
+	}
+
 	public double getHeight() {
-		if (RobotBase.isSimulation())
-			return targetHeight;
+		// if (RobotBase.isSimulation())
+		// 	return targetHeight;
 		return ElevatorConstants.rotationToMeters(getRotations());
 	}
 
@@ -73,6 +87,16 @@ public class Elevator extends SubsystemBase {
 
 	public boolean isAtSetpoint() {
 		return Math.abs(getErrorMeters()) <= ElevatorConstants.ErrorTolerence;
+	}
+
+	public void setPID(Slot0Configs tmp) {
+		leader.getConfigurator().apply(tmp);
+		follower.getConfigurator().apply(tmp);
+	}
+
+	public void setMotion(MotionMagicConfigs tmp) {
+		leader.getConfigurator().apply(tmp);
+		follower.getConfigurator().apply(tmp);
 	}
 
 	@Override
