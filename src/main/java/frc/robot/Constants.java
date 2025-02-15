@@ -155,10 +155,16 @@ public class Constants {
 			.withMotionMagicAcceleration(metersToRotations(0.01))
 			.withMotionMagicCruiseVelocity(metersToRotations(0.1));
 
-		public static final TalonFXConfiguration config = new TalonFXConfiguration()
+		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
+				.withMotorOutput(
+					new MotorOutputConfigs()
+					.withInverted(InvertedValue.Clockwise_Positive)
+					.withNeutralMode(NeutralModeValue.Brake)
+				)
 				.withSlot0(PID)
-				.withSoftwareLimitSwitch(limits)
 				.withMotionMagic(motionmagic);
+
+		public static final TalonFXConfiguration leaderConfigs = baseConfig.withSoftwareLimitSwitch(limits);
 
 		public static final PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(0);
 

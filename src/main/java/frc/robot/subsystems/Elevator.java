@@ -33,8 +33,8 @@ public class Elevator extends SubsystemBase {
 	private MechanismLigament2d stage1;
 
 	public Elevator() {
-		leader.getConfigurator().apply(ElevatorConstants.config);
-		follower.getConfigurator().apply(ElevatorConstants.config);
+		leader.getConfigurator().apply(ElevatorConstants.leaderConfigs);
+		follower.getConfigurator().apply(ElevatorConstants.baseConfig);
 
 		follower.setControl(new Follower(leader.getDeviceID(), true));
 
