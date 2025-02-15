@@ -179,17 +179,17 @@ public class Constants {
 		 * - pitch -45
 		 * - roll: 0
 		 * - yaw: 0
-		 * - left: TBD
-		 * - Forward: TBD
-		 * - Up: TBD
+		 * - left: 0.293231
+		 * - Forward: 0.032436
+		 * - Up: 0.706252
 		 *
 		 * Right:
 		 * - pitch 45
 		 * - roll: 0
 		 * - yaw: 0
-		 * - left: TBD
-		 * - Forward: TBD
-		 * - Up: TBD
+		 * - left: -0.293231
+		 * - Forward: 0.027740
+		 * - Up: 0.851537
 		 */
 		public static final String LimelightLeftName = "limelight-left";
 		public static final String LimelightRightName = "limelight-right";
