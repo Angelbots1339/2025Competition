@@ -1,26 +1,25 @@
 package frc.robot;
 
-import com.pathplanner.lib.path.PathConstraints;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 
@@ -125,13 +124,14 @@ public class Constants {
 		public static final double BaseHeight = Units.inchesToMeters(40);
 		public static final double StageHeight = Units.inchesToMeters(49);
 
-		public static final int LeaderPort = 14;
-		public static final int FollowerPort = 15;
+		public static final int LeaderPort = 4;
+		public static final int FollowerPort = 5;
 
+		// public static final double CarrageRatio = 75.250 / 25;
+		public static final double CarrageRatio = 3;
 		public static final double GearRatio = 9;
-		public static final double CarrageRatio = 75.250 / 25;
 		// TODO: change to pitch diameter
-		private static final double Radius = 0.1;
+		private static final double Radius = Units.inchesToMeters(0.6589);
 		public static final double ErrorTolerence = 0.02; // 1 cm
 
 		/* heights are in meters */
@@ -147,7 +147,9 @@ public class Constants {
 				.withKD(0)
 				.withGravityType(GravityTypeValue.Elevator_Static)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-				.withKG(0)
+				.withKG(0.245)
+				.withKV(8.68)
+				.withKA(0.04)
 				.withKS(0);
 
 		public static final SoftwareLimitSwitchConfigs limits = new SoftwareLimitSwitchConfigs()
@@ -163,8 +165,8 @@ public class Constants {
 		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withMotorOutput(
 					new MotorOutputConfigs()
-					.withInverted(InvertedValue.Clockwise_Positive)
-					.withNeutralMode(NeutralModeValue.Brake)
+					.withInverted(InvertedValue.CounterClockwise_Positive)
+					.withNeutralMode(NeutralModeValue.Coast)
 				)
 				.withFeedback(
 					new FeedbackConfigs()

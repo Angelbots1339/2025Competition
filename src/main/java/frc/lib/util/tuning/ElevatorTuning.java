@@ -57,6 +57,12 @@ public class ElevatorTuning extends Command {
 	private static GenericEntry s = pid.add("S", ElevatorConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
+	private static GenericEntry v = pid.add("Kv", ElevatorConstants.pid.kV)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry ka = pid.add("Ka", ElevatorConstants.pid.kA)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
 
 	private static GenericEntry cv = motion.add("Cruise Velocity", ElevatorConstants.rotationToMeters(ElevatorConstants.motionmagic.MotionMagicCruiseVelocity))
 			.withWidget(BuiltInWidgets.kTextView)
@@ -94,6 +100,8 @@ public class ElevatorTuning extends Command {
 				.withKI(i.getDouble(0))
 				.withKD(d.getDouble(0))
 				.withKG(g.getDouble(0))
+				.withKA(ka.getDouble(0))
+				.withKV(v.getDouble(0))
 				.withKS(s.getDouble(0));
 
 		elevator.setPID(tmp);
