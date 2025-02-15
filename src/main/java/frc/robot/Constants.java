@@ -129,6 +129,7 @@ public class Constants {
 		public static final int FollowerPort = 15;
 
 		public static final double GearRatio = 9;
+		public static final double CarrageRatio = 75.250 / 25;
 		// TODO: change to pitch diameter
 		private static final double Radius = 0.1;
 		public static final double ErrorTolerence = 0.02; // 1 cm
@@ -176,11 +177,11 @@ public class Constants {
 		public static final MotionMagicVoltage PositionRequest = new MotionMagicVoltage(0);
 
 		public static final double rotationToMeters(double rotations) {
-			return rotations * 2 * Math.PI * Radius;
+			return rotations * 2 * Math.PI * Radius * CarrageRatio;
 		}
 
 		public static final double metersToRotations(double meters) {
-			return meters / (2.0 * Math.PI * Radius);
+			return meters / (2.0 * Math.PI * Radius * CarrageRatio);
 		}
     }
 
