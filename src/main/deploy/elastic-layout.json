@@ -129,11 +129,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/P",
                   "period": 0.06,
                   "data_type": "double",
-<<<<<<< HEAD
-                  "show_submit_button": false
-=======
                   "show_submit_button": true
->>>>>>> 663a192 (tuning command for elevator)
                 }
               },
               {
@@ -175,11 +171,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/G",
                   "period": 0.06,
                   "data_type": "double",
-<<<<<<< HEAD
-                  "show_submit_button": false
-=======
                   "show_submit_button": true
->>>>>>> 663a192 (tuning command for elevator)
                 }
               },
               {
@@ -193,11 +185,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/S",
                   "period": 0.06,
                   "data_type": "double",
-<<<<<<< HEAD
-                  "show_submit_button": false
-=======
                   "show_submit_button": true
->>>>>>> 663a192 (tuning command for elevator)
                 }
               }
             ]
@@ -246,7 +234,7 @@
             "title": "Angle Error",
             "x": 768.0,
             "y": 256.0,
-            "width": 256.0,
+            "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -304,11 +292,26 @@
               "show_pointer": true,
               "show_ticks": true
             }
+          },
+          {
+            "title": "At Setpoint",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/At Setpoint",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
           }
         ]
       }
-<<<<<<< HEAD
-=======
     },
     {
       "name": "Elevator Tuning",
@@ -526,7 +529,6 @@
           }
         ]
       }
->>>>>>> 663a192 (tuning command for elevator)
     }
   ]
 }
