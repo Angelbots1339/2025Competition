@@ -280,7 +280,11 @@ public class Swerve extends SubsystemBase {
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
 
-	public void addVision(String limelightname, double std) {
+	public void addVision(String limelightname) {
+		LimelightHelpers.SetRobotOrientation(limelightname, getYaw().getDegrees(), 0, 0, 0, 0, 0);
+		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(limelightname)
+				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
+		double std = VisionConstants.calcStdDev(tagDistance);
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightname);
 
 		if (mt2 == null)
@@ -300,13 +304,8 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void updateVision() {
-		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightCenterName, getYaw().getDegrees(), 0, 0, 0, 0, 0);
-		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.LimelightCenterName)
-				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
-		double xyStdDev2 = VisionConstants.calcStdDev(tagDistance);
-		addVision(VisionConstants.LimelightCenterName, xyStdDev2);
-		// addVision(VisionConstants.LimelightRightName, xyStdDev2);
-		// addVision(VisionConstants.LimelightLeftName, xyStdDev2);
+		addVision(VisionConstants.LimelightRightName);
+		addVision(VisionConstants.LimelightLeftName);
 	}
 
 	@Override
