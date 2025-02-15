@@ -174,12 +174,23 @@ public class Constants {
     }
 
 	public class VisionConstants {
-		/* offset for outrunner
-		 * up: 0.367821
-		 * forward: -0.213700
-		 * pitch: 24.45
+		/* offset for new bot
+		 * left:
+		 * - pitch -45
+		 * - roll: 0
+		 * - yaw: 180
+		 * - right: -0.293231
+		 * - Forward: 0.032436
+		 * - Up: 0.706252
+		 *
+		 * Right:
+		 * - pitch 45
+		 * - roll: 0
+		 * - yaw: 0
+		 * - right: 0.293231
+		 * - Forward: 0.027740
+		 * - Up: 0.851537
 		 */
-		public static final String LimelightCenterName = "limelight-center";
 		public static final String LimelightLeftName = "limelight-left";
 		public static final String LimelightRightName = "limelight-right";
 
