@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
+import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
@@ -28,6 +29,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
@@ -44,6 +46,7 @@ public class RobotContainer {
 
 	private final Intake intake = new Intake();
 	private Elevator elevator = new Elevator();
+	private final EndEffector endeffector = new EndEffector();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
@@ -182,6 +185,7 @@ public class RobotContainer {
 	public Command getTuningCommand() {
 		return Commands.select(
 			Map.ofEntries(
+				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
 				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),

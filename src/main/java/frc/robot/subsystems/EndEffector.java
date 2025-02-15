@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
+import java.util.function.Supplier;
+
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -31,11 +34,18 @@ public class EndEffector extends SubsystemBase {
 	public EndEffector() {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
+
+		initLogs();
 	}
 
 	public void setAngle(Angle angle) {
 		targetAngle = angle;
 		angleMotor.setControl(new PositionVoltage(angle));
+	}
+
+	public void setAngle(Supplier<Angle> angle) {
+		targetAngle = angle.get();
+		angleMotor.setControl(new PositionVoltage(angle.get()));
 	}
 
 	public void runIntake(Voltage volts) {
@@ -52,6 +62,10 @@ public class EndEffector extends SubsystemBase {
 
 	public boolean isAtSetpoint() {
 		return getAngleError().abs(Degrees) < EndEffectorConstants.errorTolerence.in(Degrees);
+	}
+
+	public void setPID(SlotConfigs newPID) {
+		angleMotor.getConfigurator().apply(newPID);
 	}
 
 	@Override

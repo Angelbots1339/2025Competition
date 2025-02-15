@@ -314,7 +314,7 @@ public class Constants {
 			Intake,
 			Elevator,
 			EndEffector,
-			None
+			None,
 		}
 	}
 }
