@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.Logger.LoggingLevel;
+import frc.lib.util.logging.loggedObjects.LoggedFalcon;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.LoggingConstants.ElevatorLogging;
 
 public class Elevator extends SubsystemBase {
 	private TalonFX leader = new TalonFX(ElevatorConstants.LeaderPort);
@@ -23,6 +25,8 @@ public class Elevator extends SubsystemBase {
 	private double targetHeight = 0.0;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Elevator");
+	private LoggedFalcon loggedLeader;
+	private LoggedFalcon loggedFollower;
 
 	private Mechanism2d mech = new Mechanism2d(Units.inchesToMeters(20), Units.feetToMeters(8));
 	private MechanismLigament2d base;
@@ -82,13 +86,16 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void initLogging() {
-		logger.addDouble("Target Height", () -> targetHeight, LoggingLevel.NETWORK_TABLES);
-		logger.addDouble("Actual Height", this::getHeight, LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("Target Height", () -> targetHeight, ElevatorLogging.Leader);
+		logger.addDouble("Actual Height", this::getHeight, ElevatorLogging.Leader);
 
-		logger.addDouble("Target Rotations", () -> ElevatorConstants.metersToRotations(targetHeight), LoggingLevel.NETWORK_TABLES);
-		logger.addDouble("Actual Rotations", () -> ElevatorConstants.metersToRotations(getHeight()), LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("Target Rotations", () -> ElevatorConstants.metersToRotations(targetHeight), ElevatorLogging.Leader);
+		logger.addDouble("Actual Rotations", () -> ElevatorConstants.metersToRotations(getHeight()), ElevatorLogging.Leader);
 
-		logger.addDouble("Error", () -> getErrorMeters(), LoggingLevel.NETWORK_TABLES);
-		logger.addBoolean("At Setpoint", () -> isAtSetpoint(), LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("Error", () -> getErrorMeters(), ElevatorLogging.Leader);
+		logger.addBoolean("At Setpoint", () -> isAtSetpoint(), ElevatorLogging.Leader);
+
+		loggedLeader = new LoggedFalcon("leader", logger, leader, ElevatorLogging.Leader);
+		loggedFollower = new LoggedFalcon("follower", logger, follower, ElevatorLogging.Follower);
 	}
 }

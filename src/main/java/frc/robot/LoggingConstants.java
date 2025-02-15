@@ -25,6 +25,11 @@ public final class LoggingConstants {
 			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
 		}
 
+		public class ElevatorLogging {
+			public static LoggingLevel Leader = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Follower = LoggingLevel.NETWORK_TABLES;
+		}
+
         public class RobotContainerLogging {
                 public static LoggingLevel StickValues = LoggingLevel.ONBOARD_ONLY;
         }
