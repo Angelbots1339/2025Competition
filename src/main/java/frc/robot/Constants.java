@@ -124,8 +124,11 @@ public class Constants {
 		/* all units are in meters */
 		public static final double BaseHeight = Units.inchesToMeters(40);
 		public static final double StageHeight = Units.inchesToMeters(49);
+
 		public static final int LeaderPort = 14;
 		public static final int FollowerPort = 15;
+
+		public static final double GearRatio = 9;
 		// TODO: change to pitch diameter
 		private static final double Radius = 0.1;
 		public static final double ErrorTolerence = 0.02; // 1 cm
@@ -160,6 +163,10 @@ public class Constants {
 					new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
 					.withNeutralMode(NeutralModeValue.Brake)
+				)
+				.withFeedback(
+					new FeedbackConfigs()
+						.withSensorToMechanismRatio(GearRatio)
 				)
 				.withSlot0(pid)
 				.withMotionMagic(motionmagic);
