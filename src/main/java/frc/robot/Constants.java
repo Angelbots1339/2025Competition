@@ -119,7 +119,6 @@ public class Constants {
 	}
 
     public static final class ElevatorConstants {
-		// TODO: figure the motor polarity and gear ratio
 		/* all units are in meters */
 		public static final double BaseHeight = Units.inchesToMeters(40);
 		public static final double StageHeight = Units.inchesToMeters(49);
@@ -130,9 +129,8 @@ public class Constants {
 		// public static final double CarrageRatio = 75.250 / 25;
 		public static final double CarrageRatio = 3;
 		public static final double GearRatio = 9;
-		// TODO: change to pitch diameter
 		private static final double Radius = Units.inchesToMeters(0.6589);
-		public static final double ErrorTolerence = 0.02; // 1 cm
+		public static final double ErrorTolerence = 0.02; // 2 cm
 
 		/* heights are in meters */
 		public class Heights {

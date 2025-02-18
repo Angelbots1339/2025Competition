@@ -211,7 +211,7 @@
           },
           {
             "title": "Current Angle",
-            "x": 1024.0,
+            "x": 1664.0,
             "y": 0.0,
             "width": 256.0,
             "height": 256.0,
@@ -232,9 +232,9 @@
           },
           {
             "title": "Angle Error",
-            "x": 768.0,
+            "x": 1408.0,
             "y": 256.0,
-            "width": 128.0,
+            "width": 512.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -246,8 +246,8 @@
           },
           {
             "title": "Wheel Volts",
-            "x": 896.0,
-            "y": 256.0,
+            "x": 1792.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -269,12 +269,12 @@
               "topic": "/Shuffleboard/Intake Tuning/volts",
               "period": 0.06,
               "data_type": "double",
-              "show_submit_button": false
+              "show_submit_button": true
             }
           },
           {
             "title": "Target Angle",
-            "x": 768.0,
+            "x": 1408.0,
             "y": 0.0,
             "width": 256.0,
             "height": 256.0,
@@ -295,9 +295,9 @@
           },
           {
             "title": "At Setpoint",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 1408.0,
+            "y": 384.0,
+            "width": 384.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
@@ -362,7 +362,7 @@
             "title": "PID",
             "x": 256.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 384.0,
             "height": 384.0,
             "type": "List Layout",
             "properties": {
@@ -462,10 +462,10 @@
           },
           {
             "title": "Actual Height",
-            "x": 1024.0,
+            "x": 1408.0,
             "y": 0.0,
-            "width": 128.0,
-            "height": 384.0,
+            "width": 256.0,
+            "height": 768.0,
             "type": "Number Bar",
             "properties": {
               "topic": "/Shuffleboard/Elevator/Actual Height",
@@ -480,10 +480,10 @@
           },
           {
             "title": "At Setpoint",
-            "x": 1152.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 1664.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/Shuffleboard/Elevator/At Setpoint",
@@ -497,10 +497,10 @@
           },
           {
             "title": "Error",
-            "x": 1152.0,
+            "x": 1664.0,
             "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
+            "width": 256.0,
+            "height": 256.0,
             "type": "Text Display",
             "properties": {
               "topic": "/Shuffleboard/Elevator/Error",
@@ -511,10 +511,10 @@
           },
           {
             "title": "Target Height",
-            "x": 896.0,
+            "x": 1152.0,
             "y": 0.0,
-            "width": 128.0,
-            "height": 384.0,
+            "width": 256.0,
+            "height": 768.0,
             "type": "Number Bar",
             "properties": {
               "topic": "/Shuffleboard/Elevator/Target Height",
@@ -529,138 +529,15 @@
           },
           {
             "title": "Reset",
-            "x": 1152.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
+            "x": 1664.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 256.0,
             "type": "Toggle Button",
             "properties": {
               "topic": "/Shuffleboard/Elevator Tuning/Reset",
               "period": 0.06,
               "data_type": "boolean"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "EndEffector Tuning",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "PID",
-            "x": 0.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "P",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Shuffleboard/EndEffector Tuning/PID/P",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "I",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Shuffleboard/EndEffector Tuning/PID/I",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "D",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Shuffleboard/EndEffector Tuning/PID/D",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "G",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Shuffleboard/EndEffector Tuning/PID/G",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "S",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/Shuffleboard/EndEffector Tuning/PID/S",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              }
-            ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "target",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Number Slider",
-            "properties": {
-              "topic": "/Shuffleboard/EndEffector Tuning/target",
-              "period": 0.06,
-              "data_type": "double",
-              "min_value": 0.0,
-              "max_value": 90.0,
-              "divisions": 5,
-              "update_continuously": false
-            }
-          },
-          {
-            "title": "volts",
-            "x": 256.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Shuffleboard/EndEffector Tuning/volts",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
             }
           }
         ]

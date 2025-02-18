@@ -112,14 +112,11 @@ public class Elevator extends SubsystemBase {
 		logger.addDouble("Target Height", () -> targetHeight, ElevatorLogging.Leader);
 		logger.addDouble("Actual Height", this::getHeight, ElevatorLogging.Leader);
 
-		logger.addDouble("Target Rotations", () -> ElevatorConstants.metersToRotations(targetHeight), ElevatorLogging.Leader);
-		logger.addDouble("Actual Rotations", () -> ElevatorConstants.metersToRotations(getHeight()), ElevatorLogging.Leader);
-
 		logger.addDouble("Error", () -> getErrorMeters(), ElevatorLogging.Leader);
 		logger.addBoolean("At Setpoint", () -> isAtSetpoint(), ElevatorLogging.Leader);
 
-		loggedLeader = new LoggedFalcon("leader", logger, leader, ElevatorLogging.Leader);
-		loggedFollower = new LoggedFalcon("follower", logger, follower, ElevatorLogging.Follower);
+		loggedLeader = new LoggedFalcon("leader", logger, leader, ElevatorLogging.LeaderMotor);
+		loggedFollower = new LoggedFalcon("follower", logger, follower, ElevatorLogging.FollowerMotor);
 		logger.add(loggedLeader);
 		logger.add(loggedFollower);
 	}
