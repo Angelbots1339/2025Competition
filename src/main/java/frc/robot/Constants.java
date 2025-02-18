@@ -26,7 +26,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class Constants {
 	public class SwerveConstants {
-		public static final double maxspeed = 4;
+		public static final double maxspeed = 1;
 		public static final double maxturn = 2 * Math.PI;
 
 		public static final double angularDriveKP = 0.075;
