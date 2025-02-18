@@ -91,7 +91,7 @@ public class Constants {
 			.withMotorOutput(
 				new MotorOutputConfigs()
 					.withInverted(InvertedValue.Clockwise_Positive)
-					.withNeutralMode(NeutralModeValue.Coast)
+					.withNeutralMode(NeutralModeValue.Brake)
 			);
 
 		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
