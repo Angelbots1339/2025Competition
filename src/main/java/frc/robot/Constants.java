@@ -158,7 +158,7 @@ public class Constants {
 				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(metersToRotations(0.25))
+			.withMotionMagicAcceleration(metersToRotations(1.5))
 			/* increase */
 			.withMotionMagicCruiseVelocity(metersToRotations(0.5));
 
