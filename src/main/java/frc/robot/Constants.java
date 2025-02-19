@@ -135,13 +135,13 @@ public class Constants {
 		/* heights are in meters */
 		public class Heights {
 			/* TODO: Tune */
-			public static final double Max = Units.inchesToMeters(12);
+			public static final double Max = 0.57; // meters
 			public static final double Min = Units.inchesToMeters(0);
 		}
 
 		/* plot voltage and speed */
 		public static final Slot0Configs pid = new Slot0Configs()
-				.withKP(0)
+				.withKP(5)
 				.withKI(0)
 				.withKD(0)
 				.withGravityType(GravityTypeValue.Elevator_Static)
