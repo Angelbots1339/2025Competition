@@ -139,6 +139,7 @@ public class Constants {
 			public static final double Min = Units.inchesToMeters(0);
 		}
 
+		/* plot voltage and speed */
 		public static final Slot0Configs pid = new Slot0Configs()
 				.withKP(0)
 				.withKI(0)
@@ -146,7 +147,7 @@ public class Constants {
 				.withGravityType(GravityTypeValue.Elevator_Static)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 				.withKG(0.245)
-				.withKV(8.68)
+				.withKV(1.09552)
 				.withKA(0.04)
 				.withKS(0);
 
