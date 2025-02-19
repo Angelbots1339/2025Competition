@@ -147,7 +147,7 @@ public class Constants {
 				.withGravityType(GravityTypeValue.Elevator_Static)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 				.withKG(0.245)
-				.withKV(1.09552)
+				.withKV(1)
 				.withKA(0.04)
 				.withKS(0);
 
