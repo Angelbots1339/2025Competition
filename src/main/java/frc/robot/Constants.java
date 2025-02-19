@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -127,7 +128,6 @@ public class Constants {
 		public static final int FollowerPort = 5;
 
 		// public static final double CarrageRatio = 75.250 / 25;
-		public static final double CarrageRatio = 3;
 		public static final double GearRatio = 9;
 		private static final double Radius = Units.inchesToMeters(0.6589);
 		public static final double ErrorTolerence = 0.02; // 2 cm
@@ -157,18 +157,23 @@ public class Constants {
 				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(metersToRotations(0.01))
-			.withMotionMagicCruiseVelocity(metersToRotations(0.1));
+			.withMotionMagicAcceleration(metersToRotations(0.5))
+			/* increase */
+			.withMotionMagicCruiseVelocity(metersToRotations(0.5));
 
 		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withMotorOutput(
 					new MotorOutputConfigs()
 					.withInverted(InvertedValue.CounterClockwise_Positive)
-					.withNeutralMode(NeutralModeValue.Coast)
+					.withNeutralMode(NeutralModeValue.Brake)
 				)
 				.withFeedback(
 					new FeedbackConfigs()
 						.withSensorToMechanismRatio(GearRatio)
+				)
+				.withCurrentLimits(
+					new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(40)
 				)
 				.withSlot0(pid)
 				.withMotionMagic(motionmagic);
@@ -178,11 +183,11 @@ public class Constants {
 		public static final MotionMagicVoltage PositionRequest = new MotionMagicVoltage(0);
 
 		public static final double rotationToMeters(double rotations) {
-			return rotations * 2 * Math.PI * Radius * CarrageRatio;
+			return rotations * 2 * Math.PI * Radius;
 		}
 
 		public static final double metersToRotations(double meters) {
-			return meters / (2.0 * Math.PI * Radius * CarrageRatio);
+			return meters / (2.0 * Math.PI * Radius);
 		}
     }
 
