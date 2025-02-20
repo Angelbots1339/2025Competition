@@ -33,31 +33,31 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
-	// private final XboxController driver = new XboxController(DriverConstants.driverPort);
+	private final XboxController driver = new XboxController(DriverConstants.driverPort);
 	private final XboxController operator = new XboxController(DriverConstants.operatorPort);
 
-	// private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(),
-	// 		SwerveConstants.maxspeed);
-	// private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(),
-	// 		SwerveConstants.maxspeed);
-	// private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
-	// 		SwerveConstants.maxturn);
+	private final Supplier<Double> leftX = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftX(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> leftY = () -> DriverConstants.deadbandJoystickValues(-driver.getLeftY(),
+			SwerveConstants.maxspeed);
+	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
+			SwerveConstants.maxturn);
 
 	private final Intake intake = new Intake();
 	private Elevator elevator = new Elevator();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
-	// private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
+	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
-	// private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
-	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
-	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
-	// private Trigger alignBarge = new Trigger(() -> driver.getAButton());
+	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
+	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
+	private Trigger alignBarge = new Trigger(() -> driver.getAButton());
 
-	// private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
-	// private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
 
 	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
@@ -86,7 +86,7 @@ public class RobotContainer {
 		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
 		extendElevator.whileTrue(elevator.setHeightCommand(0.5));
 
-/* 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
+		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
 		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
@@ -151,13 +151,13 @@ public class RobotContainer {
 					}
 
 				}, swerve));
- */
+
 	}
 
 	public void setDefaultCommands() {
 		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 
-		// swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
