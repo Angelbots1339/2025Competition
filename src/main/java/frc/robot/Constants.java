@@ -1,26 +1,26 @@
 package frc.robot;
 
-import com.pathplanner.lib.path.PathConstraints;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 
@@ -123,46 +123,64 @@ public class Constants {
 		/* all units are in meters */
 		public static final double BaseHeight = Units.inchesToMeters(40);
 		public static final double StageHeight = Units.inchesToMeters(49);
-		public static final int LeaderPort = 14;
-		public static final int FollowerPort = 15;
-		private static final double Radius = 0.1;
-		public static final double ErrorTolerence = 0.01; // 1 cm
+
+		public static final int LeaderPort = 4;
+		public static final int FollowerPort = 5;
+
+		// public static final double CarrageRatio = 75.250 / 25;
+		public static final double GearRatio = 9;
+		private static final double Radius = Units.inchesToMeters(0.6589);
+		public static final double ErrorTolerence = 0.02; // 2 cm
 
 		/* heights are in meters */
 		public class Heights {
 			/* TODO: Tune */
-			public static final double Max = Units.inchesToMeters(89);
+			public static final double Max = 0.57; // meters
 			public static final double Min = Units.inchesToMeters(0);
-			public static final double L1 = 1;
-			public static final double L2 = 2;
-			public static final double L3 = 3;
-			public static final double L4 = 4;
 		}
 
-		public static final Slot0Configs PID = new Slot0Configs()
-				.withKP(0)
+		/* plot voltage and speed */
+		public static final Slot0Configs pid = new Slot0Configs()
+				.withKP(5)
 				.withKI(0)
 				.withKD(0)
 				.withGravityType(GravityTypeValue.Elevator_Static)
-				.withKG(0)
+				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+				.withKG(0.245)
+				.withKV(1)
+				.withKA(0.04)
 				.withKS(0);
 
 		public static final SoftwareLimitSwitchConfigs limits = new SoftwareLimitSwitchConfigs()
 				.withForwardSoftLimitEnable(true)
 				.withReverseSoftLimitEnable(true)
-				.withForwardSoftLimitThreshold(Heights.Max)
-				.withReverseSoftLimitThreshold(Heights.Min);
+				.withForwardSoftLimitThreshold(metersToRotations(Heights.Max))
+				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(1)
-			.withMotionMagicCruiseVelocity(0.1);
+			.withMotionMagicAcceleration(metersToRotations(1.8))
+			.withMotionMagicCruiseVelocity(metersToRotations(1));
 
-		public static final TalonFXConfiguration config = new TalonFXConfiguration()
-				.withSlot0(PID)
-				.withSoftwareLimitSwitch(limits)
+		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
+				.withMotorOutput(
+					new MotorOutputConfigs()
+					.withInverted(InvertedValue.CounterClockwise_Positive)
+					.withNeutralMode(NeutralModeValue.Brake)
+				)
+				.withFeedback(
+					new FeedbackConfigs()
+						.withSensorToMechanismRatio(GearRatio)
+				)
+				.withCurrentLimits(
+					new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(40)
+				)
+				.withSlot0(pid)
 				.withMotionMagic(motionmagic);
 
-		public static final PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(0);
+		public static final TalonFXConfiguration leaderConfigs = baseConfig.withSoftwareLimitSwitch(limits);
+
+		public static final MotionMagicVoltage PositionRequest = new MotionMagicVoltage(0);
 
 		public static final double rotationToMeters(double rotations) {
 			return rotations * 2 * Math.PI * Radius;
@@ -203,7 +221,7 @@ public class Constants {
 		public enum TuningSystem {
 			Swerve,
 			Intake,
-			None,
+			None, Elevator,
 		}
 	}
 }

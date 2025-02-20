@@ -129,7 +129,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/P",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               },
               {
@@ -171,7 +171,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/G",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               },
               {
@@ -185,7 +185,7 @@
                   "topic": "/Shuffleboard/Intake Tuning/PID/S",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               }
             ]
@@ -211,7 +211,7 @@
           },
           {
             "title": "Current Angle",
-            "x": 1024.0,
+            "x": 1664.0,
             "y": 0.0,
             "width": 256.0,
             "height": 256.0,
@@ -232,9 +232,9 @@
           },
           {
             "title": "Angle Error",
-            "x": 768.0,
+            "x": 1408.0,
             "y": 256.0,
-            "width": 256.0,
+            "width": 512.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -246,9 +246,9 @@
           },
           {
             "title": "Wheel Volts",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 1792.0,
+            "y": 384.0,
+            "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -269,12 +269,12 @@
               "topic": "/Shuffleboard/Intake Tuning/volts",
               "period": 0.06,
               "data_type": "double",
-              "show_submit_button": false
+              "show_submit_button": true
             }
           },
           {
             "title": "Target Angle",
-            "x": 768.0,
+            "x": 1408.0,
             "y": 0.0,
             "width": 256.0,
             "height": 256.0,
@@ -291,6 +291,281 @@
               "wrap_value": true,
               "show_pointer": true,
               "show_ticks": true
+            }
+          },
+          {
+            "title": "At Setpoint",
+            "x": 1408.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/At Setpoint",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Elevator Tuning",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Motion Magic",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Acceleration",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/Motion Magic/Acceleration",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Cruise Velocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/Motion Magic/Cruise Velocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "PID",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 640.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "P",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/P",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "I",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/I",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "D",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/D",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "S",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/S",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "G",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/G",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Kv",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/Kv",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Ka",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Shuffleboard/Elevator Tuning/PID/Ka",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "target",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator Tuning/target",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 0.57,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Actual Height",
+            "x": 1408.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 768.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator/Actual Height",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 0.57,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "At Setpoint",
+            "x": 1664.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator/At Setpoint",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Error",
+            "x": 1664.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator/Error",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Target Height",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 768.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator/Target Height",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 0.57,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "Reset",
+            "x": 1664.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Toggle Button",
+            "properties": {
+              "topic": "/Shuffleboard/Elevator Tuning/Reset",
+              "period": 0.06,
+              "data_type": "boolean"
             }
           }
         ]
