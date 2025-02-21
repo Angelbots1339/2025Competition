@@ -193,8 +193,8 @@ public class Constants {
 
 	public class SequencingConstants {
 		/* tune */
-		public static final double IntakeHitPoint = 0.2;
-		public static final double IntakeHitPointBound = 0.1;
+		public static final double IntakeHitPoint = 0.14;
+		public static final double IntakeHitPointBound = 0.05;
 
 		public static final Angle intakeAvoidAngle = Degrees.of(80);
 	}

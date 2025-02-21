@@ -49,7 +49,6 @@ public class Intake extends SubsystemBase {
 		rightAngleMotor.setControl(new Follower(leftAngleMotor.getDeviceID(), true));
 		leftAngleMotor.setPosition(IntakeConstants.startingAngle);
 
-		// changeAngle(() -> IntakeConstants.insideAngle);
 		resetAngle(IntakeConstants.startingAngle);
 
 		initLogging();

@@ -21,7 +21,7 @@ public final class LoggingConstants {
         }
 
 		public class IntakeLogging {
-			public static LoggingLevel Angle = LoggingLevel.ONBOARD_ONLY;
+			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
 			public static LoggingLevel Wheel = LoggingLevel.ONBOARD_ONLY;
 		}
 

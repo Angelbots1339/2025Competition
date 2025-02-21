@@ -16,6 +16,8 @@ public class ExtendElevator extends Command {
 		this.elevator = elevator;
 		this.intake = intake;
 		this.height = height;
+
+		addRequirements(elevator, intake);
 	}
 
 	@Override
