@@ -1,16 +1,16 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.SequencingConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 
 public class ExtendElevator extends Command {
-	Elevator elevator;
-	Intake intake;
+	private Elevator elevator;
+	private Intake intake;
 
-	double height;
+	private double height;
 
 	public ExtendElevator(Elevator elevator, Intake intake, double height) {
 		this.elevator = elevator;
@@ -20,7 +20,7 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void initialize() {
-		intake.setAngle(Degrees.of(80));
+		intake.setAngle(SequencingConstants.intakeAvoidAngle);
 	}
 
 	@Override
@@ -33,6 +33,8 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		if (Math.abs(elevator.getHeight() - SequencingConstants.IntakeHitPoint) > SequencingConstants.IntakeHitPointBound)
+			intake.setAngle(IntakeConstants.insideAngle);
 	}
 
 	@Override
