@@ -76,7 +76,7 @@ public class IntakeTuning extends Command {
 
 	@Override
 	public void initialize() {
-		intakeAngle.whileTrue(Commands.run(() -> intake.changeAngle(() -> targetAngle)));
+		intakeAngle.whileTrue(Commands.run(() -> intake.setAngle(() -> targetAngle)));
 		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.insideAngle.in(Degrees)))));
 		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.outsideAngle.in(Degrees)))));
 

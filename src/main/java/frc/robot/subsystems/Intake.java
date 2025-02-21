@@ -64,14 +64,14 @@ public class Intake extends SubsystemBase {
 	public Command runIntake(Supplier<Angle> angle) {
 		return run(
 			() -> {
-				changeAngle(angle);
+				setAngle(angle);
 				runWheelsVolts(IntakeConstants.intakeVolts);
 			}
 		);
 	}
 
 	public void home() {
-		changeAngle(() -> IntakeConstants.insideAngle);
+		setAngle(() -> IntakeConstants.insideAngle);
 		runWheelsVolts(Volts.of(0));
 	}
 
@@ -79,9 +79,12 @@ public class Intake extends SubsystemBase {
 		wheelMotor.setControl(new VoltageOut(volts));
 	}
 
-	public void changeAngle(Supplier<Angle> angle) {
+	public void setAngle(Supplier<Angle> angle) {
 		this.angle = angle.get();
 		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
+	}
+	public void setAngle(Angle angle) {
+		setAngle(() -> angle);
 	}
 
 	public Angle getAngle() {
