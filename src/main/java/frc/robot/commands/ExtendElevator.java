@@ -29,12 +29,13 @@ public class ExtendElevator extends Command {
 			return;
 
 		elevator.setHeight(height);
+
+		if (Math.abs(elevator.getHeight() - SequencingConstants.IntakeHitPoint) > SequencingConstants.IntakeHitPointBound)
+			intake.setAngle(IntakeConstants.insideAngle);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		if (Math.abs(elevator.getHeight() - SequencingConstants.IntakeHitPoint) > SequencingConstants.IntakeHitPointBound)
-			intake.setAngle(IntakeConstants.insideAngle);
 	}
 
 	@Override
