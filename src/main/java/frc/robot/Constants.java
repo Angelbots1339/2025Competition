@@ -127,7 +127,6 @@ public class Constants {
 		public static final int LeaderPort = 4;
 		public static final int FollowerPort = 5;
 
-		// public static final double CarrageRatio = 75.250 / 25;
 		public static final double GearRatio = 9;
 		private static final double Radius = Units.inchesToMeters(0.6589);
 		public static final double ErrorTolerence = 0.02; // 2 cm
