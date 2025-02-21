@@ -255,6 +255,10 @@ public class Constants {
 					.withForwardSoftLimitThreshold(maxAngle)
 					.withReverseSoftLimitThreshold(minAngle)
 			)
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(40)
+			)
 			.withFeedback(
 				new FeedbackConfigs()
 					/* TODO: Set rotation in talonfx to counterclockwise positive */
@@ -265,6 +269,10 @@ public class Constants {
 		public static final TalonFXConfiguration angleConfig = baseAngleConfig.withSlot0(Slot0Configs.from(pid));
 
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(40)
+			)
 			.withMotorOutput(
 				new MotorOutputConfigs()
 				.withNeutralMode(NeutralModeValue.Brake)
