@@ -206,8 +206,14 @@ public class Constants {
 
 		public static final double gearRatio = 32.0 / 16.0;
 
-		public static final Angle maxAngle = Degrees.of(90);
-		public static final Angle minAngle = Degrees.of(0);
+		/* the angle is based on the side of the endeffector where the wheel motors are
+		 *
+		 *
+		 *
+		 */
+		public static final Angle maxAngle = Degrees.of(120);
+		public static final Angle minAngle = Degrees.of(60);
+		public static final Angle defaultAngle = Degrees.of(120);
 		public static final Angle errorTolerence = Degrees.of(1);
 
 		public static final SlotConfigs pid = new SlotConfigs()
