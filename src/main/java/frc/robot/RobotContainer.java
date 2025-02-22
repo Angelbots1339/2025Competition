@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,7 +22,6 @@ import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;

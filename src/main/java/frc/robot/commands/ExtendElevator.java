@@ -1,10 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
-
-import java.io.SequenceInputStream;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
