@@ -91,7 +91,7 @@ public class Leds extends SubsystemBase {
 
 	private Leds() {
 		System.out.println("[Init] Creating LEDs");
-		leds = new AddressableLED(0);
+		leds = new AddressableLED(1);
 		buffer = new AddressableLEDBuffer(length);
 		leds.setLength(length);
 		leds.setData(buffer);
