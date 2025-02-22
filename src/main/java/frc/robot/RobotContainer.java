@@ -26,10 +26,10 @@ import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
-import frc.robot.commands.Elevator.IntakeAlgae;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
@@ -90,14 +90,14 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, intake, 0, false)
+				new ExtendElevator(elevator, intake, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
 				.andThen(Commands.run(() -> intake.runIntake(() -> Degrees.of(16)), intake))
 		);
-		home.onTrue(new ExtendElevator(elevator, intake, 0, true));
-		extendToBarge.onTrue(new ExtendElevator(elevator, intake, ElevatorConstants.Heights.Max, false));
-		extendToA1.onTrue(new ExtendElevator(elevator, intake, 0.2, true));
-		extendToA2.onTrue(new ExtendElevator(elevator, intake, 0.4, true));
+		home.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Home));
+		extendToBarge.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Barge));
+		extendToA1.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A1));
+		extendToA2.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A2));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 

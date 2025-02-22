@@ -15,14 +15,12 @@ public class ExtendElevator extends Command {
 	private Elevator elevator;
 	private Intake intake;
 
-	private double height;
-	private boolean bringbackin;
+	private SequencingConstants.Heights target;
 
-	public ExtendElevator(Elevator elevator, Intake intake, double height, boolean bringbackin) {
+	public ExtendElevator(Elevator elevator, Intake intake, SequencingConstants.Heights target) {
 		this.elevator = elevator;
 		this.intake = intake;
-		this.height = height;
-		this.bringbackin = bringbackin;
+		this.target = target;
 
 		addRequirements(elevator, intake);
 	}
@@ -33,20 +31,21 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void execute() {
-		intake.setAngle(SequencingConstants.intakeAvoidAngle);
-		// if (intake.getAngle().in(Degrees) < 50){
-		// 	elevator.setHeight(height);
-		// }
-		if (intake.isAtSetpoint()) {
-			elevator.setHeight(height);
+		if (target == SequencingConstants.Heights.A1 || target == SequencingConstants.Heights.A2) {
+			intake.setAngle(SequencingConstants.reefAvoidAngle);
+		} else {
+			intake.setAngle(SequencingConstants.intakeAvoidAngle);
 		}
-	}
-
-	public void run() {
+		if (intake.isAtSetpoint()) {
+			elevator.setHeight(target.height);
+		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		if (target != SequencingConstants.Heights.Barge) {
+			intake.setAngle(IntakeConstants.insideAngle);
+		}
 	}
 
 	@Override
