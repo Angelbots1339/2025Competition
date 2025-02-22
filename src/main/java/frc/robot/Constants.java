@@ -158,7 +158,8 @@ public class Constants {
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
 			.withMotionMagicAcceleration(metersToRotations(1.8))
-			.withMotionMagicCruiseVelocity(metersToRotations(1));
+			// .withMotionMagicCruiseVelocity(metersToRotations(1));
+			.withMotionMagicCruiseVelocity(metersToRotations(0.1));
 
 		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withMotorOutput(
