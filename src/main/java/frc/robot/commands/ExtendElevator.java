@@ -4,17 +4,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Intake;
 
 public class ExtendElevator extends Command {
 	private Elevator elevator;
 	private Intake intake;
+	private EndEffector endEffector;
 
 	private SequencingConstants.Heights target;
 
-	public ExtendElevator(Elevator elevator, Intake intake, SequencingConstants.Heights target) {
+	public ExtendElevator(Elevator elevator, Intake intake, EndEffector endeffector, SequencingConstants.Heights target) {
 		this.elevator = elevator;
 		this.intake = intake;
+		this.endEffector = endeffector;
 		this.target = target;
 
 		addRequirements(elevator, intake);
@@ -31,8 +34,13 @@ public class ExtendElevator extends Command {
 		} else {
 			intake.setAngle(SequencingConstants.intakeAvoidAngle);
 		}
+
 		if (intake.isAtSetpoint()) {
-			elevator.setHeight(target.height);
+			endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
+
+			if (endEffector.isAtSetpoint()) {
+				elevator.setHeight(target.height);
+			}
 		}
 	}
 
@@ -41,10 +49,14 @@ public class ExtendElevator extends Command {
 		if (target != SequencingConstants.Heights.Barge) {
 			intake.setAngle(IntakeConstants.insideAngle);
 		}
+
+		if (target == SequencingConstants.Heights.Barge) {
+			endEffector.setAngle(SequencingConstants.endEffectorBargeAngle);
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return elevator.isAtSetpoint() && intake.isAtSetpoint();
+		return elevator.isAtSetpoint() && intake.isAtSetpoint() && endEffector.isAtSetpoint();
 	}
 }

@@ -199,29 +199,6 @@ public class Constants {
 		}
     }
 
-	public class SequencingConstants {
-		/* tune */
-		public static final double IntakeHitPoint = 0.14;
-		public static final double IntakeHitPointBound = 0.05;
-
-		public static final Angle intakeAvoidAngle = Degrees.of(45);
-		public static final Angle reefAvoidAngle = Degrees.of(75);
-
-		public static enum Heights {
-			Intake(0),
-			Home(0),
-			A1(0.2),
-			A2(0.34),
-			Barge(ElevatorConstants.Heights.Max);
-
-			public final double height;
-
-			Heights(double height) {
-				this.height = height;
-			}
-		}
-	}
-
 	public class EndEffectorConstants {
 		public static final int anglePort = 6;
 		public static final int wheelPort = 7;
@@ -287,6 +264,31 @@ public class Constants {
 				.withNeutralMode(NeutralModeValue.Brake)
 				.withInverted(InvertedValue.Clockwise_Positive)
 			);
+	}
+
+	public class SequencingConstants {
+		public static final double IntakeHitPoint = 0.14;
+		public static final double IntakeHitPointBound = 0.05;
+
+		public static final Angle intakeAvoidAngle = Degrees.of(45);
+		public static final Angle reefAvoidAngle = Degrees.of(75);
+
+		public static final Angle endEffectorAvoidAngle = Degrees.of(30);
+		public static final Angle endEffectorBargeAngle = Degrees.of(100);
+
+		public static enum Heights {
+			Intake(0),
+			Home(0),
+			A1(0.2),
+			A2(0.34),
+			Barge(ElevatorConstants.Heights.Max);
+
+			public final double height;
+
+			Heights(double height) {
+				this.height = height;
+			}
+		}
 	}
 
 	public class VisionConstants {

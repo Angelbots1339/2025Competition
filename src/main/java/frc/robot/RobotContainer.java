@@ -89,14 +89,14 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, intake, SequencingConstants.Heights.Intake)
+				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
 				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.outsideAngle), intake))
 		);
-		home.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Home));
-		extendToBarge.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Barge));
-		extendToA1.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A1));
-		extendToA2.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A2));
+		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
+		extendToBarge.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge));
+		extendToA1.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1));
+		extendToA2.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
