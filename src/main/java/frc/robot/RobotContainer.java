@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +24,6 @@ import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
@@ -86,8 +84,7 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
-		// extendElevator.whileTrue(elevator.setHeightCommand(0.5));
-		extendElevator.onTrue(new ExtendElevator(elevator, intake, 0.3));
+		extendElevator.whileTrue(new ExtendElevator(elevator, intake, 0.3));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -158,8 +155,8 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
+		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		CommandScheduler.getInstance().setDefaultCommand(elevator, new ExtendElevator(elevator, intake, 0));
 	}
 
 	public void stopDefaultCommands() {

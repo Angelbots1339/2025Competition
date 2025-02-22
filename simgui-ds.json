@@ -1,9 +1,4 @@
 {
-  "System Joysticks": {
-    "window": {
-      "visible": false
-    }
-  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -90,6 +85,7 @@
     {
       "useGamepad": true
     },
+    {},
     {
       "guid": "Keyboard0"
     }
