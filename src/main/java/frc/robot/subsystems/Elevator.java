@@ -80,8 +80,9 @@ public class Elevator extends SubsystemBase {
 		return leader.getPosition().getValueAsDouble();
 	}
 
+
 	public double getErrorMeters() {
-		return ElevatorConstants.rotationToMeters(targetHeight) - ElevatorConstants.rotationToMeters(leader.getPosition().getValueAsDouble());
+		return targetHeight - ElevatorConstants.rotationToMeters(leader.getPosition().getValueAsDouble());
 	}
 
 	public boolean isAtSetpoint() {

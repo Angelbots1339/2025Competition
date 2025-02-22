@@ -56,7 +56,7 @@ public class Constants {
 		public static final int leftAngleMotorPort = 1;
 		public static final int rightAngleMotorPort = 3;
 		public static final int wheelMotorPort = 2;
-		public static final Angle angleErrorTolerence = Degrees.of(0.5);
+		public static final Angle angleErrorTolerence = Degrees.of(1);
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
@@ -130,7 +130,7 @@ public class Constants {
 
 		public static final double GearRatio = 9;
 		private static final double Radius = Units.inchesToMeters(0.6589);
-		public static final double ErrorTolerence = 0.005;
+		public static final double ErrorTolerence = 0.01;
 
 		/* heights are in meters */
 		public class Heights {
@@ -196,7 +196,7 @@ public class Constants {
 		public static final double IntakeHitPoint = 0.14;
 		public static final double IntakeHitPointBound = 0.05;
 
-		public static final Angle intakeAvoidAngle = Degrees.of(30);
+		public static final Angle intakeAvoidAngle = Degrees.of(45);
 	}
 
 	public class VisionConstants {
