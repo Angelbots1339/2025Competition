@@ -1,6 +1,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -56,17 +58,17 @@ public class Constants {
 		public static final int leftAngleMotorPort = 1;
 		public static final int rightAngleMotorPort = 3;
 		public static final int wheelMotorPort = 2;
-		public static final Angle angleErrorTolerence = Degrees.of(2.0);
+		public static final Angle angleErrorTolerence = Degrees.of(1);
 
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
 		public static final Angle insideAngle = Degrees.of(90);
-		public static final Angle outsideAngle = Degrees.of(0);
+		public static final Angle outsideAngle = Degrees.of(13);
 		public static final Angle startingAngle = Degrees.of(90);
 
 
-		public static final Voltage intakeVolts = Volts.of(2.0);
+		public static final Voltage intakeVolts = Volts.of(4.0);
 
 		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
@@ -77,11 +79,12 @@ public class Constants {
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(8)
+			/* volts per rotation */
+			.withKP(30)
 			.withKI(0)
 			.withKD(0)
-			.withKG(0.25)
-			.withKS(0.13);
+			.withKG(0.1)
+			.withKS(0.1);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
 			.withSensorToMechanismRatio(angleMotorRatio)
@@ -96,6 +99,11 @@ public class Constants {
 
 		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
 			.withSlot0(Slot0Configs.from(pid))
+			.withMotionMagic(
+					new MotionMagicConfigs()
+						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
+						.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(45 * 144))
+			)
 			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
@@ -127,10 +135,9 @@ public class Constants {
 		public static final int LeaderPort = 4;
 		public static final int FollowerPort = 5;
 
-		// public static final double CarrageRatio = 75.250 / 25;
 		public static final double GearRatio = 9;
 		private static final double Radius = Units.inchesToMeters(0.6589);
-		public static final double ErrorTolerence = 0.02; // 2 cm
+		public static final double ErrorTolerence = 0.01;
 
 		/* heights are in meters */
 		public class Heights {
@@ -190,6 +197,29 @@ public class Constants {
 			return meters / (2.0 * Math.PI * Radius);
 		}
     }
+
+	public class SequencingConstants {
+		/* tune */
+		public static final double IntakeHitPoint = 0.14;
+		public static final double IntakeHitPointBound = 0.05;
+
+		public static final Angle intakeAvoidAngle = Degrees.of(45);
+		public static final Angle reefAvoidAngle = Degrees.of(75);
+
+		public static enum Heights {
+			Intake(0),
+			Home(0),
+			A1(0.2),
+			A2(0.34),
+			Barge(ElevatorConstants.Heights.Max);
+
+			public final double height;
+
+			Heights(double height) {
+				this.height = height;
+			}
+		}
+	}
 
 	public class VisionConstants {
 		/* offset for new bot

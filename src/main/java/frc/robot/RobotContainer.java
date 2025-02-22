@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,10 +22,11 @@ import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
+import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
@@ -58,7 +57,11 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
-	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
+	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
+	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
+	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
+	private Trigger extendToIntake = new Trigger(() -> operator.getXButton());
+	private Trigger home = new Trigger(() -> operator.getStartButton());
 
 	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
 
@@ -83,8 +86,15 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
-		extendElevator.whileTrue(elevator.setHeightCommand(0.5));
+		openIntake.whileTrue(
+				new ExtendElevator(elevator, intake, SequencingConstants.Heights.Intake)
+				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
+				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.outsideAngle), intake))
+		);
+		home.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Home));
+		extendToBarge.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Barge));
+		extendToA1.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A1));
+		extendToA2.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.A2));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -155,10 +165,8 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
-
+		intake.setDefaultCommand(new InstantCommand(intake::home, intake).onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		elevator.setDefaultCommand(elevator.setHeightCommand(ElevatorConstants.Heights.Min));
 	}
 
 	public void stopDefaultCommands() {

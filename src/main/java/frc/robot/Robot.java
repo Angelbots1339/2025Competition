@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
 		disabledTimer.reset();
 		disabledTimer.start();
 
-		WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+		// WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 	}
 
 	@Override
@@ -46,13 +46,13 @@ public class Robot extends TimedRobot {
 			Logger.getInstance().log(0);
 		});
 
-		if (DriverStation.isEnabled()) {
-			disabledTimer.reset();
-		}
-		if (RobotController.getBatteryVoltage() < lowBatteryVoltage
-				&& disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
-			Leds.getInstance().lowBatteryAlert = true;
-		}
+		// if (DriverStation.isEnabled()) {
+		// 	disabledTimer.reset();
+		// }
+		// if (RobotController.getBatteryVoltage() < lowBatteryVoltage
+		// 		&& disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
+		// 	Leds.getInstance().lowBatteryAlert = true;
+		// }
 	}
 
 	@Override
