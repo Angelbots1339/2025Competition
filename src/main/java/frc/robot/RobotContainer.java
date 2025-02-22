@@ -73,7 +73,8 @@ public class RobotContainer {
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
 
 	public RobotContainer() {
-		configureBindings();
+		configureDriverBindings();
+		configureOperatorBindings();
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
@@ -87,7 +88,7 @@ public class RobotContainer {
 
 	}
 
-	private void configureBindings() {
+	private void configureOperatorBindings() {
 		openIntake.whileTrue(
 				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
@@ -97,17 +98,16 @@ public class RobotContainer {
 		extendToBarge.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge));
 		extendToA1.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1));
 		extendToA2.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2));
+	}
 
+	private void configureDriverBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
 		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
-
 		alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
-
 		alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
-
 
 		selectReef.onTrue(
 				Commands.runOnce(() -> {
