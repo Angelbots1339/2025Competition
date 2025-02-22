@@ -224,8 +224,8 @@ public class Constants {
 	}
 
 	public class EndEffectorConstants {
-		public static final int anglePort = 5;
-		public static final int wheelPort = 6;
+		public static final int anglePort = 6;
+		public static final int wheelPort = 7;
 		public static final int encoderPort = 0;
 
 		public static final double gearRatio = 32.0 / 16.0;
