@@ -33,7 +33,6 @@ public class EndEffector extends SubsystemBase {
 	public EndEffector() {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
-
 		initLogs();
 	}
 

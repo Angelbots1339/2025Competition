@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Newton;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -231,7 +232,7 @@ public class Constants {
 
 		public static final Angle maxAngle = Degrees.of(90);
 		public static final Angle minAngle = Degrees.of(0);
-		public static final Angle errorTolerence = Degrees.of(2);
+		public static final Angle errorTolerence = Degrees.of(1);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
@@ -257,16 +258,23 @@ public class Constants {
 			)
 			.withCurrentLimits(
 				new CurrentLimitsConfigs()
+					.withStatorCurrentLimitEnable(true)
 					.withStatorCurrentLimit(40)
 			)
 			.withFeedback(
 				new FeedbackConfigs()
-					/* TODO: Set rotation in talonfx to counterclockwise positive */
+					/* might need to invert */
 					.withRemoteCANcoder(new CANcoder(encoderPort))
 					.withSensorToMechanismRatio(gearRatio)
 			);
 
-		public static final TalonFXConfiguration angleConfig = baseAngleConfig.withSlot0(Slot0Configs.from(pid));
+		public static final TalonFXConfiguration angleConfig = baseAngleConfig
+			.withMotionMagic(
+				new MotionMagicConfigs()
+					.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
+					.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
+			)
+			.withSlot0(Slot0Configs.from(pid));
 
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
 			.withCurrentLimits(
