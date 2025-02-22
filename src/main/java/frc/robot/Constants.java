@@ -62,11 +62,11 @@ public class Constants {
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
 		public static final Angle insideAngle = Degrees.of(90);
-		public static final Angle outsideAngle = Degrees.of(0);
+		public static final Angle outsideAngle = Degrees.of(13);
 		public static final Angle startingAngle = Degrees.of(90);
 
 
-		public static final Voltage intakeVolts = Volts.of(2.0);
+		public static final Voltage intakeVolts = Volts.of(4.0);
 
 		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
 			.withMotorOutput(
@@ -203,7 +203,7 @@ public class Constants {
 			Intake(0),
 			Home(0),
 			A1(0.2),
-			A2(0.4),
+			A2(0.34),
 			Barge(ElevatorConstants.Heights.Max);
 
 			public final double height;

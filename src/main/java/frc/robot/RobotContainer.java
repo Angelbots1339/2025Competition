@@ -92,7 +92,7 @@ public class RobotContainer {
 		openIntake.whileTrue(
 				new ExtendElevator(elevator, intake, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
-				.andThen(Commands.run(() -> intake.runIntake(() -> Degrees.of(16)), intake))
+				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.outsideAngle), intake))
 		);
 		home.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(new ExtendElevator(elevator, intake, SequencingConstants.Heights.Barge));

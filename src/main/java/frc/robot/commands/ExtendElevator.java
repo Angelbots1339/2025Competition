@@ -50,6 +50,6 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return elevator.isAtSetpoint() && intake.isAtSetpoint();
+		return elevator.isAtSetpoint();
 	}
 }
