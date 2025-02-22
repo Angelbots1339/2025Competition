@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -79,11 +80,11 @@ public class Intake extends SubsystemBase {
 
 	public void setAngle(Supplier<Angle> angle) {
 		this.angle = angle.get();
-		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
+		leftAngleMotor.setControl(new MotionMagicVoltage(angle.get()));
 	}
 	public void setAngle(Angle angle) {
 		this.angle = angle;
-		leftAngleMotor.setControl(new PositionVoltage(angle));
+		leftAngleMotor.setControl(new MotionMagicVoltage(angle));
 	}
 
 	public Angle getAngle() {

@@ -1,6 +1,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -78,10 +80,10 @@ public class Constants {
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 			/* volts per rotation */
-			.withKP(18)
+			.withKP(30)
 			.withKI(0)
 			.withKD(0)
-			.withKG(0.27)
+			.withKG(0.1)
 			.withKS(0.1);
 
 		public static final FeedbackConfigs feedback = new FeedbackConfigs()
@@ -97,6 +99,11 @@ public class Constants {
 
 		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
 			.withSlot0(Slot0Configs.from(pid))
+			.withMotionMagic(
+					new MotionMagicConfigs()
+						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
+						.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(45 * 144))
+			)
 			.withFeedback(feedback)
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()

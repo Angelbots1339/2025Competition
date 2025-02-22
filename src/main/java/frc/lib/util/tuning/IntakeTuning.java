@@ -43,7 +43,7 @@ public class IntakeTuning extends Command {
 			.withProperties(Map.of("min", 0, "max", 90))
 			.getEntry();
 
-	private static GenericEntry volts = tab.add("volts", 1)
+	private static GenericEntry volts = tab.add("volts", IntakeConstants.intakeVolts.in(Volts))
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
