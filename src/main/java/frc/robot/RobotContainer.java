@@ -155,7 +155,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(new InstantCommand(intake::home, intake));
+		intake.setDefaultCommand(new InstantCommand(intake::home, intake).onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 	}
 

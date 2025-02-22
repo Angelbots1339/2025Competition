@@ -35,8 +35,6 @@ public class ExtendElevator extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		elevator.setHeight(0);
-		/* wait until elevator is fully down otherwise the intake default command could hit it */
-		while (!elevator.isAtSetpoint());
 	}
 
 	@Override

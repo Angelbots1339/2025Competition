@@ -88,6 +88,10 @@ public class Elevator extends SubsystemBase {
 		return Math.abs(getErrorMeters()) <= ElevatorConstants.ErrorTolerence;
 	}
 
+	public boolean isAtHome() {
+		return targetHeight == 0 && isAtSetpoint();
+	}
+
 	public void setPID(Slot0Configs tmp) {
 		leader.getConfigurator().apply(tmp);
 		follower.getConfigurator().apply(tmp);
