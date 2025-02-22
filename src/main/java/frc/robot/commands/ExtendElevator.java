@@ -30,7 +30,14 @@ public class ExtendElevator extends Command {
 			return;
 
 		elevator.setHeight(height);
+
+		if (!elevator.isAtSetpoint())
+			return;
+
+		run();
 	}
+
+	public void run() {}
 
 	@Override
 	public void end(boolean interrupted) {

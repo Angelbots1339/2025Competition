@@ -28,6 +28,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
+import frc.robot.commands.Elevator.IntakeAlgae;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
@@ -83,7 +84,9 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		openIntake.whileTrue(intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))));
+		openIntake.whileTrue(
+			new IntakeAlgae(elevator, intake, () -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis())))
+		);
 		extendElevator.whileTrue(new ExtendElevator(elevator, intake, 0.3));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));

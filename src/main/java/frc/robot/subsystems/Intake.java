@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
@@ -60,13 +59,9 @@ public class Intake extends SubsystemBase {
 		leftAngleMotor.setPosition(angle);
 	}
 
-	public Command runIntake(Supplier<Angle> angle) {
-		return run(
-			() -> {
-				setAngle(angle);
-				runWheelsVolts(IntakeConstants.intakeVolts);
-			}
-		);
+	public void runIntake(Supplier<Angle> angle) {
+		setAngle(angle);
+		runWheelsVolts(IntakeConstants.intakeVolts);
 	}
 
 	public void home() {
