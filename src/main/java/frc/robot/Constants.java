@@ -203,6 +203,7 @@ public class Constants {
 		public static final int anglePort = 6;
 		public static final int wheelPort = 7;
 		public static final int encoderPort = 0;
+		public static final int sensorPort = 1;
 
 		public static final double gearRatio = 32.0 / 16.0;
 
@@ -214,7 +215,9 @@ public class Constants {
 		public static final Angle maxAngle = Degrees.of(120);
 		public static final Angle minAngle = Degrees.of(60);
 		public static final Angle defaultAngle = Degrees.of(120);
-		public static final Angle errorTolerence = Degrees.of(1);
+
+		public static final Angle angleErrorTolerence = Degrees.of(1);
+		public static final double hasAlgaeThreshold = 250; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(3);
 
@@ -228,8 +231,8 @@ public class Constants {
 			.withKG(0);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
-			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144));
+			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(12.5))
+			.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
 
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
 			.withMotorOutput(

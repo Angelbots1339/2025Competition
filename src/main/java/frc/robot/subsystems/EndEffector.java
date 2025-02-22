@@ -9,6 +9,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +26,8 @@ public class EndEffector extends SubsystemBase {
 
 	private CANcoder encoder = new CANcoder(EndEffectorConstants.encoderPort);
 
+	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
+
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("End Effector");
@@ -32,6 +37,8 @@ public class EndEffector extends SubsystemBase {
 	public EndEffector() {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
+
+		sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 	}
 
@@ -66,7 +73,11 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean isAtSetpoint() {
-		return getAngleError().abs(Degrees) <= EndEffectorConstants.errorTolerence.in(Degrees);
+		return getAngleError().abs(Degrees) <= EndEffectorConstants.angleErrorTolerence.in(Degrees);
+	}
+
+	public boolean hasAlgae() {
+		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
 	public void setPID(SlotConfigs newPID) {
@@ -85,6 +96,9 @@ public class EndEffector extends SubsystemBase {
 		logger.addDouble("target angle", () -> targetAngle.in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
+
+		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
+		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), EndEffectorLogging.Wheel);
 

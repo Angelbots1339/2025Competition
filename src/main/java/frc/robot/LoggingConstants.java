@@ -35,6 +35,7 @@ public final class LoggingConstants {
 		public class EndEffectorLogging {
 			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
 			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel TOF = LoggingLevel.NETWORK_TABLES;
 		}
 
         public class RobotContainerLogging {
