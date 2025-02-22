@@ -5,7 +5,9 @@ import static edu.wpi.first.units.Units.Rotations;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -38,12 +40,11 @@ public class EndEffector extends SubsystemBase {
 
 	public void setAngle(Angle angle) {
 		targetAngle = angle;
-		angleMotor.setControl(new PositionVoltage(angle));
+		angleMotor.setControl(new MotionMagicVoltage(angle));
 	}
 
 	public void setAngle(Supplier<Angle> angle) {
-		targetAngle = angle.get();
-		angleMotor.setControl(new PositionVoltage(angle.get()));
+		setAngle(angle.get());
 	}
 
 	public void runIntake(Voltage volts) {
@@ -64,6 +65,9 @@ public class EndEffector extends SubsystemBase {
 
 	public void setPID(SlotConfigs newPID) {
 		angleMotor.getConfigurator().apply(newPID);
+	}
+	public void setMotion(MotionMagicConfigs tmp) {
+		angleMotor.getConfigurator().apply(tmp);
 	}
 
 	@Override

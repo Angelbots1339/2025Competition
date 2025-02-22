@@ -63,7 +63,6 @@ public class RobotContainer {
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
-	private Trigger extendToIntake = new Trigger(() -> operator.getXButton());
 	private Trigger home = new Trigger(() -> operator.getStartButton());
 
 	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);

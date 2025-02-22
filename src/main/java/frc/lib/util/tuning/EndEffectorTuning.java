@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -33,6 +34,7 @@ public class EndEffectorTuning extends Command {
 
 	private static ShuffleboardTab tab = Shuffleboard.getTab("EndEffector Tuning");
 	private static ShuffleboardLayout pid = tab.getLayout("PID", BuiltInLayouts.kList);
+	private static ShuffleboardLayout motion = tab.getLayout("Motion Magic", BuiltInLayouts.kList);
 	private static XboxController test = new XboxController(DriverConstants.testPort);
 
 	private static Voltage volt_target = Volts.zero();
@@ -62,6 +64,14 @@ public class EndEffectorTuning extends Command {
 	private static GenericEntry s = pid.add("S", EndEffectorConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
+
+	private static GenericEntry cv = motion.add("Cruise Velocity", EndEffectorConstants.motion.MotionMagicCruiseVelocity)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry a = motion.add("Acceleration", EndEffectorConstants.motion.MotionMagicAcceleration)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+
 
 	private static Trigger setAngle = new Trigger(() -> test.getBButton());
 	private static Trigger angleUp = new Trigger(() -> test.getPOV() == 0);
@@ -96,6 +106,11 @@ public class EndEffectorTuning extends Command {
 				.withKS(s.getDouble(0));
 
 		endeffector.setPID(tmp);
+
+		MotionMagicConfigs motion = EndEffectorConstants.motion
+			.withMotionMagicCruiseVelocity(cv.getDouble(0))
+			.withMotionMagicAcceleration(a.getDouble(0));
+		endeffector.setMotion(motion);
 	}
 
 	@Override

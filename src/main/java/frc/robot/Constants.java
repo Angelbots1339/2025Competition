@@ -13,7 +13,6 @@ import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Newton;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -243,6 +242,10 @@ public class Constants {
 			.withKS(0)
 			.withKG(0);
 
+		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
+			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144));
+
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
 			.withMotorOutput(
 				new MotorOutputConfigs()
@@ -271,8 +274,6 @@ public class Constants {
 		public static final TalonFXConfiguration angleConfig = baseAngleConfig
 			.withMotionMagic(
 				new MotionMagicConfigs()
-					.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
-					.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
 			)
 			.withSlot0(Slot0Configs.from(pid));
 
