@@ -41,9 +41,9 @@ public class Elevator extends SubsystemBase {
 
 		reset();
 
-		base = mech.getRoot("Elevator", Units.inchesToMeters(13.970), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
-		stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
-		SmartDashboard.putData("Elevator Mech", mech);
+		// base = mech.getRoot("Elevator", Units.inchesToMeters(13.970), 0).append(new MechanismLigament2d("Base", ElevatorConstants.BaseHeight, 90));
+		// stage1 = base.append(new MechanismLigament2d("Stage 1", Units.inchesToMeters(1), 0, 6, new Color8Bit(Color.kRed)));
+		// SmartDashboard.putData("Elevator Mech", mech);
 		initLogging();
 	}
 
@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public double getErrorMeters() {
-		return ElevatorConstants.rotationToMeters(leader.getClosedLoopError().getValueAsDouble());
+		return ElevatorConstants.rotationToMeters(targetHeight) - ElevatorConstants.rotationToMeters(leader.getPosition().getValueAsDouble());
 	}
 
 	public boolean isAtSetpoint() {
@@ -104,11 +104,11 @@ public class Elevator extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		double length = targetHeight - ElevatorConstants.BaseHeight;
+		// double length = targetHeight - ElevatorConstants.BaseHeight;
 		// if (length < ElevatorConstants.BaseHeight) {
 		// 	stage1.setLength(Units.inchesToMeters(1));
 		// } else {
-			stage1.setLength(length);
+			// stage1.setLength(length);
 		// }
 	}
 
@@ -121,7 +121,5 @@ public class Elevator extends SubsystemBase {
 
 		loggedLeader = new LoggedFalcon("leader", logger, leader, ElevatorLogging.LeaderMotor);
 		loggedFollower = new LoggedFalcon("follower", logger, follower, ElevatorLogging.FollowerMotor);
-		logger.add(loggedLeader);
-		logger.add(loggedFollower);
 	}
 }

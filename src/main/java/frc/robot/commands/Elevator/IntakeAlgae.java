@@ -12,7 +12,7 @@ public class IntakeAlgae extends ExtendElevator {
 	Intake intake;
 
 	public IntakeAlgae(Elevator elevator, Intake intake, Supplier<Angle> targetAngle) {
-		super(elevator, intake, 0);
+		super(elevator, intake, 0, false);
 
 		this.targetAngle = targetAngle;
 		this.intake = intake;

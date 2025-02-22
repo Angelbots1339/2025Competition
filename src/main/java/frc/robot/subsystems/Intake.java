@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
 	private LoggedFalcon loggedWheel;
 
 	private Mechanism2d intake = new Mechanism2d(Units.inchesToMeters(26), Units.inchesToMeters(35));
-	private MechanismLigament2d slapdown;
+	// private MechanismLigament2d slapdown;
 
 	public Intake() {
 		leftAngleMotor.getConfigurator().apply(IntakeConstants.angleConfigs);
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
 
 		initLogging();
 
-		setMech();
+		// setMech();
 	}
 
 	public void resetAngle(Angle angle) {
@@ -62,6 +62,10 @@ public class Intake extends SubsystemBase {
 	public void runIntake(Supplier<Angle> angle) {
 		setAngle(angle);
 		runWheelsVolts(IntakeConstants.intakeVolts);
+	}
+
+	public Angle getTarget() {
+		return angle;
 	}
 
 	public void home() {
@@ -78,7 +82,8 @@ public class Intake extends SubsystemBase {
 		leftAngleMotor.setControl(new PositionVoltage(angle.get()));
 	}
 	public void setAngle(Angle angle) {
-		setAngle(() -> angle);
+		this.angle = angle;
+		leftAngleMotor.setControl(new PositionVoltage(angle));
 	}
 
 	public Angle getAngle() {
@@ -86,8 +91,9 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Angle getAngleError() {
-		return Rotations.of(leftAngleMotor.getClosedLoopError().getValueAsDouble());
+		return angle.minus(leftAngleMotor.getPosition().getValue());
 	}
+
 
 	public boolean isAtSetpoint() {
 		return Math.abs(getAngleError().in(Degrees)) < IntakeConstants.angleErrorTolerence.in(Degrees);
@@ -95,7 +101,7 @@ public class Intake extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		slapdown.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
+		// slapdown.setAngle(angle.minus(Degrees.of(90)).in(Degrees));
 	}
 
 	public void setPID(SlotConfigs newPID) {
@@ -103,10 +109,10 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void setMech() {
-		slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
-			.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
-			.append(new MechanismLigament2d("Slapdown", Units.inchesToMeters(20.012), 0, 6, new Color8Bit(edu.wpi.first.wpilibj.util.Color.kRed)));
-		SmartDashboard.putData("Intake Mech", intake);
+		// slapdown = intake.getRoot("Intake", Units.inchesToMeters(24.685), 0)
+		// 	.append(new MechanismLigament2d("Base", Units.inchesToMeters(11), 90))
+		// 	.append(new MechanismLigament2d("Slapdown", Units.inchesToMeters(20.012), 0, 6, new Color8Bit(edu.wpi.first.wpilibj.util.Color.kRed)));
+		// SmartDashboard.putData("Intake Mech", intake);
 	}
 
 	public void initLogging() {
@@ -121,8 +127,5 @@ public class Intake extends SubsystemBase {
 		loggedLeftAngle = new LoggedFalcon("Left Angle Motor", logger, leftAngleMotor, IntakeLogging.Angle);
 		loggedRightAngle = new LoggedFalcon("Right Angle Motor", logger, rightAngleMotor, IntakeLogging.Angle);
 		loggedWheel = new LoggedFalcon("wheel Motor", logger, wheelMotor, IntakeLogging.Wheel);
-		logger.add(loggedLeftAngle);
-		logger.add(loggedRightAngle);
-		logger.add(loggedWheel);
 	}
 }

@@ -24,6 +24,7 @@ import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
@@ -59,7 +60,11 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
-	private Trigger extendElevator = new Trigger(() -> operator.getYButton());
+	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
+	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
+	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
+	private Trigger extendToIntake = new Trigger(() -> operator.getXButton());
+	private Trigger home = new Trigger(() -> operator.getStartButton());
 
 	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
 
@@ -85,9 +90,14 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		openIntake.whileTrue(
-			new IntakeAlgae(elevator, intake, () -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis())))
+				new ExtendElevator(elevator, intake, 0, false)
+				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
+				.andThen(Commands.run(() -> intake.runIntake(() -> Degrees.of(16)), intake))
 		);
-		extendElevator.whileTrue(new ExtendElevator(elevator, intake, 0.3));
+		home.onTrue(new ExtendElevator(elevator, intake, 0, true));
+		extendToBarge.onTrue(new ExtendElevator(elevator, intake, ElevatorConstants.Heights.Max, false));
+		extendToA1.onTrue(new ExtendElevator(elevator, intake, 0.2, true));
+		extendToA2.onTrue(new ExtendElevator(elevator, intake, 0.4, true));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
