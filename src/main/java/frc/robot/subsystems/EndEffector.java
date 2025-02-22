@@ -56,11 +56,11 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public Angle getAngleError() {
-		return Rotations.of(angleMotor.getClosedLoopError().getValue());
+		return targetAngle.minus(getAngle());
 	}
 
 	public boolean isAtSetpoint() {
-		return getAngleError().abs(Degrees) < EndEffectorConstants.errorTolerence.in(Degrees);
+		return getAngleError().abs(Degrees) <= EndEffectorConstants.errorTolerence.in(Degrees);
 	}
 
 	public void setPID(SlotConfigs newPID) {
