@@ -216,6 +216,8 @@ public class Constants {
 		public static final Angle defaultAngle = Degrees.of(120);
 		public static final Angle errorTolerence = Degrees.of(1);
 
+		public static final Voltage intakeVolts = Volts.of(3);
+
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
@@ -279,6 +281,7 @@ public class Constants {
 		public static final Angle intakeAvoidAngle = Degrees.of(45);
 		public static final Angle reefAvoidAngle = Degrees.of(75);
 
+		public static final Angle endEffectorIntakeAngle = Degrees.of(60);
 		public static final Angle endEffectorAvoidAngle = Degrees.of(30);
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
 

@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotations;
-
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -40,6 +37,11 @@ public class EndEffector extends SubsystemBase {
 
 	public void home() {
 		setAngle(EndEffectorConstants.defaultAngle);
+	}
+
+	public void intake(Angle angle) {
+		setAngle(angle);
+		runIntake(EndEffectorConstants.intakeVolts);
 	}
 
 	public void setAngle(Angle angle) {
