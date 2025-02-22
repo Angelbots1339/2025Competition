@@ -82,6 +82,7 @@ public class Elevator extends SubsystemBase {
 
 
 	public double getErrorMeters() {
+		/* we are manually checking the error because getclosedlooperror is delayed */
 		return targetHeight - ElevatorConstants.rotationToMeters(leader.getPosition().getValueAsDouble());
 	}
 

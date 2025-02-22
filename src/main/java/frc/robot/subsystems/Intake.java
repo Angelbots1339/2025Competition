@@ -91,6 +91,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Angle getAngleError() {
+		/* we are manually checking the error because getclosedlooperror is delayed */
 		return angle.minus(leftAngleMotor.getPosition().getValue());
 	}
 
