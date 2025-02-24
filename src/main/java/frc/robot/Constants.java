@@ -210,6 +210,7 @@ public class Constants {
 		public static final double gearRatio = 32.0 / 16.0;
 		/* todo find the actual angles for this
 		 * first find the 90 position by setting the end effector where it won't tip
+		 * then set the offset in talonfx with (current rotation found by the cancoder) - 0.25
 		 */
 		public static final Angle maxAngle = Degrees.of(120);
 		public static final Angle minAngle = Degrees.of(60);
@@ -219,6 +220,7 @@ public class Constants {
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(3);
+		public static final Voltage algaeHoldVoltage = Volts.of(2);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
@@ -254,7 +256,7 @@ public class Constants {
 			)
 			.withFeedback(
 				new FeedbackConfigs()
-					/* might need to invert */
+					/* might need to invert in tunerfx */
 					.withRemoteCANcoder(new CANcoder(encoderPort))
 					.withSensorToMechanismRatio(gearRatio)
 			);

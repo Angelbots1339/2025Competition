@@ -46,6 +46,12 @@ public class EndEffector extends SubsystemBase {
 
 	public void home() {
 		setAngle(EndEffectorConstants.defaultAngle);
+
+		if (hasAlgae()) {
+			runIntake(EndEffectorConstants.algaeHoldVoltage);
+			return;
+		}
+
 		runIntake(Volts.zero());
 	}
 
