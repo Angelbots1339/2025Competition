@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -44,6 +46,7 @@ public class EndEffector extends SubsystemBase {
 
 	public void home() {
 		setAngle(EndEffectorConstants.defaultAngle);
+		runIntake(Volts.zero());
 	}
 
 	public void intake(Angle angle) {
