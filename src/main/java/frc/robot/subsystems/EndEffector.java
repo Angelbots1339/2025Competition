@@ -85,7 +85,8 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean hasAlgae() {
-		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
+		return true;
+		// return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
 	public void setPID(SlotConfigs newPID) {
