@@ -50,14 +50,14 @@ public class ExtendElevator extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		if (target == SequencingConstants.Heights.Barge) {
-			intake.setAngle(IntakeConstants.outsideAngle);
+			intake.setAngle(IntakeConstants.intakeAngle);
 			return;
 		}
 
 		if (endEffector.hasAlgae())
 			intake.setAngle(IntakeConstants.algaeStayAngle);
 		else
-			intake.setAngle(IntakeConstants.insideAngle);
+			intake.setAngle(IntakeConstants.maxAngle);
 	}
 
 	@Override

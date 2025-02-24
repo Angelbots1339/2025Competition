@@ -38,7 +38,7 @@ public class IntakeTuning extends Command {
 	private static Voltage volt_target = Volt.zero();
 	private static Angle targetAngle = Degrees.zero();
 
-	private static GenericEntry target = tab.add("target", IntakeConstants.outsideAngle.in(Degrees))
+	private static GenericEntry target = tab.add("target", IntakeConstants.intakeAngle.in(Degrees))
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", 0, "max", 90))
 			.getEntry();
@@ -77,11 +77,11 @@ public class IntakeTuning extends Command {
 	@Override
 	public void initialize() {
 		intakeAngle.whileTrue(Commands.run(() -> intake.setAngle(() -> targetAngle)));
-		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.insideAngle.in(Degrees)))));
-		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.outsideAngle.in(Degrees)))));
+		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.maxAngle.in(Degrees)))));
+		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.intakeAngle.in(Degrees)))));
 
 		intakeRun.whileTrue(Commands.run(() -> intake.runWheelsVolts(volt_target))).whileFalse(Commands.run(() -> intake.runWheelsVolts(Volt.zero())));
-		resetAngle.onTrue(Commands.runOnce(() -> intake.resetAngle(IntakeConstants.insideAngle), intake));
+		resetAngle.onTrue(Commands.runOnce(() -> intake.resetAngle(IntakeConstants.maxAngle), intake));
 	}
 
 	@Override

@@ -16,8 +16,6 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -66,8 +64,9 @@ public class Constants {
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
-		public static final Angle insideAngle = Degrees.of(90);
-		public static final Angle outsideAngle = Degrees.of(13);
+		public static final Angle maxAngle = Degrees.of(90);
+		public static final Angle minAngle = Degrees.of(0);
+		public static final Angle intakeAngle = Degrees.of(13);
 		public static final Angle startingAngle = Degrees.of(90);
 		/* TODO: find what this angle is */
 		public static final Angle algaeStayAngle = Degrees.of(45);
@@ -113,9 +112,9 @@ public class Constants {
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
 					.withForwardSoftLimitEnable(true)
-					.withForwardSoftLimitThreshold(insideAngle)
+					.withForwardSoftLimitThreshold(maxAngle)
 					.withReverseSoftLimitEnable(true)
-					.withReverseSoftLimitThreshold(outsideAngle)
+					.withReverseSoftLimitThreshold(minAngle)
 			);
 	}
 

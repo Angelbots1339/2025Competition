@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
 	private TalonFX rightAngleMotor = new TalonFX(IntakeConstants.rightAngleMotorPort);
 	private TalonFX wheelMotor = new TalonFX(IntakeConstants.wheelMotorPort);
 
-	private Angle angle = IntakeConstants.insideAngle;
+	private Angle angle = IntakeConstants.maxAngle;
 
 	private LoggedSubsystem logger = new LoggedSubsystem("Intake");
 	private LoggedFalcon loggedLeftAngle;
@@ -65,7 +65,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void home() {
-		setAngle(() -> IntakeConstants.insideAngle);
+		setAngle(() -> IntakeConstants.maxAngle);
 		runWheelsVolts(Volts.of(0));
 	}
 
