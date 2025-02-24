@@ -67,6 +67,8 @@ public class Constants {
 		public static final Angle insideAngle = Degrees.of(90);
 		public static final Angle outsideAngle = Degrees.of(13);
 		public static final Angle startingAngle = Degrees.of(90);
+		/* TODO: find what this angle is */
+		public static final Angle algaeStayAngle = Degrees.of(45);
 
 
 		public static final Voltage intakeVolts = Volts.of(4.0);

@@ -168,7 +168,11 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(new InstantCommand(intake::home, intake).onlyIf(() -> elevator.isAtHome()));
+		intake.setDefaultCommand(
+			Commands.either(
+				new InstantCommand(intake::home, intake),
+				new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
+				() -> endeffector.hasAlgae()).onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		endeffector.setDefaultCommand(new InstantCommand(endeffector::home, endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
