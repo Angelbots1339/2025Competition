@@ -97,9 +97,18 @@ public class RobotContainer {
 				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
-		extendToBarge.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge));
-		extendToA1.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1));
-		extendToA2.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2));
+		extendToBarge.onTrue(
+			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
+			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
+		);
+		extendToA1.onTrue(
+			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
+			.andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+		);
+		extendToA2.onTrue(
+			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2)
+			.andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+		);
 	}
 
 	private void configureDriverBindings() {

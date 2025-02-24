@@ -214,8 +214,10 @@ public class Constants {
 		 */
 		public static final Angle maxAngle = Degrees.of(120);
 		public static final Angle minAngle = Degrees.of(60);
+
 		public static final Angle defaultAngle = Degrees.of(120);
 		public static final Angle intakeAngle = Degrees.of(60);
+		public static final Angle algaeAngle = Degrees.of(10);
 
 		public static final Angle angleErrorTolerence = Degrees.of(1);
 		public static final double hasAlgaeThreshold = 250; /* mm */
