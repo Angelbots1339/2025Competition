@@ -49,10 +49,9 @@ public class EndEffector extends SubsystemBase {
 
 		if (hasAlgae()) {
 			runIntake(EndEffectorConstants.algaeHoldVoltage);
-			return;
+		} else {
+			runIntake(Volts.zero());
 		}
-
-		runIntake(Volts.zero());
 	}
 
 	public void intake(Angle angle) {

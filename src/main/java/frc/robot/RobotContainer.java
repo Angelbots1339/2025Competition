@@ -23,6 +23,7 @@ import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -93,7 +94,7 @@ public class RobotContainer {
 				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
 				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.outsideAngle), intake))
-				.andThen(Commands.run(() -> endeffector.intake(SequencingConstants.endEffectorIntakeAngle), endeffector))
+				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge));
@@ -172,7 +173,8 @@ public class RobotContainer {
 			Commands.either(
 				new InstantCommand(intake::home, intake),
 				new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
-				() -> endeffector.hasAlgae()).onlyIf(() -> elevator.isAtHome()));
+				() -> endeffector.hasAlgae())
+			.onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		endeffector.setDefaultCommand(new InstantCommand(endeffector::home, endeffector).onlyIf(() -> elevator.isAtHome()));
 	}

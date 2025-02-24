@@ -25,34 +25,39 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void initialize() {
+		if (endEffector.hasAlgae()) {
+			intake.setAngle(SequencingConstants.algaeAvoidAngle);
+		} else {
+			intake.setAngle(SequencingConstants.intakeAvoidAngle);
+		}
 	}
 
 	@Override
 	public void execute() {
-		if (target == SequencingConstants.Heights.A1 || target == SequencingConstants.Heights.A2) {
-			intake.setAngle(SequencingConstants.reefAvoidAngle);
-		} else {
-			intake.setAngle(SequencingConstants.intakeAvoidAngle);
+		if (!intake.isAtSetpoint()) {
+			return;
 		}
 
-		if (intake.isAtSetpoint()) {
-			endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
+		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 
-			if (endEffector.isAtSetpoint()) {
-				elevator.setHeight(target.height);
-			}
+		if (!endEffector.isAtSetpoint()) {
+			return;
 		}
+
+		elevator.setHeight(target.height);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		if (target != SequencingConstants.Heights.Barge) {
-			intake.setAngle(IntakeConstants.insideAngle);
+		if (target == SequencingConstants.Heights.Barge) {
+			intake.setAngle(IntakeConstants.outsideAngle);
+			return;
 		}
 
-		if (target == SequencingConstants.Heights.Barge) {
-			endEffector.setAngle(SequencingConstants.endEffectorBargeAngle);
-		}
+		if (endEffector.hasAlgae())
+			intake.setAngle(IntakeConstants.algaeStayAngle);
+		else
+			intake.setAngle(IntakeConstants.insideAngle);
 	}
 
 	@Override

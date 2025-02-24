@@ -16,6 +16,8 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -215,6 +217,7 @@ public class Constants {
 		public static final Angle maxAngle = Degrees.of(120);
 		public static final Angle minAngle = Degrees.of(60);
 		public static final Angle defaultAngle = Degrees.of(120);
+		public static final Angle intakeAngle = Degrees.of(60);
 
 		public static final Angle angleErrorTolerence = Degrees.of(1);
 		public static final double hasAlgaeThreshold = 250; /* mm */
@@ -283,12 +286,16 @@ public class Constants {
 		public static final double IntakeHitPoint = 0.14;
 		public static final double IntakeHitPointBound = 0.05;
 
+		/* angle at which the end effector will not hit the intake with no algae */
 		public static final Angle intakeAvoidAngle = Degrees.of(45);
-		public static final Angle reefAvoidAngle = Degrees.of(75);
+		/* todo find the angle at which the intake is no longer in the way of the algae + end effector */
+		public static final Angle algaeAvoidAngle = Degrees.of(40);
 
-		public static final Angle endEffectorIntakeAngle = Degrees.of(60);
+		/* angle at which the end effector will not hit the elevator when moving upwards */
 		public static final Angle endEffectorAvoidAngle = Degrees.of(30);
+		/* angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
+
 
 		public static enum Heights {
 			Intake(0),
