@@ -208,11 +208,8 @@ public class Constants {
 		public static final int sensorPort = 1;
 
 		public static final double gearRatio = 32.0 / 16.0;
-
-		/* the angle is based on the side of the endeffector where the wheel motors are
-		 *
-		 *
-		 *
+		/* todo find the actual angles for this
+		 * first find the 90 position by setting the end effector where it won't tip
 		 */
 		public static final Angle maxAngle = Degrees.of(120);
 		public static final Angle minAngle = Degrees.of(60);
@@ -234,7 +231,8 @@ public class Constants {
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(12.5))
-			.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
+			// .withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
+			;
 
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
 			.withMotorOutput(
