@@ -60,6 +60,11 @@ public class Intake extends SubsystemBase {
 		runWheelsVolts(IntakeConstants.intakeVolts);
 	}
 
+	public void runOuttake() {
+		setAngle(IntakeConstants.intakeAngle);
+		runWheelsVolts(IntakeConstants.intakeVolts.unaryMinus());
+	}
+
 	public Angle getTarget() {
 		return angle;
 	}
@@ -77,6 +82,7 @@ public class Intake extends SubsystemBase {
 		this.angle = angle.get();
 		leftAngleMotor.setControl(new MotionMagicVoltage(angle.get()));
 	}
+
 	public void setAngle(Angle angle) {
 		this.angle = angle;
 		leftAngleMotor.setControl(new MotionMagicVoltage(angle));

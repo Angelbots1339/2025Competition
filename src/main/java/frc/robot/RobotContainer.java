@@ -61,12 +61,14 @@ public class RobotContainer {
 	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
 	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getStartButton());
 
 	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
+	private Trigger outtake = new Trigger(() -> operator.getRightTriggerAxis() > 0.1);
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -96,6 +98,17 @@ public class RobotContainer {
 				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
 				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
+
+		outtake.whileTrue(
+				Commands.either(
+					Commands.run(() -> {
+						intake.runOuttake();
+						endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus());
+					}, endeffector, intake),
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus()), endeffector),
+				() -> elevator.isAtHome())
+		);
+
 		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
