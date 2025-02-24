@@ -145,7 +145,6 @@ public class Constants {
 
 		/* heights are in meters */
 		public class Heights {
-			/* TODO: Tune */
 			public static final double Max = 0.57; // meters
 			public static final double Min = Units.inchesToMeters(0);
 		}
@@ -209,7 +208,7 @@ public class Constants {
 		public static final int sensorPort = 1;
 
 		public static final double gearRatio = 32.0 / 16.0;
-		/* todo find the actual angles for this
+		/* TODO: find the actual angles for these
 		 * first find the 90 position by setting the end effector where it won't tip
 		 * then set the offset in talonfx with (current rotation found by the cancoder) - 0.25
 		 */
@@ -285,14 +284,14 @@ public class Constants {
 		public static final double IntakeHitPoint = 0.14;
 		public static final double IntakeHitPointBound = 0.05;
 
-		/* angle at which the end effector will not hit the intake with no algae */
+		/* TODO: find the angle at which the end effector will not hit the intake with no algae */
 		public static final Angle intakeAvoidAngle = Degrees.of(45);
-		/* todo find the angle at which the intake is no longer in the way of the algae + end effector */
+		/* TODO: find the angle at which the intake is no longer in the way of the algae + end effector */
 		public static final Angle algaeAvoidAngle = Degrees.of(40);
 
-		/* angle at which the end effector will not hit the elevator when moving upwards */
+		/* TODO: find the angle at which the end effector will not hit the elevator when moving upwards */
 		public static final Angle endEffectorAvoidAngle = Degrees.of(30);
-		/* angle at which we will start to score algae */
+		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
 
 
