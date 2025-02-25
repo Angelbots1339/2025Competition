@@ -32,7 +32,6 @@ public class EndEffector extends SubsystemBase {
 	private TalonFX wheelMotor = new TalonFX(EndEffectorConstants.wheelPort);
 
 	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1, EndEffectorConstants.encoderOffset);
-	private final Timer throughBoreTimer = new Timer();
 
 	// private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
 
@@ -48,7 +47,6 @@ public class EndEffector extends SubsystemBase {
 
 		encoder.setInverted(true);
 		resetAngle(getEncoderAngle());
-		throughBoreTimer.start();
 		// sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 	}
@@ -86,12 +84,14 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public Angle getAngle() {
-		// return Rotations.of(encoder.get());
 		return angleMotor.getPosition().getValue();
 	}
 
 	public Angle getEncoderAngle() {
-		return Rotations.of(encoder.get() / EndEffectorConstants.gearRatio);
+		Angle rot = Rotations.of(encoder.get() / EndEffectorConstants.gearRatio);
+		if (rot.gt(EndEffectorConstants.maxAngle.plus(Degrees.of(5))))
+			return rot.minus(Degrees.of(180));
+		return rot;
 	}
 
 	public Angle getAngleError() {
@@ -122,11 +122,6 @@ public class EndEffector extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (throughBoreTimer.get() >= EndEffectorConstants.timeBeforeEncoderReset) {
-			resetToAbsolute();
-			throughBoreTimer.reset();
-			throughBoreTimer.stop();
-		  }
 	}
 
 	public void initLogs() {
