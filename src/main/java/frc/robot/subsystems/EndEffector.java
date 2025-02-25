@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
@@ -16,6 +17,8 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
@@ -26,7 +29,7 @@ public class EndEffector extends SubsystemBase {
 	private TalonFX angleMotor = new TalonFX(EndEffectorConstants.anglePort);
 	private TalonFX wheelMotor = new TalonFX(EndEffectorConstants.wheelPort);
 
-	private CANcoder encoder = new CANcoder(EndEffectorConstants.encoderPort);
+	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1, EndEffectorConstants.encoderOffset);
 
 	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
 
@@ -39,6 +42,8 @@ public class EndEffector extends SubsystemBase {
 	public EndEffector() {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
+
+		angleMotor.setPosition(getEncoderAngle());
 
 		sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
@@ -73,7 +78,12 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public Angle getAngle() {
-		return encoder.getAbsolutePosition().getValue();
+		// return Rotations.of(encoder.get());
+		return angleMotor.getPosition().getValue();
+	}
+
+	public Angle getEncoderAngle() {
+		return Rotations.of(encoder.get());
 	}
 
 	public Angle getAngleError() {
@@ -101,6 +111,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void initLogs() {
+		logger.addDouble("encoder angle", () -> getEncoderAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("current angle", () -> getAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("target angle", () -> targetAngle.in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);

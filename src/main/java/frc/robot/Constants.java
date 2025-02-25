@@ -207,6 +207,8 @@ public class Constants {
 		public static final int encoderPort = 0;
 		public static final int sensorPort = 1;
 
+		public static final double encoderOffset = 0.0;
+
 		public static final double gearRatio = 32.0 / 16.0;
 		/* TODO: find the actual angles for these
 		 * first find the 90 position by setting the end effector where it won't tip
@@ -260,7 +262,7 @@ public class Constants {
 			.withFeedback(
 				new FeedbackConfigs()
 					/* might need to invert in tunerfx */
-					.withRemoteCANcoder(new CANcoder(encoderPort))
+					.withFeedbackRemoteSensorID(encoderPort)
 					.withSensorToMechanismRatio(gearRatio)
 			);
 
