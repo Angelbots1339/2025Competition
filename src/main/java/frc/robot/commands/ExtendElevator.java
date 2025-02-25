@@ -34,9 +34,9 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void execute() {
-		if (!intake.isAtSetpoint()) {
-			return;
-		}
+		// if (!intake.isAtSetpoint()) {
+		// 	return;
+		// }
 
 		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 
@@ -62,6 +62,7 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return elevator.isAtSetpoint() && intake.isAtSetpoint() && endEffector.isAtSetpoint();
+		// return elevator.isAtSetpoint() && intake.isAtSetpoint() && endEffector.isAtSetpoint();
+		return elevator.isAtSetpoint() && endEffector.isAtSetpoint();
 	}
 }
