@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
@@ -30,8 +31,9 @@ public class EndEffector extends SubsystemBase {
 	private TalonFX wheelMotor = new TalonFX(EndEffectorConstants.wheelPort);
 
 	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1, EndEffectorConstants.encoderOffset);
+	private final Timer throughBoreTimer = new Timer();
 
-	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
+	// private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
 
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
 
@@ -43,9 +45,9 @@ public class EndEffector extends SubsystemBase {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
 
-		angleMotor.setPosition(getEncoderAngle());
-
-		sensor.setRangingMode(RangingMode.Short, 24);
+		resetAngle(getEncoderAngle());
+		throughBoreTimer.start();
+		// sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 	}
 
@@ -77,13 +79,17 @@ public class EndEffector extends SubsystemBase {
 		wheelMotor.setControl(new VoltageOut(volts));
 	}
 
+	public void resetAngle(Angle angle) {
+		angleMotor.setPosition(angle);
+	}
+
 	public Angle getAngle() {
 		// return Rotations.of(encoder.get());
 		return angleMotor.getPosition().getValue();
 	}
 
 	public Angle getEncoderAngle() {
-		return Rotations.of(encoder.get());
+		return Rotations.of(encoder.get() / 2.0);
 	}
 
 	public Angle getAngleError() {
@@ -106,18 +112,28 @@ public class EndEffector extends SubsystemBase {
 		angleMotor.getConfigurator().apply(tmp);
 	}
 
+	public void resetToAbsolute() {
+		angleMotor.setPosition(getEncoderAngle());
+	}
+
 	@Override
 	public void periodic() {
+		if (throughBoreTimer.get() >= EndEffectorConstants.timeBeforeEncoderReset) {
+			resetToAbsolute();
+			throughBoreTimer.reset();
+			throughBoreTimer.stop();
+		  }
 	}
 
 	public void initLogs() {
+		logger.addBoolean("encoder", () -> encoder.isConnected(), EndEffectorLogging.Angle);
 		logger.addDouble("encoder angle", () -> getEncoderAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("current angle", () -> getAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("target angle", () -> targetAngle.in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
 
-		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
+		// logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
 		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), EndEffectorLogging.Wheel);

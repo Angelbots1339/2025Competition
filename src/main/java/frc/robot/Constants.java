@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -204,12 +205,14 @@ public class Constants {
 	public class EndEffectorConstants {
 		public static final int anglePort = 6;
 		public static final int wheelPort = 7;
-		public static final int encoderPort = 0;
-		public static final int sensorPort = 1;
+		public static final int encoderPort = 2;
+		public static final int sensorPort = 9;
 
-		public static final double encoderOffset = 0.0;
+		public static final double encoderOffset = 0.0434;
+		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
+		public static final double gearbox = 9;
 		/* TODO: find the actual angles for these
 		 * first find the 90 position by setting the end effector where it won't tip
 		 * then set the offset in talonfx with (current rotation found by the cancoder) - 0.25
@@ -261,9 +264,7 @@ public class Constants {
 			)
 			.withFeedback(
 				new FeedbackConfigs()
-					/* might need to invert in tunerfx */
-					.withFeedbackRemoteSensorID(encoderPort)
-					.withSensorToMechanismRatio(gearRatio)
+					.withSensorToMechanismRatio(gearRatio * gearbox)
 			);
 
 		public static final TalonFXConfiguration angleConfig = baseAngleConfig
