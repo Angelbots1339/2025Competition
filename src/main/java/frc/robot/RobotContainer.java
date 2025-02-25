@@ -96,7 +96,7 @@ public class RobotContainer {
 				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
 				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
-				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
+				.alongWith(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 
 		outtake.whileTrue(
