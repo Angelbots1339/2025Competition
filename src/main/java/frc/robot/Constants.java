@@ -208,7 +208,7 @@ public class Constants {
 		public static final int encoderPort = 2;
 		public static final int sensorPort = 9;
 
-		public static final double encoderOffset = 0.0434;
+		public static final double encoderOffset = -0.405;
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
@@ -241,8 +241,7 @@ public class Constants {
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45))
-			// .withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
-			;
+			.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
 
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
 			.withMotorOutput(

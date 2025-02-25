@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
+import frc.lib.util.logging.Logger.LoggingLevel;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.LoggingConstants.EndEffectorLogging;
@@ -45,6 +46,7 @@ public class EndEffector extends SubsystemBase {
 		angleMotor.getConfigurator().apply(EndEffectorConstants.angleConfig);
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
 
+		encoder.setInverted(true);
 		resetAngle(getEncoderAngle());
 		throughBoreTimer.start();
 		// sensor.setRangingMode(RangingMode.Short, 24);
@@ -89,7 +91,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public Angle getEncoderAngle() {
-		return Rotations.of(encoder.get() / 2.0);
+		return Rotations.of(encoder.get() / EndEffectorConstants.gearRatio);
 	}
 
 	public Angle getAngleError() {
@@ -113,6 +115,8 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void resetToAbsolute() {
+		if (!encoder.isConnected())
+			return;
 		angleMotor.setPosition(getEncoderAngle());
 	}
 
@@ -126,6 +130,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void initLogs() {
+		logger.addDouble("true encoder", () -> encoder.get(), LoggingLevel.NETWORK_TABLES);
 		logger.addBoolean("encoder", () -> encoder.isConnected(), EndEffectorLogging.Angle);
 		logger.addDouble("encoder angle", () -> getEncoderAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("current angle", () -> getAngle().in(Degrees), EndEffectorLogging.Angle);
