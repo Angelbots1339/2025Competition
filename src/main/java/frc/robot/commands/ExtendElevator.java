@@ -50,7 +50,7 @@ public class ExtendElevator extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		if (target == SequencingConstants.Heights.Barge) {
-			intake.setAngle(IntakeConstants.intakeAngle);
+			intake.setAngle(IntakeConstants.minAngle);
 			return;
 		}
 
