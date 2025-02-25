@@ -230,15 +230,15 @@ public class Constants {
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(0)
+			.withKP(18)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKG(0);
+			.withKS(0.3)
+			.withKG(0.4);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45))
-			.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
+			.withMotionMagicCruiseVelocity(4.5)
+			.withMotionMagicAcceleration(3);
 
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
 			.withMotorOutput(
