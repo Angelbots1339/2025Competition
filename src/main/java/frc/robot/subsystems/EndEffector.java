@@ -31,11 +31,14 @@ public class EndEffector extends SubsystemBase {
 	private TalonFX angleMotor = new TalonFX(EndEffectorConstants.anglePort);
 	private TalonFX wheelMotor = new TalonFX(EndEffectorConstants.wheelPort);
 
-	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1, EndEffectorConstants.encoderOffset);
+	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1,
+			EndEffectorConstants.encoderOffset);
 
-	// private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
+	// private TimeOfFlight sensor = new
+	// TimeOfFlight(EndEffectorConstants.sensorPort);
 
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
+	private final Timer throughBoreTimer = new Timer();
 
 	private LoggedSubsystem logger = new LoggedSubsystem("End Effector");
 	private LoggedFalcon loggedAngle;
@@ -46,7 +49,7 @@ public class EndEffector extends SubsystemBase {
 		wheelMotor.getConfigurator().apply(EndEffectorConstants.wheelConfig);
 
 		encoder.setInverted(true);
-		resetAngle(getEncoderAngle());
+		throughBoreTimer.start();
 		// sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 	}
@@ -110,6 +113,7 @@ public class EndEffector extends SubsystemBase {
 	public void setPID(SlotConfigs newPID) {
 		angleMotor.getConfigurator().apply(newPID);
 	}
+
 	public void setMotion(MotionMagicConfigs tmp) {
 		angleMotor.getConfigurator().apply(tmp);
 	}
@@ -122,6 +126,11 @@ public class EndEffector extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		if (throughBoreTimer.get() >= EndEffectorConstants.timeBeforeEncoderReset) {
+			resetToAbsolute();
+			throughBoreTimer.reset();
+			throughBoreTimer.stop();
+		}
 	}
 
 	public void initLogs() {
@@ -133,10 +142,12 @@ public class EndEffector extends SubsystemBase {
 		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
 
-		// logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
+		// logger.addDouble("TOF distance", () -> sensor.getRange(),
+		// EndEffectorLogging.TOF);
 		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
 
-		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(), EndEffectorLogging.Wheel);
+		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(),
+				EndEffectorLogging.Wheel);
 
 		loggedAngle = new LoggedFalcon("angle motor", logger, angleMotor, EndEffectorLogging.Angle);
 		loggedWheel = new LoggedFalcon("wheel motor", logger, wheelMotor, EndEffectorLogging.Wheel);
