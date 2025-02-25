@@ -213,11 +213,11 @@ public class Constants {
 		 * then set the offset in talonfx with (current rotation found by the cancoder) - 0.25
 		 */
 		public static final Angle maxAngle = Degrees.of(120);
-		public static final Angle minAngle = Degrees.of(60);
+		public static final Angle minAngle = Degrees.of(0);
 
-		public static final Angle defaultAngle = Degrees.of(120);
-		public static final Angle intakeAngle = Degrees.of(60);
-		public static final Angle algaeAngle = Degrees.of(10);
+		public static final Angle defaultAngle = Degrees.of(110);
+		public static final Angle intakeAngle = Degrees.of(50);
+		public static final Angle algaeAngle = Degrees.of(49);
 
 		public static final Angle angleErrorTolerence = Degrees.of(1);
 		public static final double hasAlgaeThreshold = 250; /* mm */
