@@ -235,7 +235,7 @@ public class Constants {
 			.withKG(0);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(12.5))
+			.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45))
 			// .withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(12.5));
 			;
 
@@ -265,9 +265,7 @@ public class Constants {
 			);
 
 		public static final TalonFXConfiguration angleConfig = baseAngleConfig
-			.withMotionMagic(
-				new MotionMagicConfigs()
-			)
+			.withMotionMagic(motion)
 			.withSlot0(Slot0Configs.from(pid));
 
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
