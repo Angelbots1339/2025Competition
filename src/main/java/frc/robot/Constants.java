@@ -213,14 +213,11 @@ public class Constants {
 
 		public static final double gearRatio = 32.0 / 16.0;
 		public static final double gearbox = 9;
-		/* TODO: find the actual angles for these
-		 * first find the 90 position by setting the end effector where it won't tip
-		 * then set the offset in talonfx with (current rotation found by the cancoder) - 0.25
-		 */
-		public static final Angle maxAngle = Degrees.of(120);
+		public static final Angle maxAngle = Degrees.of(110);
 		public static final Angle minAngle = Degrees.of(0);
 
 		public static final Angle defaultAngle = Degrees.of(110);
+		/* TODO tune these */
 		public static final Angle intakeAngle = Degrees.of(50);
 		public static final Angle algaeAngle = Degrees.of(49);
 
@@ -292,7 +289,7 @@ public class Constants {
 		public static final Angle algaeAvoidAngle = Degrees.of(40);
 
 		/* TODO: find the angle at which the end effector will not hit the elevator when moving upwards */
-		public static final Angle endEffectorAvoidAngle = Degrees.of(30);
+		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
 
