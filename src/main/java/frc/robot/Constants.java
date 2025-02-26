@@ -208,7 +208,7 @@ public class Constants {
 		public static final int encoderPort = 2;
 		public static final int sensorPort = 9;
 
-		public static final double encoderOffset = -0.405;
+		public static final double encoderOffset = -(0.9 - 0.5);
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
@@ -217,13 +217,13 @@ public class Constants {
 		public static final Angle minAngle = Degrees.of(0);
 
 		public static final Angle defaultAngle = Degrees.of(110);
-		public static final Angle intakeAngle = Degrees.of(50);
+		public static final Angle intakeAngle = Degrees.of(30);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(3);
-		public static final Voltage algaeHoldVoltage = Volts.of(2);
+		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)

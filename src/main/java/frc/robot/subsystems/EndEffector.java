@@ -107,7 +107,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean hasAlgae() {
-		return false;
+		return true;
 		// return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
