@@ -288,13 +288,15 @@ public class Constants {
 		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
+		public static final Angle A2Angle = Degrees.of(40); // elevator 0.33
+		public static final Angle A1Angle = Degrees.of(34); // elevator 0.21
 
 
 		public static enum Heights {
 			Intake(0),
 			Home(0),
-			A1(0.2),
-			A2(0.34),
+			A1(0.21),
+			A2(0.33),
 			Barge(ElevatorConstants.Heights.Max);
 
 			public final double height;

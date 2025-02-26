@@ -118,11 +118,11 @@ public class RobotContainer {
 		);
 		extendToA1.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
-			// .andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle)))
 		);
 		extendToA2.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2)
-			// .andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle)))
 		);
 	}
 
