@@ -284,7 +284,6 @@ public class Constants {
 		/* TODO: find the angle at which the intake is no longer in the way of the algae + end effector */
 		public static final Angle algaeAvoidAngle = Degrees.of(40);
 
-		/* TODO: find the angle at which the end effector will not hit the elevator when moving upwards */
 		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
