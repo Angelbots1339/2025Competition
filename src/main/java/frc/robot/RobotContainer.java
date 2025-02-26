@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -67,8 +69,8 @@ public class RobotContainer {
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getStartButton());
 
-	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
-	private Trigger outtake = new Trigger(() -> operator.getRightTriggerAxis() > 0.1);
+	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.5);
+	private Trigger outtake = new Trigger(() -> operator.getRightTriggerAxis() > 0.5);
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -198,7 +200,8 @@ public class RobotContainer {
 		// 		() -> endeffector.hasAlgae())
 		// 	.onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		endeffector.setDefaultCommand(Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
+		endeffector.setDefaultCommand(
+				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
 	public void stopDefaultCommands() {

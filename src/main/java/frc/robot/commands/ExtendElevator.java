@@ -20,7 +20,7 @@ public class ExtendElevator extends Command {
 		this.endEffector = endeffector;
 		this.target = target;
 
-		addRequirements(elevator, intake);
+		addRequirements(elevator, intake, endeffector);
 	}
 
 	@Override
@@ -30,6 +30,7 @@ public class ExtendElevator extends Command {
 		// } else {
 		// 	intake.setAngle(SequencingConstants.intakeAvoidAngle);
 		// }
+		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 	}
 
 	@Override
@@ -38,7 +39,6 @@ public class ExtendElevator extends Command {
 		// 	return;
 		// }
 
-		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 
 		if (!endEffector.isAtSetpoint()) {
 			return;
