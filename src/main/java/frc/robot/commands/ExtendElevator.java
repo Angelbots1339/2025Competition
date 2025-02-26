@@ -25,11 +25,11 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void initialize() {
-		if (endEffector.hasAlgae()) {
-			intake.setAngle(SequencingConstants.algaeAvoidAngle);
-		} else {
-			intake.setAngle(SequencingConstants.intakeAvoidAngle);
-		}
+		// if (endEffector.hasAlgae()) {
+		// 	intake.setAngle(SequencingConstants.algaeAvoidAngle);
+		// } else {
+		// 	intake.setAngle(SequencingConstants.intakeAvoidAngle);
+		// }
 	}
 
 	@Override

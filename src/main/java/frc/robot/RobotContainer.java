@@ -112,15 +112,15 @@ public class RobotContainer {
 		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
-			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
+			// .andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
 		);
 		extendToA1.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
-			.andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+			// .andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
 		);
 		extendToA2.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2)
-			.andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
+			// .andThen(new InstantCommand(() -> endeffector.setAngle(EndEffectorConstants.algaeAngle)))
 		);
 	}
 
@@ -191,14 +191,14 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(
-			Commands.either(
-				new InstantCommand(intake::home, intake),
-				new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
-				() -> endeffector.hasAlgae())
-			.onlyIf(() -> elevator.isAtHome()));
+		// intake.setDefaultCommand(
+		// 	Commands.either(
+		// 		new InstantCommand(intake::home, intake),
+		// 		new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
+		// 		() -> endeffector.hasAlgae())
+		// 	.onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		endeffector.setDefaultCommand(new InstantCommand(endeffector::home, endeffector).onlyIf(() -> elevator.isAtHome()));
+		// endeffector.setDefaultCommand(new InstantCommand(endeffector::home, endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
 	public void stopDefaultCommands() {

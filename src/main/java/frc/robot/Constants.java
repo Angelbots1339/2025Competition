@@ -221,7 +221,7 @@ public class Constants {
 		public static final Angle intakeAngle = Degrees.of(50);
 		public static final Angle algaeAngle = Degrees.of(49);
 
-		public static final Angle angleErrorTolerence = Degrees.of(1);
+		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(3);
@@ -229,11 +229,11 @@ public class Constants {
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
-			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 			.withKP(18)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.3)
+			.withKS(0.1)
 			.withKG(0.4);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
@@ -252,11 +252,7 @@ public class Constants {
 					.withReverseSoftLimitEnable(true)
 					.withForwardSoftLimitThreshold(maxAngle)
 					.withReverseSoftLimitThreshold(minAngle)
-			)
-			.withCurrentLimits(
-				new CurrentLimitsConfigs()
-					.withStatorCurrentLimitEnable(true)
-					.withStatorCurrentLimit(40)
+
 			)
 			.withFeedback(
 				new FeedbackConfigs()
