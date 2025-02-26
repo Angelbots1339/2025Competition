@@ -1,5 +1,16 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
@@ -8,21 +19,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import com.pathplanner.lib.path.PathConstraints;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 
@@ -63,9 +65,12 @@ public class Constants {
 		public static final double angleMotorRatio = 9 * 32.0/14.0;
 		public static final Angle angleMotorOffset = Rotations.of(-0.75);
 
-		public static final Angle insideAngle = Degrees.of(90);
-		public static final Angle outsideAngle = Degrees.of(13);
+		public static final Angle maxAngle = Degrees.of(90);
+		public static final Angle minAngle = Degrees.of(0);
+		public static final Angle intakeAngle = Degrees.of(13);
 		public static final Angle startingAngle = Degrees.of(90);
+		/* TODO: find what this angle is */
+		public static final Angle algaeStayAngle = Degrees.of(45);
 
 
 		public static final Voltage intakeVolts = Volts.of(4.0);
@@ -108,9 +113,9 @@ public class Constants {
 			.withSoftwareLimitSwitch(
 				new SoftwareLimitSwitchConfigs()
 					.withForwardSoftLimitEnable(true)
-					.withForwardSoftLimitThreshold(insideAngle)
+					.withForwardSoftLimitThreshold(maxAngle)
 					.withReverseSoftLimitEnable(true)
-					.withReverseSoftLimitThreshold(outsideAngle)
+					.withReverseSoftLimitThreshold(minAngle)
 			);
 	}
 
@@ -141,7 +146,6 @@ public class Constants {
 
 		/* heights are in meters */
 		public class Heights {
-			/* TODO: Tune */
 			public static final double Max = 0.57; // meters
 			public static final double Min = Units.inchesToMeters(0);
 		}
@@ -198,19 +202,98 @@ public class Constants {
 		}
     }
 
+	public class EndEffectorConstants {
+		public static final int anglePort = 6;
+		public static final int wheelPort = 7;
+		public static final int encoderPort = 2;
+		public static final int sensorPort = 9;
+
+		public static final double encoderOffset = -0.405;
+		public static double timeBeforeEncoderReset = 1.5;
+
+		public static final double gearRatio = 32.0 / 16.0;
+		public static final double gearbox = 9;
+		public static final Angle maxAngle = Degrees.of(110);
+		public static final Angle minAngle = Degrees.of(0);
+
+		public static final Angle defaultAngle = Degrees.of(110);
+		public static final Angle intakeAngle = Degrees.of(50);
+
+		public static final Angle angleErrorTolerence = Degrees.of(3);
+		public static final double hasAlgaeThreshold = 250; /* mm */
+
+		public static final Voltage intakeVolts = Volts.of(3);
+		public static final Voltage algaeHoldVoltage = Volts.of(2);
+
+		public static final SlotConfigs pid = new SlotConfigs()
+			.withGravityType(GravityTypeValue.Arm_Cosine)
+			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+			.withKP(18)
+			.withKI(0)
+			.withKD(0)
+			.withKS(0.1)
+			.withKG(0.4);
+
+		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(4.5)
+			.withMotionMagicAcceleration(3);
+
+		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
+			.withMotorOutput(
+				new MotorOutputConfigs()
+					.withNeutralMode(NeutralModeValue.Brake)
+					.withInverted(InvertedValue.Clockwise_Positive)
+			)
+			.withSoftwareLimitSwitch(
+				new SoftwareLimitSwitchConfigs()
+					.withForwardSoftLimitEnable(true)
+					.withReverseSoftLimitEnable(true)
+					.withForwardSoftLimitThreshold(maxAngle)
+					.withReverseSoftLimitThreshold(minAngle)
+
+			)
+			.withFeedback(
+				new FeedbackConfigs()
+					.withSensorToMechanismRatio(gearRatio * gearbox)
+			);
+
+		public static final TalonFXConfiguration angleConfig = baseAngleConfig
+			.withMotionMagic(motion)
+			.withSlot0(Slot0Configs.from(pid));
+
+		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(40)
+			)
+			.withMotorOutput(
+				new MotorOutputConfigs()
+				.withNeutralMode(NeutralModeValue.Brake)
+				.withInverted(InvertedValue.Clockwise_Positive)
+			);
+	}
+
 	public class SequencingConstants {
-		/* tune */
 		public static final double IntakeHitPoint = 0.14;
 		public static final double IntakeHitPointBound = 0.05;
 
+		/* TODO: find the angle at which the end effector will not hit the intake with no algae */
 		public static final Angle intakeAvoidAngle = Degrees.of(45);
-		public static final Angle reefAvoidAngle = Degrees.of(75);
+		/* TODO: find the angle at which the intake is no longer in the way of the algae + end effector */
+		public static final Angle algaeAvoidAngle = Degrees.of(40);
+
+		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
+		/* TODO: find the angle at which we will start to score algae */
+		public static final Angle endEffectorBargeAngle = Degrees.of(100);
+		public static final Angle A2Angle = Degrees.of(40); // elevator 0.33
+		public static final Angle A1Angle = Degrees.of(34); // elevator 0.21
+
 
 		public static enum Heights {
 			Intake(0),
 			Home(0),
-			A1(0.2),
-			A2(0.34),
+			A1(0.21),
+			A2(0.33),
 			Barge(ElevatorConstants.Heights.Max);
 
 			public final double height;
@@ -251,7 +334,9 @@ public class Constants {
 		public enum TuningSystem {
 			Swerve,
 			Intake,
-			None, Elevator,
+			Elevator,
+			EndEffector,
+			None,
 		}
 	}
 }

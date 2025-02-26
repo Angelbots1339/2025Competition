@@ -5,11 +5,11 @@
 package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -25,63 +25,71 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.EndEffector;
 
-public class IntakeTuning extends Command {
-	private Intake intake;
+public class EndEffectorTuning extends Command {
+	EndEffector endeffector;
 
-	private static ShuffleboardTab tab = Shuffleboard.getTab("Intake Tuning");
+	private static ShuffleboardTab tab = Shuffleboard.getTab("EndEffector Tuning");
 	private static ShuffleboardLayout pid = tab.getLayout("PID", BuiltInLayouts.kList);
+	private static ShuffleboardLayout motion = tab.getLayout("Motion Magic", BuiltInLayouts.kList);
 	private static XboxController test = new XboxController(DriverConstants.testPort);
 
-	private static Voltage volt_target = Volt.zero();
+	private static Voltage volt_target = Volts.zero();
 	private static Angle targetAngle = Degrees.zero();
 
-	private static GenericEntry target = tab.add("target", IntakeConstants.intakeAngle.in(Degrees))
+	private static GenericEntry target = tab.add("target", EndEffectorConstants.minAngle.in(Degrees))
 			.withWidget(BuiltInWidgets.kNumberSlider)
-			.withProperties(Map.of("min", 0, "max", 90))
+			.withProperties(Map.of("min", 0, "max", EndEffectorConstants.maxAngle.in(Degrees)))
 			.getEntry();
 
-	private static GenericEntry volts = tab.add("volts", IntakeConstants.intakeVolts.in(Volts))
-			.withWidget(BuiltInWidgets.kTextView)
-			.getEntry();
-
-	private static GenericEntry p = pid.add("P", IntakeConstants.pid.kP)
-			.withWidget(BuiltInWidgets.kTextView)
-			.getEntry();
-	private static GenericEntry i = pid.add("I", IntakeConstants.pid.kI)
-			.withWidget(BuiltInWidgets.kTextView)
-			.getEntry();
-	private static GenericEntry d = pid.add("D", IntakeConstants.pid.kD)
-			.withWidget(BuiltInWidgets.kTextView)
-			.getEntry();
-	private static GenericEntry g = pid.add("G", IntakeConstants.pid.kG)
-			.withWidget(BuiltInWidgets.kTextView)
-			.getEntry();
-	private static GenericEntry s = pid.add("S", IntakeConstants.pid.kS)
+	private static GenericEntry volts = tab.add("volts", 1)
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
-	private static Trigger intakeAngle = new Trigger(() -> test.getBButton());
+	private static GenericEntry p = pid.add("P", EndEffectorConstants.pid.kP)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry i = pid.add("I", EndEffectorConstants.pid.kI)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry d = pid.add("D", EndEffectorConstants.pid.kD)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry g = pid.add("G", EndEffectorConstants.pid.kG)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry s = pid.add("S", EndEffectorConstants.pid.kS)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+
+	private static GenericEntry cv = motion.add("Cruise Velocity", EndEffectorConstants.motion.MotionMagicCruiseVelocity)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+	private static GenericEntry a = motion.add("Acceleration", EndEffectorConstants.motion.MotionMagicAcceleration)
+			.withWidget(BuiltInWidgets.kTextView)
+			.getEntry();
+
+
+	private static Trigger setAngle = new Trigger(() -> test.getBButton());
 	private static Trigger angleUp = new Trigger(() -> test.getPOV() == 0);
 	private static Trigger angleDown = new Trigger(() -> test.getPOV() == 180);
 	private static Trigger intakeRun = new Trigger(() -> test.getAButton());
 
-	private static Trigger resetAngle = new Trigger(() -> test.getXButtonPressed());
-
-	public IntakeTuning(Intake intake) {
-		this.intake = intake;
+	public EndEffectorTuning(EndEffector endeffector) {
+		this.endeffector = endeffector;
+		addRequirements(endeffector);
 	}
 
 	@Override
 	public void initialize() {
-		intakeAngle.whileTrue(Commands.run(() -> intake.setAngle(() -> targetAngle)));
-		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, IntakeConstants.maxAngle.in(Degrees)))));
-		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, IntakeConstants.intakeAngle.in(Degrees)))));
+		setAngle.whileTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)));
+		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, EndEffectorConstants.maxAngle.in(Degrees)))));
+		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, EndEffectorConstants.minAngle.in(Degrees)))));
 
-		intakeRun.whileTrue(Commands.run(() -> intake.runWheelsVolts(volt_target))).whileFalse(Commands.run(() -> intake.runWheelsVolts(Volt.zero())));
-		resetAngle.onTrue(Commands.runOnce(() -> intake.resetAngle(IntakeConstants.maxAngle), intake));
+		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
 	}
 
 	@Override
@@ -97,7 +105,12 @@ public class IntakeTuning extends Command {
 				.withKG(g.getDouble(0))
 				.withKS(s.getDouble(0));
 
-		intake.setPID(tmp);
+		endeffector.setPID(tmp);
+
+		MotionMagicConfigs motion = EndEffectorConstants.motion
+			.withMotionMagicCruiseVelocity(cv.getDouble(0))
+			.withMotionMagicAcceleration(a.getDouble(0));
+		endeffector.setMotion(motion);
 	}
 
 	@Override
