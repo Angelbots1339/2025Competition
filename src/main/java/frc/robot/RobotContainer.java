@@ -95,14 +95,14 @@ public class RobotContainer {
 		openIntake.whileTrue(
 				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
 				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
-				.andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
-				.alongWith(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
+				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
+				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 
 		outtake.whileTrue(
 				Commands.either(
 					Commands.run(() -> {
-						intake.runOuttake();
+						// intake.runOuttake();
 						endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus());
 					}, endeffector, intake),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus()), endeffector),
@@ -198,7 +198,7 @@ public class RobotContainer {
 		// 		() -> endeffector.hasAlgae())
 		// 	.onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		// endeffector.setDefaultCommand(new InstantCommand(endeffector::home, endeffector).onlyIf(() -> elevator.isAtHome()));
+		endeffector.setDefaultCommand(Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
 	public void stopDefaultCommands() {
