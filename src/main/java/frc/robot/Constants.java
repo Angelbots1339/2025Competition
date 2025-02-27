@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -12,6 +13,8 @@ import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -182,6 +185,11 @@ public class Constants {
 					.withForwardSoftLimitThreshold(maxAngle)
 					.withReverseSoftLimitThreshold(minAngle)
 
+			)
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(80)
+					.withSupplyCurrentLimit(40)
 			)
 			.withFeedback(
 				new FeedbackConfigs()
