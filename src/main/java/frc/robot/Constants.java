@@ -56,69 +56,6 @@ public class Constants {
 		public static final double width = Units.inchesToMeters(32.5);
 	}
 
-	public class IntakeConstants {
-		public static final int leftAngleMotorPort = 1;
-		public static final int rightAngleMotorPort = 3;
-		public static final int wheelMotorPort = 2;
-		public static final Angle angleErrorTolerence = Degrees.of(1);
-
-		public static final double angleMotorRatio = 9 * 32.0/14.0;
-		public static final Angle angleMotorOffset = Rotations.of(-0.75);
-
-		public static final Angle maxAngle = Degrees.of(90);
-		public static final Angle minAngle = Degrees.of(0);
-		public static final Angle intakeAngle = Degrees.of(13);
-		public static final Angle startingAngle = Degrees.of(90);
-		/* TODO: find what this angle is */
-		public static final Angle algaeStayAngle = Degrees.of(45);
-
-
-		public static final Voltage intakeVolts = Volts.of(4.0);
-
-		public static final TalonFXConfiguration wheelConfigs = new TalonFXConfiguration()
-			.withMotorOutput(
-				new MotorOutputConfigs()
-					.withInverted(InvertedValue.CounterClockwise_Positive)
-			);
-
-		public static final SlotConfigs pid = new SlotConfigs()
-			.withGravityType(GravityTypeValue.Arm_Cosine)
-			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			/* volts per rotation */
-			.withKP(30)
-			.withKI(0)
-			.withKD(0)
-			.withKG(0.1)
-			.withKS(0.1);
-
-		public static final FeedbackConfigs feedback = new FeedbackConfigs()
-			.withSensorToMechanismRatio(angleMotorRatio)
-			.withFeedbackRotorOffset(angleMotorOffset);
-
-		public static final TalonFXConfiguration baseAngleConfigs = new TalonFXConfiguration()
-			.withMotorOutput(
-				new MotorOutputConfigs()
-					.withInverted(InvertedValue.Clockwise_Positive)
-					.withNeutralMode(NeutralModeValue.Brake)
-			);
-
-		public static final TalonFXConfiguration angleConfigs = baseAngleConfigs
-			.withSlot0(Slot0Configs.from(pid))
-			.withMotionMagic(
-					new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(45 * 144))
-						.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(45 * 144))
-			)
-			.withFeedback(feedback)
-			.withSoftwareLimitSwitch(
-				new SoftwareLimitSwitchConfigs()
-					.withForwardSoftLimitEnable(true)
-					.withForwardSoftLimitThreshold(maxAngle)
-					.withReverseSoftLimitEnable(true)
-					.withReverseSoftLimitThreshold(minAngle)
-			);
-	}
-
 	public class DriverConstants {
 		public static final int driverPort = 0;
 		public static final int operatorPort = 1;

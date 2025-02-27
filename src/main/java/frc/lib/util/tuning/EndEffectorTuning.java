@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.EndEffector;
 
 public class EndEffectorTuning extends Command {
@@ -98,7 +97,7 @@ public class EndEffectorTuning extends Command {
 
 		volt_target = Volts.of(volts.getDouble(0));
 
-		SlotConfigs tmp = IntakeConstants.pid
+		SlotConfigs tmp = EndEffectorConstants.pid
 				.withKP(p.getDouble(0))
 				.withKI(i.getDouble(0))
 				.withKD(d.getDouble(0))
