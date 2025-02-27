@@ -96,7 +96,6 @@ public class RobotContainer {
 		outtake.whileTrue(
 				Commands.either(
 					Commands.run(() -> {
-						// intake.runOuttake();
 						endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus());
 					}, endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus()), endeffector),
@@ -185,12 +184,6 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		// intake.setDefaultCommand(
-		// 	Commands.either(
-		// 		new InstantCommand(intake::home, intake),
-		// 		new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
-		// 		() -> endeffector.hasAlgae())
-		// 	.onlyIf(() -> elevator.isAtHome()));
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 		endeffector.setDefaultCommand(
 				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));

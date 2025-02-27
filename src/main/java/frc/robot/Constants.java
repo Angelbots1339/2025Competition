@@ -5,16 +5,11 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -87,7 +82,6 @@ public class Constants {
 			public static final double Min = Units.inchesToMeters(0);
 		}
 
-		/* plot voltage and speed */
 		public static final Slot0Configs pid = new Slot0Configs()
 				.withKP(5)
 				.withKI(0)
@@ -211,14 +205,6 @@ public class Constants {
 	}
 
 	public class SequencingConstants {
-		public static final double IntakeHitPoint = 0.14;
-		public static final double IntakeHitPointBound = 0.05;
-
-		/* TODO: find the angle at which the end effector will not hit the intake with no algae */
-		public static final Angle intakeAvoidAngle = Degrees.of(45);
-		/* TODO: find the angle at which the intake is no longer in the way of the algae + end effector */
-		public static final Angle algaeAvoidAngle = Degrees.of(40);
-
 		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(100);
@@ -270,7 +256,6 @@ public class Constants {
 	public class TuningConstants {
 		public enum TuningSystem {
 			Swerve,
-			Intake,
 			Elevator,
 			EndEffector,
 			None,

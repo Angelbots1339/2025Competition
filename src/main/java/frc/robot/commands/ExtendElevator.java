@@ -21,21 +21,11 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void initialize() {
-		// if (endEffector.hasAlgae()) {
-		// 	intake.setAngle(SequencingConstants.algaeAvoidAngle);
-		// } else {
-		// 	intake.setAngle(SequencingConstants.intakeAvoidAngle);
-		// }
 		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 	}
 
 	@Override
 	public void execute() {
-		// if (!intake.isAtSetpoint()) {
-		// 	return;
-		// }
-
-
 		if (!endEffector.isAtSetpoint()) {
 			return;
 		}
@@ -45,20 +35,10 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		// if (target == SequencingConstants.Heights.Barge) {
-		// 	intake.setAngle(IntakeConstants.minAngle);
-		// 	return;
-		// }
-
-		// if (endEffector.hasAlgae())
-		// 	intake.setAngle(IntakeConstants.algaeStayAngle);
-		// else
-		// 	intake.setAngle(IntakeConstants.maxAngle);
 	}
 
 	@Override
 	public boolean isFinished() {
-		// return elevator.isAtSetpoint() && intake.isAtSetpoint() && endEffector.isAtSetpoint();
 		return elevator.isAtSetpoint() && endEffector.isAtSetpoint();
 	}
 }
