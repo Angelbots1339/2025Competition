@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -21,19 +19,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.EndEffectorTuning;
-import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -47,7 +42,6 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
 			SwerveConstants.maxturn);
 
-	private final Intake intake = new Intake();
 	private Elevator elevator = new Elevator();
 	private final EndEffector endeffector = new EndEffector();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
@@ -95,9 +89,7 @@ public class RobotContainer {
 
 	private void configureOperatorBindings() {
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
-				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
-				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
+				new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Intake)
 				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 
@@ -106,22 +98,22 @@ public class RobotContainer {
 					Commands.run(() -> {
 						// intake.runOuttake();
 						endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus());
-					}, endeffector, intake),
+					}, endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus()), endeffector),
 				() -> elevator.isAtHome())
 		);
 
-		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
+		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
+			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Barge)
 			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
 		);
 		extendToA1.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
+			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.A1)
 			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle)))
 		);
 		extendToA2.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2)
+			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.A2)
 			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle)))
 		);
 	}
@@ -205,7 +197,6 @@ public class RobotContainer {
 	}
 
 	public void stopDefaultCommands() {
-		intake.removeDefaultCommand();
 		swerve.removeDefaultCommand();
 		elevator.removeDefaultCommand();
 	}
@@ -218,7 +209,6 @@ public class RobotContainer {
 		return Commands.select(
 			Map.ofEntries(
 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
-				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
 				Map.entry(TuningSystem.None, Commands.none())
