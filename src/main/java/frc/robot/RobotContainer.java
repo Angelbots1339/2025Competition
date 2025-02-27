@@ -114,7 +114,7 @@ public class RobotContainer {
 		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
 		extendToBarge.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
-			// .andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
+			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
 		);
 		extendToA1.onTrue(
 			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
