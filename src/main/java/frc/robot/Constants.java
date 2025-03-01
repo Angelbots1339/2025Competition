@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -142,7 +143,8 @@ public class Constants {
 		public static final int encoderPort = 2;
 		public static final int sensorPort = 9;
 
-		public static final double encoderOffset = -(0.9 - 0.5);
+		// public static final double encoderOffset = -(0.9 - 0.5);
+		public static final double encoderOffset = -0.25;
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
@@ -157,16 +159,17 @@ public class Constants {
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(3);
+		public static final Voltage outtakeVolts = Volts.of(-6);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-			.withKP(18)
+			.withKP(32)
 			.withKI(0)
 			.withKD(0)
 			.withKS(0.1)
-			.withKG(0.4);
+			.withKG(0.65);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(4.5)

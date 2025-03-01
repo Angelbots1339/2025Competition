@@ -72,8 +72,8 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void setAngle(Angle angle) {
-		targetAngle = angle;
-		angleMotor.setControl(new MotionMagicVoltage(angle));
+		targetAngle = angle.minus(Degrees.of(24));
+		angleMotor.setControl(new MotionMagicVoltage(targetAngle));
 	}
 
 	public void setAngle(Supplier<Angle> angle) {
