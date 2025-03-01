@@ -20,13 +20,8 @@ public final class LoggingConstants {
                 public static LoggingLevel Main = LoggingLevel.NONE;
         }
 
-		public class IntakeLogging {
-			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
-			public static LoggingLevel Wheel = LoggingLevel.NONE;
-		}
-
 		public class ElevatorLogging {
-			public static LoggingLevel Leader = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Leader = LoggingLevel.NONE;
 			public static LoggingLevel Follower = LoggingLevel.NONE;
 			public static LoggingLevel FollowerMotor = LoggingLevel.NONE;
 			public static LoggingLevel LeaderMotor = LoggingLevel.NONE;
@@ -34,8 +29,8 @@ public final class LoggingConstants {
 
 		public class EndEffectorLogging {
 			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
-			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
-			public static LoggingLevel TOF = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Wheel = LoggingLevel.NONE;
+			public static LoggingLevel TOF = LoggingLevel.NONE;
 		}
 
         public class RobotContainerLogging {

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.Logger.LoggingLevel;
@@ -54,6 +55,7 @@ public class EndEffector extends SubsystemBase {
 		throughBoreTimer.start();
 		// sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
+		angleMotor.setPosition(Degrees.of(140).minus(Degrees.of(47)));
 	}
 
 	public void home() {
@@ -69,6 +71,14 @@ public class EndEffector extends SubsystemBase {
 	public void intake(Angle angle) {
 		setAngle(angle);
 		runIntake(EndEffectorConstants.intakeVolts);
+	}
+
+	public Command runOuttakeCommand(Voltage volts, Angle angle) {
+		return run(() -> {
+		setAngle(angle);
+		if (isAtSetpoint())
+			runIntake(volts);
+		});
 	}
 
 	public void setAngle(Angle angle) {
@@ -96,8 +106,8 @@ public class EndEffector extends SubsystemBase {
 		angleMotor.setControl(new NeutralOut());
 	}
 
-	public void stopIntake() {
-		wheelMotor.setControl(new NeutralOut());
+	public void hold() {
+		runIntake(EndEffectorConstants.algaeHoldVoltage);
 	}
 
 	public Angle getEncoderAngle() {
@@ -142,7 +152,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void initLogs() {
-		logger.addDouble("true encoder", () -> encoder.get(), LoggingLevel.NETWORK_TABLES);
+		logger.addDouble("true encoder", () -> encoder.get(), EndEffectorLogging.Angle);
 		logger.addBoolean("encoder", () -> encoder.isConnected(), EndEffectorLogging.Angle);
 		logger.addDouble("encoder angle", () -> getEncoderAngle().in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("current angle", () -> getAngle().in(Degrees), EndEffectorLogging.Angle);
@@ -160,8 +170,5 @@ public class EndEffector extends SubsystemBase {
 
 		loggedAngle = new LoggedFalcon("angle motor", logger, angleMotor, EndEffectorLogging.Angle);
 		loggedWheel = new LoggedFalcon("wheel motor", logger, wheelMotor, EndEffectorLogging.Wheel);
-
-		logger.add(loggedAngle);
-		logger.add(loggedWheel);
 	}
 }

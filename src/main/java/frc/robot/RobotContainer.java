@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.EndEffectorTuning;
@@ -64,7 +65,7 @@ public class RobotContainer {
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
-	private Trigger home = new Trigger(() -> operator.getStartButton());
+	private Trigger home = new Trigger(() -> operator.getXButton());
 
 
 	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
@@ -84,7 +85,7 @@ public class RobotContainer {
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		SmartDashboard.putData("Auto", autoChooser);
+		// SmartDashboard.putData("Auto", autoChooser);
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
@@ -93,7 +94,7 @@ public class RobotContainer {
 		SmartDashboard.putData("Tuning System", tuningChooser);
 
 
-		SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
+		// SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
 
 	}
 
@@ -116,8 +117,8 @@ public class RobotContainer {
 		.andThen(
 		Commands.select(
 			Map.ofEntries(
-				Map.entry(SequencingConstants.Heights.A1, new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
-				Map.entry(SequencingConstants.Heights.A2, new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
+				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
+				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
 				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
 				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
 				Map.entry(SequencingConstants.Heights.Home, Commands.none())
@@ -131,13 +132,11 @@ public class RobotContainer {
 
 		outtake.whileTrue(
 				Commands.either(
-					Commands.run(() -> {
-						endeffector.setAngle(Degrees.of(50));
-						endeffector.runIntake(EndEffectorConstants.outtakeVolts);
-					}, endeffector),
+					Commands.run(() -> endeffector.setAngle(EndEffectorConstants.processorAngle), endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector),
 				() -> elevator.isAtHome())
-		).onFalse(Commands.runOnce(() -> endeffector.stopIntake(), endeffector));
+		).onFalse(Commands.runOnce(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
+					.andThen(Commands.waitSeconds(EndEffectorConstants.outtakeTime)));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
@@ -204,9 +203,10 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> elevator.isAtHome()));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> !elevator.isAtHome()));
 		endeffector.setDefaultCommand(
-				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
+				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome())
+				.andThen(Commands.run(() -> endeffector.hold(), endeffector)));
 	}
 
 	public void stopDefaultCommands() {

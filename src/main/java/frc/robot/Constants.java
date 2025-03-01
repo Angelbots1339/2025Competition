@@ -31,6 +31,7 @@ public class Constants {
 	public class SwerveConstants {
 		public static final double maxspeed = 4;
 		public static final double maxturn = 2 * Math.PI;
+		public static final double slowedSpeed = 0.5;
 
 		public static final double angularDriveKP = 0.075;
 		public static final double angularDriveKI = 0;
@@ -61,6 +62,7 @@ public class Constants {
 		public static final int testPort = 2;
 		public static final double joystickDeadband = 0.1;
 		public static final boolean openLoopDrive = true;
+
 
 		public static double deadbandJoystickValues(double val, double max) {
 			return MathUtil.applyDeadband(Math.pow(Math.abs(val), 1),
@@ -154,22 +156,24 @@ public class Constants {
 
 		public static final Angle defaultAngle = Degrees.of(80);
 		public static final Angle intakeAngle = Degrees.of(8);
+		public static final double outtakeTime = 0.5;
+		public static final Angle processorAngle = Degrees.of(60);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
-		public static final Voltage intakeVolts = Volts.of(6);
-		public static final Voltage outtakeVolts = Volts.of(-10);
+		public static final Voltage intakeVolts = Volts.of(10);
+		public static final Voltage outtakeVolts = Volts.of(-12);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
-			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-			.withKP(30) //30 with algae
+			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+			.withKP(30)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKG(0.65); // 0.65;
+			.withKS(0.1)
+			.withKG(0.65);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(6)
@@ -216,9 +220,9 @@ public class Constants {
 	}
 
 	public class SequencingConstants {
-		public static final Angle endEffectorAvoidAngle = Degrees.of(63);
+		public static final Angle endEffectorAvoidAngle = Degrees.of(73);
 		/* TODO: find the angle at which we will start to score algae */
-		public static final Angle endEffectorBargeAngle = Degrees.of(85);
+		public static final Angle endEffectorBargeAngle = Degrees.of(80);
 		public static final Angle A2Angle = Degrees.of(16); // elevator 0.33
 		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
 

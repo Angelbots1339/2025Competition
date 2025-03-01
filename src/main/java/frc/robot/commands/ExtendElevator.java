@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
