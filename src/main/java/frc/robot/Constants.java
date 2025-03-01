@@ -152,27 +152,27 @@ public class Constants {
 		public static final Angle maxAngle = Degrees.of(90);
 		public static final Angle minAngle = Degrees.of(-43);
 
-		public static final Angle defaultAngle = Degrees.of(110);
-		public static final Angle intakeAngle = Degrees.of(30);
+		public static final Angle defaultAngle = maxAngle;
+		public static final Angle intakeAngle = Degrees.of(8);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 250; /* mm */
 
-		public static final Voltage intakeVolts = Volts.of(3);
+		public static final Voltage intakeVolts = Volts.of(6);
 		public static final Voltage outtakeVolts = Volts.of(-6);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-			.withKP(32)
+			.withKP(18)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.1)
-			.withKG(0.65);
+			.withKS(0)
+			.withKG(0.45);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(4.5)
+			.withMotionMagicCruiseVelocity(6)
 			.withMotionMagicAcceleration(3);
 
 		public static final TalonFXConfiguration baseAngleConfig = new TalonFXConfiguration()
@@ -216,11 +216,11 @@ public class Constants {
 	}
 
 	public class SequencingConstants {
-		public static final Angle endEffectorAvoidAngle = Degrees.of(90);
+		public static final Angle endEffectorAvoidAngle = Degrees.of(63);
 		/* TODO: find the angle at which we will start to score algae */
-		public static final Angle endEffectorBargeAngle = Degrees.of(100);
-		public static final Angle A2Angle = Degrees.of(40); // elevator 0.33
-		public static final Angle A1Angle = Degrees.of(34); // elevator 0.21
+		public static final Angle endEffectorBargeAngle = Degrees.of(88);
+		public static final Angle A2Angle = Degrees.of(16); // elevator 0.33
+		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
 
 
 		public static enum Heights {

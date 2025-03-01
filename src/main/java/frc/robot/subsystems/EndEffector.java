@@ -72,7 +72,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void setAngle(Angle angle) {
-		targetAngle = angle.minus(Degrees.of(24));
+		targetAngle = angle;
 		angleMotor.setControl(new MotionMagicVoltage(targetAngle));
 	}
 
@@ -146,6 +146,7 @@ public class EndEffector extends SubsystemBase {
 		logger.addDouble("target angle", () -> targetAngle.in(Degrees), EndEffectorLogging.Angle);
 		logger.addDouble("angle error", () -> getAngleError().in(Degrees), EndEffectorLogging.Angle);
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
+		logger.addDouble("pid error", () -> Rotations.of(angleMotor.getClosedLoopError().getValue()).in(Degrees), EndEffectorLogging.Angle);
 
 		// logger.addDouble("TOF distance", () -> sensor.getRange(),
 		// EndEffectorLogging.TOF);
