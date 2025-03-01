@@ -185,8 +185,8 @@ public class RobotContainer {
 
 	public void setDefaultCommands() {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		endeffector.setDefaultCommand(
-				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
+		// endeffector.setDefaultCommand(
+		// 		Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
 	public void stopDefaultCommands() {

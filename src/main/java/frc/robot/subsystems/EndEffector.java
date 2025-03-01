@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -89,6 +90,11 @@ public class EndEffector extends SubsystemBase {
 
 	public Angle getAngle() {
 		return angleMotor.getPosition().getValue();
+	}
+
+	public void stop() {
+		angleMotor.setControl(new NeutralOut());
+		wheelMotor.setControl(new NeutralOut());
 	}
 
 	public Angle getEncoderAngle() {
