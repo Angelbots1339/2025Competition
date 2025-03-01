@@ -99,8 +99,6 @@ public class EndEffector extends SubsystemBase {
 
 	public Angle getEncoderAngle() {
 		Angle rot = Rotations.of(encoder.get() / EndEffectorConstants.gearRatio);
-		if (rot.gt(EndEffectorConstants.maxAngle.plus(Degrees.of(5))))
-			return rot.minus(Degrees.of(180));
 		return rot;
 	}
 
@@ -128,7 +126,7 @@ public class EndEffector extends SubsystemBase {
 	public void resetToAbsolute() {
 		if (!encoder.isConnected())
 			return;
-		angleMotor.setPosition(getEncoderAngle());
+		angleMotor.setPosition(getEncoderAngle().minus(Degrees.of(47)));
 	}
 
 	@Override

@@ -149,8 +149,8 @@ public class Constants {
 
 		public static final double gearRatio = 32.0 / 16.0;
 		public static final double gearbox = 9;
-		public static final Angle maxAngle = Degrees.of(110);
-		public static final Angle minAngle = Degrees.of(0);
+		public static final Angle maxAngle = Degrees.of(90);
+		public static final Angle minAngle = Degrees.of(-43);
 
 		public static final Angle defaultAngle = Degrees.of(110);
 		public static final Angle intakeAngle = Degrees.of(30);
