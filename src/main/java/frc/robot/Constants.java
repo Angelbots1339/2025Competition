@@ -82,17 +82,17 @@ public class Constants {
 
 		/* heights are in meters */
 		public class Heights {
-			public static final double Max = 0.57; // meters
+			public static final double Max = 0.5734; // meters
 			public static final double Min = Units.inchesToMeters(0);
 		}
 
 		public static final Slot0Configs pid = new Slot0Configs()
-				.withKP(5)
+				.withKP(15)
 				.withKI(0)
 				.withKD(0)
 				.withGravityType(GravityTypeValue.Elevator_Static)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-				.withKG(0.245)
+				.withKG(0.254)
 				.withKV(1)
 				.withKA(0.04)
 				.withKS(0);
@@ -104,7 +104,7 @@ public class Constants {
 				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(metersToRotations(1.8))
+			.withMotionMagicAcceleration(metersToRotations(1))
 			.withMotionMagicCruiseVelocity(metersToRotations(1));
 
 		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
