@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -185,6 +187,7 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> elevator.isAtHome()));
 		endeffector.setDefaultCommand(
+				// Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()).andThen(Commands.run(() -> endeffector.runIntake(Volts.zero()), endeffector)));
 				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
