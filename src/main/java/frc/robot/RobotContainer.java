@@ -125,9 +125,7 @@ public class RobotContainer {
 		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
 
 		openIntake.whileTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Home).andThen(
-
-				new ExtendElevator(elevator, endeffector))
+				new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home)
 				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 
@@ -207,7 +205,6 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> elevator.isAtHome()));
 		endeffector.setDefaultCommand(
-				// Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()).andThen(Commands.run(() -> endeffector.runIntake(Volts.zero()), endeffector)));
 				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
 	}
 
