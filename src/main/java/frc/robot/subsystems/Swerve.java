@@ -75,12 +75,16 @@ public class Swerve extends SubsystemBase {
 		initlogs();
 		// putSwerveState();
 	}
-
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
 			Supplier<Boolean> fieldRelative) {
+		return drive(x, y, turn, fieldRelative, () -> false);
+	}
+
+	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
+			Supplier<Boolean> fieldRelative,Supplier<Boolean> slowdown) {
 		return run(() -> {
 			ChassisSpeeds speeds = new ChassisSpeeds(x.get(),
-					y.get(), turn.get());
+					y.get(), turn.get()).times(slowdown.get() ? SwerveConstants.slowedSpeed / SwerveConstants.maxspeed: 1);
 			SwerveRequest req;
 
 			if (fieldRelative.get()) {

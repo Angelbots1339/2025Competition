@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.EndEffector;
 
 public class EndEffectorTuning extends Command {
@@ -90,6 +89,7 @@ public class EndEffectorTuning extends Command {
 		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, EndEffectorConstants.minAngle.in(Degrees)))));
 
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
+		endeffector.stop();
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class EndEffectorTuning extends Command {
 
 		volt_target = Volts.of(volts.getDouble(0));
 
-		SlotConfigs tmp = IntakeConstants.pid
+		SlotConfigs tmp = EndEffectorConstants.pid
 				.withKP(p.getDouble(0))
 				.withKI(i.getDouble(0))
 				.withKD(d.getDouble(0))

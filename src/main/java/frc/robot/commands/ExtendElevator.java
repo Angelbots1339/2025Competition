@@ -1,68 +1,54 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.Intake;
 
 public class ExtendElevator extends Command {
 	private Elevator elevator;
-	private Intake intake;
 	private EndEffector endEffector;
 
-	private SequencingConstants.Heights target;
+	static public SequencingConstants.Heights target = SequencingConstants.Heights.Home;
+	public SequencingConstants.Heights override = null;
 
-	public ExtendElevator(Elevator elevator, Intake intake, EndEffector endeffector, SequencingConstants.Heights target) {
+	public ExtendElevator(Elevator elevator, EndEffector endeffector, SequencingConstants.Heights override) {
+		this(elevator, endeffector);
+		this.override = override;
+	}
+
+	public ExtendElevator(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
-		this.intake = intake;
 		this.endEffector = endeffector;
-		this.target = target;
 
-		addRequirements(elevator, intake, endeffector);
+		addRequirements(elevator, endeffector);
 	}
 
 	@Override
 	public void initialize() {
-		// if (endEffector.hasAlgae()) {
-		// 	intake.setAngle(SequencingConstants.algaeAvoidAngle);
-		// } else {
-		// 	intake.setAngle(SequencingConstants.intakeAvoidAngle);
-		// }
 		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
 	}
 
 	@Override
 	public void execute() {
-		// if (!intake.isAtSetpoint()) {
-		// 	return;
-		// }
-
-
 		if (!endEffector.isAtSetpoint()) {
 			return;
 		}
 
-		elevator.setHeight(target.height);
+		if (override != null)
+			elevator.setHeight(override.height);
+		else
+			elevator.setHeight(target.height);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		// if (target == SequencingConstants.Heights.Barge) {
-		// 	intake.setAngle(IntakeConstants.minAngle);
-		// 	return;
-		// }
-
-		// if (endEffector.hasAlgae())
-		// 	intake.setAngle(IntakeConstants.algaeStayAngle);
-		// else
-		// 	intake.setAngle(IntakeConstants.maxAngle);
 	}
 
 	@Override
 	public boolean isFinished() {
-		// return elevator.isAtSetpoint() && intake.isAtSetpoint() && endEffector.isAtSetpoint();
 		return elevator.isAtSetpoint() && endEffector.isAtSetpoint();
 	}
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
@@ -18,22 +19,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.EndEffectorTuning;
-import frc.lib.util.tuning.IntakeTuning;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
@@ -47,7 +46,6 @@ public class RobotContainer {
 	private final Supplier<Double> rightX = () -> DriverConstants.deadbandJoystickValues(-driver.getRightX(),
 			SwerveConstants.maxturn);
 
-	private final Intake intake = new Intake();
 	private Elevator elevator = new Elevator();
 	private final EndEffector endeffector = new EndEffector();
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
@@ -67,10 +65,14 @@ public class RobotContainer {
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
-	private Trigger home = new Trigger(() -> operator.getStartButton());
+	private Trigger home = new Trigger(() -> operator.getXButton());
 
-	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.5);
-	private Trigger outtake = new Trigger(() -> operator.getRightTriggerAxis() > 0.5);
+
+	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
+	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
+
+	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -83,7 +85,7 @@ public class RobotContainer {
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		SmartDashboard.putData("Auto", autoChooser);
+		// SmartDashboard.putData("Auto", autoChooser);
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
@@ -91,121 +93,123 @@ public class RobotContainer {
 		tuningChooser.setDefaultOption("None", TuningSystem.None);
 		SmartDashboard.putData("Tuning System", tuningChooser);
 
+
+		// SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
+
 	}
 
 	private void configureOperatorBindings() {
+		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		extendToBarge.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Barge)
+		);
+		extendToA1.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A1)
+		);
+		extendToA2.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
+		);
+
+	}
+
+	private void configureDriverBindings() {
+		extendElevator.onTrue(new ExtendElevator(elevator, endeffector)
+		.andThen(
+		Commands.select(
+			Map.ofEntries(
+				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
+				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
+				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
+				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
+				Map.entry(SequencingConstants.Heights.Home, Commands.none())
+			),
+			() -> ExtendElevator.target)));
+		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Intake)
-				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.insideAngle.minus(Degrees.of(90 * operator.getLeftTriggerAxis()))), intake))
-				// .andThen(Commands.run(() -> intake.runIntake(() -> IntakeConstants.intakeAngle), intake))
-				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
+				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
 		outtake.whileTrue(
 				Commands.either(
-					Commands.run(() -> {
-						// intake.runOuttake();
-						endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus());
-					}, endeffector, intake),
-					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.intakeVolts.unaryMinus()), endeffector),
+					Commands.run(() -> endeffector.setAngle(EndEffectorConstants.processorAngle), endeffector),
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector),
 				() -> elevator.isAtHome())
-		);
+		).onFalse(Commands.runOnce(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
+					.andThen(Commands.waitSeconds(EndEffectorConstants.outtakeTime)));
 
-		home.onTrue(new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Home));
-		extendToBarge.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.Barge)
-			// .andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
-		);
-		extendToA1.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A1)
-			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle)))
-		);
-		extendToA2.onTrue(
-			new ExtendElevator(elevator, intake, endeffector, SequencingConstants.Heights.A2)
-			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle)))
-		);
-	}
-
-	private void configureDriverBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
-		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
-		alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
-		alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
-		alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
+		// alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
+		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
+		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
+		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
-		selectReef.onTrue(
-				Commands.runOnce(() -> {
-					int reef = 0;
-					switch (driver.getPOV()) {
-						case 0:
-							reef = 0;
-							break;
-						case 45:
-							reef = 5;
-							break;
-						case 135:
-							reef = 4;
-							break;
-						case 180:
-							reef = 3;
-							break;
-						case 225:
-							reef = 2;
-							break;
-						case 315:
-							reef = 1;
-							break;
-						default:
-							return;
-					}
-					AlignUtil.selectReef(reef);
+		// selectReef.onTrue(
+		// 		Commands.runOnce(() -> {
+		// 			int reef = 0;
+		// 			switch (driver.getPOV()) {
+		// 				case 0:
+		// 					reef = 0;
+		// 					break;
+		// 				case 45:
+		// 					reef = 5;
+		// 					break;
+		// 				case 135:
+		// 					reef = 4;
+		// 					break;
+		// 				case 180:
+		// 					reef = 3;
+		// 					break;
+		// 				case 225:
+		// 					reef = 2;
+		// 					break;
+		// 				case 315:
+		// 					reef = 1;
+		// 					break;
+		// 				default:
+		// 					return;
+		// 			}
+		// 			AlignUtil.selectReef(reef);
 
-					// TODO: there has to be a better way
-					if (alignSelectedReef.getAsBoolean()) {
-						AlignUtil.driveToSelectedReef(reef).schedule();
-						return;
-					}
+		// 			// TODO: there has to be a better way
+		// 			if (alignSelectedReef.getAsBoolean()) {
+		// 				AlignUtil.driveToSelectedReef(reef).schedule();
+		// 				return;
+		// 			}
 
-					if (alignClosestReef.getAsBoolean()) {
-						AlignUtil.driveToClosestReef().schedule();
-						return;
-					}
+		// 			if (alignClosestReef.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestReef().schedule();
+		// 				return;
+		// 			}
 
-					if (alignCoralStation.getAsBoolean()) {
-						AlignUtil.driveToClosestCoralStation().schedule();
-						return;
-					}
+		// 			if (alignCoralStation.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestCoralStation().schedule();
+		// 				return;
+		// 			}
 
-					if (alignProcessor.getAsBoolean()) {
-						AlignUtil.driveToProcessor().schedule();
-						return;
-					}
+		// 			if (alignProcessor.getAsBoolean()) {
+		// 				AlignUtil.driveToProcessor().schedule();
+		// 				return;
+		// 			}
 
-					if (alignBarge.getAsBoolean()) {
-						AlignUtil.driveToClosestBarge().schedule();
-						return;
-					}
+		// 			if (alignBarge.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestBarge().schedule();
+		// 				return;
+		// 			}
 
-				}, swerve));
-
+		// 		}, swerve));
 	}
 
 	public void setDefaultCommands() {
-		// intake.setDefaultCommand(
-		// 	Commands.either(
-		// 		new InstantCommand(intake::home, intake),
-		// 		new InstantCommand(() -> intake.setAngle(IntakeConstants.algaeStayAngle)),
-		// 		() -> endeffector.hasAlgae())
-		// 	.onlyIf(() -> elevator.isAtHome()));
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> !elevator.isAtHome()));
 		endeffector.setDefaultCommand(
-				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome()));
+				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome())
+				.andThen(Commands.run(() -> endeffector.hold(), endeffector)));
 	}
 
 	public void stopDefaultCommands() {
-		intake.removeDefaultCommand();
 		swerve.removeDefaultCommand();
 		elevator.removeDefaultCommand();
 	}
@@ -218,7 +222,6 @@ public class RobotContainer {
 		return Commands.select(
 			Map.ofEntries(
 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
-				Map.entry(TuningSystem.Intake, new IntakeTuning(intake)),
 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
 				Map.entry(TuningSystem.None, Commands.none())
