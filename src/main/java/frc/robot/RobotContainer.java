@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
@@ -125,18 +126,18 @@ public class RobotContainer {
 		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
 
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home)
-				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
+				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
 		outtake.whileTrue(
 				Commands.either(
 					Commands.run(() -> {
+						endeffector.setAngle(Degrees.of(50));
 						endeffector.runIntake(EndEffectorConstants.outtakeVolts);
 					}, endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector),
 				() -> elevator.isAtHome())
-		);
+		).onFalse(Commands.runOnce(() -> endeffector.stopIntake(), endeffector));
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 

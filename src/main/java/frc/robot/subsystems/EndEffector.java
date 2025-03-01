@@ -94,6 +94,9 @@ public class EndEffector extends SubsystemBase {
 
 	public void stop() {
 		angleMotor.setControl(new NeutralOut());
+	}
+
+	public void stopIntake() {
 		wheelMotor.setControl(new NeutralOut());
 	}
 
