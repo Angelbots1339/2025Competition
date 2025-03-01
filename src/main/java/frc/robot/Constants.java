@@ -222,7 +222,7 @@ public class Constants {
 	public class SequencingConstants {
 		public static final Angle endEffectorAvoidAngle = Degrees.of(73);
 		/* TODO: find the angle at which we will start to score algae */
-		public static final Angle endEffectorBargeAngle = Degrees.of(80);
+		public static final Angle endEffectorBargeAngle = Degrees.of(74);
 		public static final Angle A2Angle = Degrees.of(16); // elevator 0.33
 		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
 
@@ -232,7 +232,7 @@ public class Constants {
 			Home(0),
 			A1(0.21),
 			A2(0.33),
-			Barge(0.571);
+			Barge(0.572); // 0.571 max
 
 			public final double height;
 
