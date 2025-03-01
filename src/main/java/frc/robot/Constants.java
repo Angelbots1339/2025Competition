@@ -149,10 +149,10 @@ public class Constants {
 
 		public static final double gearRatio = 32.0 / 16.0;
 		public static final double gearbox = 9;
-		public static final Angle maxAngle = Degrees.of(80);
+		public static final Angle maxAngle = Degrees.of(90);
 		public static final Angle minAngle = Degrees.of(-43);
 
-		public static final Angle defaultAngle = maxAngle;
+		public static final Angle defaultAngle = Degrees.of(80);
 		public static final Angle intakeAngle = Degrees.of(8);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
@@ -218,7 +218,7 @@ public class Constants {
 	public class SequencingConstants {
 		public static final Angle endEffectorAvoidAngle = Degrees.of(63);
 		/* TODO: find the angle at which we will start to score algae */
-		public static final Angle endEffectorBargeAngle = Degrees.of(80);
+		public static final Angle endEffectorBargeAngle = Degrees.of(85);
 		public static final Angle A2Angle = Degrees.of(16); // elevator 0.33
 		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
 
@@ -228,7 +228,7 @@ public class Constants {
 			Home(0),
 			A1(0.21),
 			A2(0.33),
-			Barge(ElevatorConstants.Heights.Max);
+			Barge(0.571);
 
 			public final double height;
 
