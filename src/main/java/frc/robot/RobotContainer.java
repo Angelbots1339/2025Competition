@@ -65,8 +65,12 @@ public class RobotContainer {
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getStartButton());
 
-	private Trigger openIntake = new Trigger(() -> operator.getLeftTriggerAxis() > 0.5);
-	private Trigger outtake = new Trigger(() -> operator.getRightTriggerAxis() > 0.5);
+
+	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
+	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
+
+	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
 
 
 	private final SendableChooser<Command> autoChooser;
@@ -87,11 +91,43 @@ public class RobotContainer {
 		tuningChooser.setDefaultOption("None", TuningSystem.None);
 		SmartDashboard.putData("Tuning System", tuningChooser);
 
+
+		SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
+
 	}
 
 	private void configureOperatorBindings() {
+		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		extendToBarge.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Barge)
+		);
+		extendToA1.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A1)
+		);
+		extendToA2.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
+		);
+
+	}
+
+	private void configureDriverBindings() {
+		extendElevator.onTrue(new ExtendElevator(elevator, endeffector)
+		.andThen(
+		Commands.select(
+			Map.ofEntries(
+				Map.entry(SequencingConstants.Heights.A1, new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
+				Map.entry(SequencingConstants.Heights.A2, new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
+				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
+				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
+				Map.entry(SequencingConstants.Heights.Home, Commands.none())
+			),
+			() -> ExtendElevator.target)));
+		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+
 		openIntake.whileTrue(
-				new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Intake)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Home).andThen(
+
+				new ExtendElevator(elevator, endeffector))
 				.andThen(Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector))
 		);
 
@@ -104,84 +140,68 @@ public class RobotContainer {
 				() -> elevator.isAtHome())
 		);
 
-		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
-		extendToBarge.onTrue(
-			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Barge)
-			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)))
-		);
-		extendToA1.onTrue(
-			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.A1)
-			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A1Angle)))
-		);
-		extendToA2.onTrue(
-			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.A2)
-			.andThen(new InstantCommand(() -> endeffector.intake(SequencingConstants.A2Angle)))
-		);
-	}
-
-	private void configureDriverBindings() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
-		alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
-		alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
-		alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
-		alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
+		// alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
+		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
+		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
+		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
-		selectReef.onTrue(
-				Commands.runOnce(() -> {
-					int reef = 0;
-					switch (driver.getPOV()) {
-						case 0:
-							reef = 0;
-							break;
-						case 45:
-							reef = 5;
-							break;
-						case 135:
-							reef = 4;
-							break;
-						case 180:
-							reef = 3;
-							break;
-						case 225:
-							reef = 2;
-							break;
-						case 315:
-							reef = 1;
-							break;
-						default:
-							return;
-					}
-					AlignUtil.selectReef(reef);
+		// selectReef.onTrue(
+		// 		Commands.runOnce(() -> {
+		// 			int reef = 0;
+		// 			switch (driver.getPOV()) {
+		// 				case 0:
+		// 					reef = 0;
+		// 					break;
+		// 				case 45:
+		// 					reef = 5;
+		// 					break;
+		// 				case 135:
+		// 					reef = 4;
+		// 					break;
+		// 				case 180:
+		// 					reef = 3;
+		// 					break;
+		// 				case 225:
+		// 					reef = 2;
+		// 					break;
+		// 				case 315:
+		// 					reef = 1;
+		// 					break;
+		// 				default:
+		// 					return;
+		// 			}
+		// 			AlignUtil.selectReef(reef);
 
-					// TODO: there has to be a better way
-					if (alignSelectedReef.getAsBoolean()) {
-						AlignUtil.driveToSelectedReef(reef).schedule();
-						return;
-					}
+		// 			// TODO: there has to be a better way
+		// 			if (alignSelectedReef.getAsBoolean()) {
+		// 				AlignUtil.driveToSelectedReef(reef).schedule();
+		// 				return;
+		// 			}
 
-					if (alignClosestReef.getAsBoolean()) {
-						AlignUtil.driveToClosestReef().schedule();
-						return;
-					}
+		// 			if (alignClosestReef.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestReef().schedule();
+		// 				return;
+		// 			}
 
-					if (alignCoralStation.getAsBoolean()) {
-						AlignUtil.driveToClosestCoralStation().schedule();
-						return;
-					}
+		// 			if (alignCoralStation.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestCoralStation().schedule();
+		// 				return;
+		// 			}
 
-					if (alignProcessor.getAsBoolean()) {
-						AlignUtil.driveToProcessor().schedule();
-						return;
-					}
+		// 			if (alignProcessor.getAsBoolean()) {
+		// 				AlignUtil.driveToProcessor().schedule();
+		// 				return;
+		// 			}
 
-					if (alignBarge.getAsBoolean()) {
-						AlignUtil.driveToClosestBarge().schedule();
-						return;
-					}
+		// 			if (alignBarge.getAsBoolean()) {
+		// 				AlignUtil.driveToClosestBarge().schedule();
+		// 				return;
+		// 			}
 
-				}, swerve));
+		// 		}, swerve));
 	}
 
 	public void setDefaultCommands() {
