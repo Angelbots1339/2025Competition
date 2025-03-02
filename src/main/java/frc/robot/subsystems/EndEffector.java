@@ -37,8 +37,7 @@ public class EndEffector extends SubsystemBase {
 	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1,
 			EndEffectorConstants.encoderOffset);
 
-	// private TimeOfFlight sensor = new
-	// TimeOfFlight(EndEffectorConstants.sensorPort);
+	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
 
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
 	private final Timer throughBoreTimer = new Timer();
@@ -53,7 +52,7 @@ public class EndEffector extends SubsystemBase {
 
 		encoder.setInverted(true);
 		throughBoreTimer.start();
-		// sensor.setRangingMode(RangingMode.Short, 24);
+		sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 		angleMotor.setPosition(Degrees.of(140).minus(Degrees.of(47)));
 	}
@@ -161,8 +160,7 @@ public class EndEffector extends SubsystemBase {
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
 		logger.addDouble("pid error", () -> Rotations.of(angleMotor.getClosedLoopError().getValue()).in(Degrees), EndEffectorLogging.Angle);
 
-		// logger.addDouble("TOF distance", () -> sensor.getRange(),
-		// EndEffectorLogging.TOF);
+		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
 		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(),
