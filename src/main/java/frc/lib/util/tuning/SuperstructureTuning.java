@@ -77,9 +77,11 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void execute() {
-		targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
-		targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
-		volt_target = Volts.of(clamp(volts.getDouble(0), -12, 12));
+		// targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
+		targetHeight = height.getDouble(0);
+		// targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
+		targetAngle = Degrees.of(angle.getDouble(0));
+		volt_target = Volts.of(volts.getDouble(0));
 	}
 
 	@Override
