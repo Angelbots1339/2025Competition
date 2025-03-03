@@ -273,6 +273,7 @@ public class Constants {
 			Swerve,
 			Elevator,
 			EndEffector,
+			Superstructure,
 			None,
 		}
 	}

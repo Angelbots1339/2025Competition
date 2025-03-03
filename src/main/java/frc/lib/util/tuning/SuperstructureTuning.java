@@ -27,9 +27,11 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.EndEffector;
 
 public class SuperstructureTuning extends Command {
 	private Elevator elevator;
+	private EndEffector endeffector;
 
 	private static ShuffleboardTab tab = Shuffleboard.getTab("Superstructure Tuning");
 	private static XboxController test = new XboxController(DriverConstants.testPort);
@@ -51,10 +53,10 @@ public class SuperstructureTuning extends Command {
 			.getEntry();
 
 	private static Trigger setHeight = new Trigger(() -> test.getBButton());
-	private static Trigger heightUp = new Trigger(() -> test.getPOV() == 0);
-	private static Trigger heightDown = new Trigger(() -> test.getPOV() == 180);
+	private static Trigger setAngle = new Trigger(() -> test.getYButton());
+	private static Trigger intakeRun = new Trigger(() -> test.getAButton());
 
-	public SuperstructureTuning(Elevator elevator) {
+	public SuperstructureTuning(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
 	}
 
@@ -62,17 +64,12 @@ public class SuperstructureTuning extends Command {
 		return Math.min(Math.min(val, max), Math.max(val, min));
 	}
 
-	public void stepHeight(double val) {
-		double cur = height.getDouble(0);
-
-		height.setDouble(cur + val);
-	}
-
 	@Override
 	public void initialize() {
 		setHeight.whileTrue(elevator.setHeightCommand(() -> targetHeight));
-		heightUp.onTrue(Commands.runOnce(() -> height.setDouble(Math.min(height.getDouble(0) + step, ElevatorConstants.Heights.Max))));
-		heightDown.onTrue(Commands.runOnce(() -> height.setDouble(Math.max(height.getDouble(0) - step, ElevatorConstants.Heights.Min))));
+		setAngle.onTrue(Commands.run(() -> endeffector.setAngle(targetAngle)));
+		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
+		endeffector.stopIntake();
 	}
 
 	@Override
