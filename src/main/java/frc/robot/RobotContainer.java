@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -133,7 +134,7 @@ public class RobotContainer {
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
-		intakeCoral.whileTrue(new IntakeCoral(endeffector));
+		intakeCoral.whileTrue(new IntakeCoral(endeffector).onlyIf(() -> elevator.isAtHome()));
 		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector));
 
 		outtake.whileTrue(
