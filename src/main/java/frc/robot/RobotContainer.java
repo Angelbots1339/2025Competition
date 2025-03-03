@@ -219,6 +219,7 @@ public class RobotContainer {
 	public void stopDefaultCommands() {
 		swerve.removeDefaultCommand();
 		elevator.removeDefaultCommand();
+		endeffector.removeDefaultCommand();
 	}
 
 	public Command getAutonomousCommand() {

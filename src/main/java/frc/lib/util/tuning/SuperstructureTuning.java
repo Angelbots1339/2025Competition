@@ -61,6 +61,7 @@ public class SuperstructureTuning extends Command {
 	public SuperstructureTuning(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
 		this.endeffector = endeffector;
+		addRequirements(elevator, endeffector);
 	}
 
 	public double clamp(double val, double min, double max) {
@@ -69,7 +70,7 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void initialize() {
-		setHeight.whileTrue(elevator.setHeightCommand(() -> targetHeight));
+		setHeight.whileTrue(Commands.runOnce(() -> elevator.setHeight(() -> targetHeight)));
 		setAngle.onTrue(Commands.runOnce(() -> endeffector.setAngle(targetAngle)));
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
 		endeffector.stopIntake();
