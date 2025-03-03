@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.EndEffectorTuning;
-import frc.lib.util.tuning.ElevatorTuning;
+import frc.lib.util.tuning.SuperstructureTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
@@ -225,7 +225,7 @@ public class RobotContainer {
 		return Commands.select(
 			Map.ofEntries(
 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
-				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
+				Map.entry(TuningSystem.Elevator, new SuperstructureTuning(elevator)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
 				Map.entry(TuningSystem.None, Commands.none())
 			),
