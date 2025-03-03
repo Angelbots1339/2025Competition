@@ -31,6 +31,7 @@ import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
+import frc.robot.commands.IntakeCoral;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Swerve;
@@ -74,7 +75,7 @@ public class RobotContainer {
 	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
 
-
+	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
@@ -129,6 +130,8 @@ public class RobotContainer {
 		openIntake.whileTrue(
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
+
+		intakeCoral.whileTrue(new IntakeCoral(endeffector));
 
 		outtake.whileTrue(
 				Commands.either(

@@ -37,8 +37,7 @@ public class EndEffector extends SubsystemBase {
 	private DutyCycleEncoder encoder = new DutyCycleEncoder(EndEffectorConstants.encoderPort, 1,
 			EndEffectorConstants.encoderOffset);
 
-	// private TimeOfFlight sensor = new
-	// TimeOfFlight(EndEffectorConstants.sensorPort);
+	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
 
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
 	private final Timer throughBoreTimer = new Timer();
@@ -53,7 +52,7 @@ public class EndEffector extends SubsystemBase {
 
 		encoder.setInverted(true);
 		throughBoreTimer.start();
-		// sensor.setRangingMode(RangingMode.Short, 24);
+		sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 		angleMotor.setPosition(Degrees.of(140).minus(Degrees.of(47)));
 	}
@@ -61,11 +60,7 @@ public class EndEffector extends SubsystemBase {
 	public void home() {
 		setAngle(EndEffectorConstants.defaultAngle);
 
-		if (hasAlgae()) {
-			runIntake(EndEffectorConstants.algaeHoldVoltage);
-		} else {
-			runIntake(Volts.zero());
-		}
+		hold();
 	}
 
 	public void intake(Angle angle) {
@@ -102,12 +97,15 @@ public class EndEffector extends SubsystemBase {
 		return angleMotor.getPosition().getValue();
 	}
 
-	public void stop() {
+	public void stopIntake() {
 		angleMotor.setControl(new NeutralOut());
 	}
 
 	public void hold() {
-		runIntake(EndEffectorConstants.algaeHoldVoltage);
+		if (hasCoral())
+			wheelMotor.setControl(new NeutralOut());
+		else
+			runIntake(EndEffectorConstants.algaeHoldVoltage);
 	}
 
 	public Angle getEncoderAngle() {
@@ -123,9 +121,8 @@ public class EndEffector extends SubsystemBase {
 		return getAngleError().abs(Degrees) <= EndEffectorConstants.angleErrorTolerence.in(Degrees);
 	}
 
-	public boolean hasAlgae() {
-		return true;
-		// return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
+	public boolean hasCoral() {
+		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
 	public void setPID(SlotConfigs newPID) {
@@ -161,9 +158,9 @@ public class EndEffector extends SubsystemBase {
 		logger.addBoolean("at setpoint", this::isAtSetpoint, EndEffectorLogging.Angle);
 		logger.addDouble("pid error", () -> Rotations.of(angleMotor.getClosedLoopError().getValue()).in(Degrees), EndEffectorLogging.Angle);
 
-		// logger.addDouble("TOF distance", () -> sensor.getRange(),
-		// EndEffectorLogging.TOF);
-		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
+		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
+		logger.addBoolean("Has Coral", this::hasCoral, EndEffectorLogging.TOF);
+
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(),
 				EndEffectorLogging.Wheel);

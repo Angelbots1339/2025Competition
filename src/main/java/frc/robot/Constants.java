@@ -160,7 +160,7 @@ public class Constants {
 		public static final Angle processorAngle = Degrees.of(60);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
-		public static final double hasAlgaeThreshold = 250; /* mm */
+		public static final double hasAlgaeThreshold = 70; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(10);
 		public static final Voltage outtakeVolts = Volts.of(-12);
