@@ -60,7 +60,7 @@ public class EndEffector extends SubsystemBase {
 	public void home() {
 		setAngle(EndEffectorConstants.defaultAngle);
 
-		if (hasAlgae()) {
+		if (hasCoral()) {
 			runIntake(EndEffectorConstants.algaeHoldVoltage);
 		} else {
 			runIntake(Volts.zero());
@@ -109,6 +109,10 @@ public class EndEffector extends SubsystemBase {
 		runIntake(EndEffectorConstants.algaeHoldVoltage);
 	}
 
+	public void stopIntake() {
+		wheelMotor.setControl(new NeutralOut());
+	}
+
 	public Angle getEncoderAngle() {
 		Angle rot = Rotations.of(encoder.get() / EndEffectorConstants.gearRatio);
 		return rot;
@@ -122,7 +126,7 @@ public class EndEffector extends SubsystemBase {
 		return getAngleError().abs(Degrees) <= EndEffectorConstants.angleErrorTolerence.in(Degrees);
 	}
 
-	public boolean hasAlgae() {
+	public boolean hasCoral() {
 		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
@@ -161,7 +165,7 @@ public class EndEffector extends SubsystemBase {
 		logger.addDouble("pid error", () -> Rotations.of(angleMotor.getClosedLoopError().getValue()).in(Degrees), EndEffectorLogging.Angle);
 
 		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
-		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
+		logger.addBoolean("Has Algae", this::hasCoral, EndEffectorLogging.TOF);
 
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(),
