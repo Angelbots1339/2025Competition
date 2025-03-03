@@ -40,16 +40,18 @@ public class SuperstructureTuning extends Command {
 	private static Voltage volt_target = Volts.zero();
 	private static Angle targetAngle = Degrees.zero();
 
-	private static double step = 0.05;
-
 	private static GenericEntry height = tab.add("target height", ElevatorConstants.pid.kS)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", ElevatorConstants.Heights.Min, "max", ElevatorConstants.Heights.Max))
 			.getEntry();
 
-	private static GenericEntry angle = tab.add("target angle", ElevatorConstants.pid.kS)
+	private static GenericEntry angle = tab.add("target angle", EndEffectorConstants.defaultAngle.in(Degrees))
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", EndEffectorConstants.minAngle.in(Degrees), "max", EndEffectorConstants.maxAngle.in(Degrees)))
+			.getEntry();
+
+	private static GenericEntry volts = tab.add("volts", 1)
+			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
 	private static Trigger setHeight = new Trigger(() -> test.getBButton());
@@ -58,23 +60,26 @@ public class SuperstructureTuning extends Command {
 
 	public SuperstructureTuning(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
+		this.endeffector = endeffector;
 	}
 
 	public double clamp(double val, double max, double min) {
-		return Math.min(Math.min(val, max), Math.max(val, min));
+		return Math.max(min, Math.min(max, val));
 	}
 
 	@Override
 	public void initialize() {
 		setHeight.whileTrue(elevator.setHeightCommand(() -> targetHeight));
-		setAngle.onTrue(Commands.run(() -> endeffector.setAngle(targetAngle)));
+		setAngle.onTrue(Commands.runOnce(() -> endeffector.setAngle(targetAngle)));
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
 		endeffector.stopIntake();
 	}
 
 	@Override
 	public void execute() {
-		targetHeight = height.getDouble(0);
+		targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
+		targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
+		volt_target = Volts.of(clamp(volts.getDouble(0), 0, 12));
 	}
 
 	@Override
