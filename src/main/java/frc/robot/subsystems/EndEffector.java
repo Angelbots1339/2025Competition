@@ -123,8 +123,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean hasAlgae() {
-		return true;
-		// return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
+		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
 	}
 
 	public void setPID(SlotConfigs newPID) {
@@ -148,6 +147,7 @@ public class EndEffector extends SubsystemBase {
 			throughBoreTimer.reset();
 			throughBoreTimer.stop();
 		}
+		sensor.identifySensor();
 	}
 
 	public void initLogs() {
@@ -162,6 +162,7 @@ public class EndEffector extends SubsystemBase {
 
 		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
 		logger.addBoolean("Has Algae", this::hasAlgae, EndEffectorLogging.TOF);
+
 
 		logger.addDouble("wheel volts", () -> wheelMotor.getMotorVoltage().getValueAsDouble(),
 				EndEffectorLogging.Wheel);
