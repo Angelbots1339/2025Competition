@@ -89,7 +89,7 @@ public class EndEffectorTuning extends Command {
 		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, EndEffectorConstants.minAngle.in(Degrees)))));
 
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
-		endeffector.stop();
+		endeffector.stopIntake();
 	}
 
 	@Override
