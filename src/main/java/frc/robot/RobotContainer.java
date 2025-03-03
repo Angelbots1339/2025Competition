@@ -77,6 +77,7 @@ public class RobotContainer {
 	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
 
 	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
+	private Trigger outtakeCoral = new Trigger(() -> driver.getRightBumperButton());
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
@@ -133,6 +134,7 @@ public class RobotContainer {
 		);
 
 		intakeCoral.whileTrue(new IntakeCoral(endeffector));
+		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector));
 
 		outtake.whileTrue(
 				Commands.either(
