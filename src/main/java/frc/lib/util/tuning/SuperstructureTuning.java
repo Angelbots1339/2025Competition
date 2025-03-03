@@ -50,7 +50,7 @@ public class SuperstructureTuning extends Command {
 			.withProperties(Map.of("min", EndEffectorConstants.minAngle.in(Degrees), "max", EndEffectorConstants.maxAngle.in(Degrees)))
 			.getEntry();
 
-	private static GenericEntry volts = tab.add("volts", 1)
+	private static GenericEntry volts = tab.add("volts", EndEffectorConstants.intakeVolts.in(Volts))
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
