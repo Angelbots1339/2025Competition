@@ -40,7 +40,7 @@ public class SuperstructureTuning extends Command {
 	private static Voltage volt_target = Volts.zero();
 	private static Angle targetAngle = Degrees.zero();
 
-	private static GenericEntry height = tab.add("target height", ElevatorConstants.pid.kS)
+	private static GenericEntry height = tab.add("target height", 0)
 			.withWidget(BuiltInWidgets.kNumberSlider)
 			.withProperties(Map.of("min", ElevatorConstants.Heights.Min, "max", ElevatorConstants.Heights.Max))
 			.getEntry();
@@ -63,7 +63,7 @@ public class SuperstructureTuning extends Command {
 		this.endeffector = endeffector;
 	}
 
-	public double clamp(double val, double max, double min) {
+	public double clamp(double val, double min, double max) {
 		return Math.max(min, Math.min(max, val));
 	}
 
@@ -79,7 +79,7 @@ public class SuperstructureTuning extends Command {
 	public void execute() {
 		targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
 		targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
-		volt_target = Volts.of(clamp(volts.getDouble(0), 0, 12));
+		volt_target = Volts.of(clamp(volts.getDouble(0), -12, 12));
 	}
 
 	@Override
