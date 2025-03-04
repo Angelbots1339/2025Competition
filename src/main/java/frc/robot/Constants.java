@@ -142,7 +142,7 @@ public class Constants {
 	public class EndEffectorConstants {
 		public static final int anglePort = 6;
 		public static final int wheelPort = 7;
-		public static final int encoderPort = 2;
+		public static final int encoderPort = 0;
 		public static final int sensorPort = 9;
 
 		// public static final double encoderOffset = -(0.9 - 0.5);
