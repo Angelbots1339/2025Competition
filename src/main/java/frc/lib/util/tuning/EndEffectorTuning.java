@@ -86,8 +86,8 @@ public class EndEffectorTuning extends Command {
 	@Override
 	public void initialize() {
 		setAngle.whileTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)));
-		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(target.getDouble(0) + 5)));
-		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(target.getDouble(0) - 5)));
+		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(targetAngle.in(Degrees) + 5)));
+		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(targetAngle.in(Degrees) - 5)));
 
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
 		endeffector.stop();
@@ -116,6 +116,10 @@ public class EndEffectorTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		setAngle.whileTrue(Commands.none());
+		angleUp.onTrue(Commands.none());
+		angleDown.onTrue(Commands.none());
+		intakeRun.whileTrue(Commands.none());
 	}
 
 	@Override

@@ -79,6 +79,7 @@ public class ElevatorTuning extends Command {
 
 	public ElevatorTuning(Elevator elevator) {
 		this.elevator = elevator;
+		addRequirements(elevator);
 	}
 
 	@Override
@@ -118,8 +119,6 @@ public class ElevatorTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		elevator.getCurrentCommand().cancel();
-
 		setHeight.whileTrue(Commands.none());
 		heightUp.onTrue(Commands.none());
 		heightDown.onTrue(Commands.none());

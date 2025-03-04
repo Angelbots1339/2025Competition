@@ -83,6 +83,9 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		setHeight.whileTrue(Commands.none());
+		setAngle.whileTrue(Commands.none());
+		intakeRun.whileTrue(Commands.none());
 	}
 
 	@Override
