@@ -84,6 +84,8 @@ public class ElevatorTuning extends Command {
 		setHeight.whileTrue(elevator.setHeightCommand(() -> targetHeight));
 		heightUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + step, ElevatorConstants.Heights.Max))));
 		heightDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - step, ElevatorConstants.Heights.Min))));
+
+		elevator.stop();
 	}
 
 	@Override

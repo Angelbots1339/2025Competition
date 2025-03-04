@@ -73,15 +73,15 @@ public class SuperstructureTuning extends Command {
 		setHeight.whileTrue(Commands.runOnce(() -> elevator.setHeight(() -> targetHeight)));
 		setAngle.onTrue(Commands.runOnce(() -> endeffector.setAngle(targetAngle)));
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
-		endeffector.stopIntake();
+		endeffector.stop();
 	}
 
 	@Override
 	public void execute() {
-		// targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
-		targetHeight = height.getDouble(0);
-		// targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
-		targetAngle = Degrees.of(angle.getDouble(0));
+		targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
+		// targetHeight = height.getDouble(0);
+		targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
+		// targetAngle = Degrees.of(angle.getDouble(0));
 		volt_target = Volts.of(volts.getDouble(0));
 	}
 
