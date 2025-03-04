@@ -11,6 +11,8 @@ import java.util.Map;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
@@ -64,10 +66,6 @@ public class SuperstructureTuning extends Command {
 		addRequirements(elevator, endeffector);
 	}
 
-	public double clamp(double val, double min, double max) {
-		return Math.max(min, Math.min(max, val));
-	}
-
 	@Override
 	public void initialize() {
 		setHeight.whileTrue(Commands.runOnce(() -> elevator.setHeight(() -> targetHeight)));
@@ -78,8 +76,8 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void execute() {
-		targetHeight = clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
-		targetAngle = Degrees.of(clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
+		targetHeight = MathUtil.clamp(height.getDouble(0), 0, ElevatorConstants.Heights.Max);
+		targetAngle = Degrees.of(MathUtil.clamp(angle.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
 		volt_target = Volts.of(volts.getDouble(0));
 	}
 
