@@ -52,8 +52,8 @@ public class SuperstructureTuning extends Command {
 			.withWidget(BuiltInWidgets.kTextView)
 			.getEntry();
 
-	private static Trigger setHeight = new Trigger(() -> test.getBButton());
-	private static Trigger setAngle = new Trigger(() -> test.getYButton());
+	private static Trigger setHeight = new Trigger(() -> test.getYButton());
+	private static Trigger setAngle = new Trigger(() -> test.getBButton());
 	private static Trigger intakeRun = new Trigger(() -> test.getAButton());
 
 	public SuperstructureTuning(Elevator elevator, EndEffector endeffector) {
