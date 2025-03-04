@@ -21,7 +21,7 @@ public final class LoggingConstants {
         }
 
 		public class ElevatorLogging {
-			public static LoggingLevel Leader = LoggingLevel.NONE;
+			public static LoggingLevel Leader = LoggingLevel.NETWORK_TABLES;
 			public static LoggingLevel Follower = LoggingLevel.NONE;
 			public static LoggingLevel FollowerMotor = LoggingLevel.NONE;
 			public static LoggingLevel LeaderMotor = LoggingLevel.NONE;
