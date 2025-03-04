@@ -107,11 +107,12 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testPeriodic() {
-		m_robotContainer.getTuningCommand().schedule();;
+		m_robotContainer.getTuningCommand().schedule();
 	}
 
 	@Override
 	public void testExit() {
 		m_robotContainer.setDefaultCommands();
+		m_robotContainer.getTuningCommand().cancel();
 	}
 }

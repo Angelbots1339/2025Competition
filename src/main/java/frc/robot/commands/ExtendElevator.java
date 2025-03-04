@@ -13,10 +13,16 @@ public class ExtendElevator extends Command {
 
 	static public SequencingConstants.Heights target = SequencingConstants.Heights.Home;
 	public SequencingConstants.Heights override = null;
+	public double heightOverride = -1;
 
 	public ExtendElevator(Elevator elevator, EndEffector endeffector, SequencingConstants.Heights override) {
 		this(elevator, endeffector);
 		this.override = override;
+	}
+
+	public ExtendElevator(Elevator elevator, EndEffector endeffector, double override) {
+		this(elevator, endeffector);
+		this.heightOverride = override;
 	}
 
 	public ExtendElevator(Elevator elevator, EndEffector endeffector) {
@@ -33,12 +39,14 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void execute() {
-		if (!endEffector.isAtSetpoint()) {
-			return;
-		}
+		// if (!endEffector.isAtSetpoint()) {
+		// 	return;
+		// }
 
 		if (override != null)
 			elevator.setHeight(override.height);
+		else if (heightOverride != -1)
+			elevator.setHeight(heightOverride);
 		else
 			elevator.setHeight(target.height);
 	}

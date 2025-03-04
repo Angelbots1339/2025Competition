@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.commands.ExtendElevator;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 
@@ -63,10 +64,12 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void initialize() {
-		setHeight.whileTrue(Commands.runOnce(() -> elevator.setHeight(() -> targetHeight)));
+		setHeight.whileTrue(new ExtendElevator(elevator, endeffector, targetHeight));
 		setAngle.whileTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)));
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
+
 		endeffector.stop();
+		elevator.stop();
 	}
 
 	@Override
@@ -78,9 +81,6 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		setHeight.whileTrue(Commands.none());
-		setAngle.whileTrue(Commands.none());
-		intakeRun.whileTrue(Commands.none());
 	}
 
 	@Override
