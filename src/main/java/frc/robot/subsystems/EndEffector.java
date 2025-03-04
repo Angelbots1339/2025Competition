@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -11,7 +9,6 @@ import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
@@ -19,13 +16,10 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.logging.LoggedSubsystem;
-import frc.lib.util.logging.Logger.LoggingLevel;
 import frc.lib.util.logging.loggedObjects.LoggedFalcon;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.LoggingConstants.EndEffectorLogging;

@@ -4,16 +4,11 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
