@@ -39,9 +39,9 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public void execute() {
-		// if (!endEffector.isAtSetpoint()) {
-		// 	return;
-		// }
+		if (!endEffector.isAtSetpoint()) {
+			return;
+		}
 
 		if (override != null)
 			elevator.setHeight(override.height);
