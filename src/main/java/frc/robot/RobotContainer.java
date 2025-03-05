@@ -121,7 +121,7 @@ public class RobotContainer {
 				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
 				Map.entry(SequencingConstants.Heights.Home, Commands.none())
 			),
-			() -> ExtendElevator.target)));
+			() -> ExtendElevator.target).onlyIf(() -> !endeffector.hasCoral())));
 		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
 
 		openIntake.whileTrue(
@@ -204,7 +204,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> !elevator.isAtHome()));
+		// swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> !elevator.isAtHome()));
 		endeffector.setDefaultCommand(
 				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome())
 				.andThen(Commands.run(() -> endeffector.hold(), endeffector)));
@@ -221,6 +221,8 @@ public class RobotContainer {
 	}
 
 	public Command getTuningCommand() {
+		endeffector.stop();
+		elevator.stop();
 		return Commands.select(
 			Map.ofEntries(
 				Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),

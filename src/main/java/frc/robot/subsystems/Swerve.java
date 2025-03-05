@@ -326,8 +326,8 @@ public class Swerve extends SubsystemBase {
 		// logged_field.addPose2d("Closest Reef", () -> AlignUtil.getClosestReef(), true);
 		// logged_field.addPose2d("Selected Reef", () -> AlignUtil.getSelectedReef(), true);
 		logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
-		logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
-		logged_field.addPose2d("Limelight Right", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose : Pose2d.kZero, true);
+		// logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
+		// logged_field.addPose2d("Limelight Right", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose : Pose2d.kZero, true);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);

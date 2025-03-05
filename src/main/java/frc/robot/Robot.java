@@ -103,11 +103,11 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
 		m_robotContainer.stopDefaultCommands();
+		m_robotContainer.getTuningCommand().schedule();
 	}
 
 	@Override
 	public void testPeriodic() {
-		m_robotContainer.getTuningCommand().schedule();
 	}
 
 	@Override

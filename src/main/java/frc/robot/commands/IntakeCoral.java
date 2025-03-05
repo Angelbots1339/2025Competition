@@ -21,7 +21,7 @@ public class IntakeCoral extends Command {
 	@Override
 	public void initialize() {
 		endEffector.setAngle(Degrees.of(93));
-		endEffector.runIntake(EndEffectorConstants.outtakeVolts);
+		endEffector.runIntake(EndEffectorConstants.coralIntakeVolts);
 	}
 
 	@Override
