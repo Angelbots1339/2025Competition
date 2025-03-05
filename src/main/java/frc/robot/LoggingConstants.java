@@ -14,7 +14,7 @@ public final class LoggingConstants {
                 public static LoggingLevel Modules = LoggingLevel.NONE;
                 public static LoggingLevel Motors = LoggingLevel.NONE;
                 public static LoggingLevel Gyro = LoggingLevel.NONE;
-                public static LoggingLevel Pose = LoggingLevel.NONE;
+                public static LoggingLevel Pose = LoggingLevel.NETWORK_TABLES;
                 public static LoggingLevel PidPose = LoggingLevel.NONE;
                 public static LoggingLevel Auto = LoggingLevel.NONE;
                 public static LoggingLevel Main = LoggingLevel.NONE;
