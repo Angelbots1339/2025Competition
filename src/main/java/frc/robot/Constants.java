@@ -229,12 +229,24 @@ public class Constants {
 			Home(0),
 			A1(0.21),
 			A2(0.33),
+			/* TODO: tune coral heights */
+			L1(0.21),
+			L2(0.33),
+			L3(0.33),
+			L4(0.33),
 			Barge(0.572); // 0.571 max
 
 			public final double height;
+			public final Angle angle;
 
 			Heights(double height) {
 				this.height = height;
+				this.angle = null;
+			}
+
+			Heights(double height, Angle angle) {
+				this.height = height;
+				this.angle = angle;
 			}
 		}
 	}

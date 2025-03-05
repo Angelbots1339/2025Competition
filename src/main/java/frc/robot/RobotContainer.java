@@ -63,6 +63,10 @@ public class RobotContainer {
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getXButton());
+	private Trigger extendToL4 = new Trigger(() -> operator.getPOV() == 0);
+	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270);
+	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
+	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
 
 
 	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
@@ -106,6 +110,18 @@ public class RobotContainer {
 		);
 		extendToA2.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
+		);
+		extendToL4.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L4)
+		);
+		extendToL3.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L3)
+		);
+		extendToL2.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L2)
+		);
+		extendToL1.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L1)
 		);
 
 	}
