@@ -48,7 +48,7 @@ public class EndEffector extends SubsystemBase {
 		throughBoreTimer.start();
 		sensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
-		angleMotor.setPosition(Degrees.of(140).minus(Degrees.of(47)));
+		angleMotor.setPosition(EndEffectorConstants.maxAngle);
 	}
 
 	public void home() {
