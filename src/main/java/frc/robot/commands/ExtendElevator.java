@@ -22,11 +22,6 @@ public class ExtendElevator extends Command {
 		this.override = override;
 	}
 
-	public ExtendElevator(Elevator elevator, EndEffector endeffector, Supplier<Double> override) {
-		this(elevator, endeffector);
-		this.heightOverride = override.get();
-	}
-
 	public ExtendElevator(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
 		this.endEffector = endeffector;

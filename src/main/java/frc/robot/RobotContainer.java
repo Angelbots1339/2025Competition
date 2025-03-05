@@ -239,6 +239,7 @@ public class RobotContainer {
 	public Command getTuningCommand() {
 		endeffector.stop();
 		elevator.stop();
+		ExtendElevator.heightOverride = -1;
 		return Commands.select(
 			Map.ofEntries(
 				Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
