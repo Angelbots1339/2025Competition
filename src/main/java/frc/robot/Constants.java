@@ -159,7 +159,8 @@ public class Constants {
 		public static final double hasAlgaeThreshold = 70; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(10);
-		public static final Voltage coralIntakeVolts = Volts.of(10);
+		public static final Voltage coralIntakeVolts = Volts.of(-5);
+		public static final Voltage coralIntakeSetVolts = Volts.of(0.3);
 		public static final Voltage outtakeVolts = Volts.of(-12);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
