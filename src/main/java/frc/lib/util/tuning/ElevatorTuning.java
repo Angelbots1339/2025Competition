@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -77,18 +79,21 @@ public class ElevatorTuning extends Command {
 
 	public ElevatorTuning(Elevator elevator) {
 		this.elevator = elevator;
+		addRequirements(elevator);
 	}
 
 	@Override
 	public void initialize() {
-		setHeight.whileTrue(elevator.setHeightCommand(() -> targetHeight));
-		heightUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + step, ElevatorConstants.Heights.Max))));
-		heightDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - step, ElevatorConstants.Heights.Min))));
+		setHeight.whileTrue(Commands.run(() -> elevator.setHeight(() -> targetHeight)));
+		heightUp.onTrue(Commands.runOnce(() -> target.setDouble(targetHeight + step)));
+		heightDown.onTrue(Commands.runOnce(() -> target.setDouble(targetHeight - step)));
+
+		elevator.stop();
 	}
 
 	@Override
 	public void execute() {
-		targetHeight = target.getDouble(0);
+		targetHeight = MathUtil.clamp(target.getDouble(0), ElevatorConstants.Heights.Min, ElevatorConstants.Heights.Max);
 
 		if (resetElevator.getBoolean(false)) {
 			elevator.reset();
@@ -114,6 +119,9 @@ public class ElevatorTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		setHeight.whileTrue(Commands.none());
+		heightUp.onTrue(Commands.none());
+		heightDown.onTrue(Commands.none());
 	}
 
 	@Override

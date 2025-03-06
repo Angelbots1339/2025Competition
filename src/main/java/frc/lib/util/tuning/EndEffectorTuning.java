@@ -12,6 +12,7 @@ import java.util.Map;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
@@ -85,18 +86,18 @@ public class EndEffectorTuning extends Command {
 	@Override
 	public void initialize() {
 		setAngle.whileTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)));
-		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(Math.min(target.getDouble(0) + 5, EndEffectorConstants.maxAngle.in(Degrees)))));
-		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(Math.max(target.getDouble(0) - 5, EndEffectorConstants.minAngle.in(Degrees)))));
+		angleUp.onTrue(Commands.runOnce(() -> target.setDouble(targetAngle.in(Degrees) + 5)));
+		angleDown.onTrue(Commands.runOnce(() -> target.setDouble(targetAngle.in(Degrees) - 5)));
 
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
-		endeffector.stopIntake();
+		endeffector.stop();
 	}
 
 	@Override
 	public void execute() {
-		targetAngle = Degrees.of(target.getDouble(0));
+		targetAngle = Degrees.of(MathUtil.clamp(target.getDouble(0), EndEffectorConstants.minAngle.in(Degrees), EndEffectorConstants.maxAngle.in(Degrees)));
 
-		volt_target = Volts.of(volts.getDouble(0));
+		volt_target = Volts.of(MathUtil.clamp(volts.getDouble(0), -12, 12));
 
 		SlotConfigs tmp = EndEffectorConstants.pid
 				.withKP(p.getDouble(0))
@@ -115,6 +116,10 @@ public class EndEffectorTuning extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		setAngle.whileTrue(Commands.none());
+		angleUp.onTrue(Commands.none());
+		angleDown.onTrue(Commands.none());
+		intakeRun.whileTrue(Commands.none());
 	}
 
 	@Override

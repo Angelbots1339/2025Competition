@@ -1,12 +1,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,8 +12,6 @@ import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -142,7 +138,7 @@ public class Constants {
 	public class EndEffectorConstants {
 		public static final int anglePort = 6;
 		public static final int wheelPort = 7;
-		public static final int encoderPort = 2;
+		public static final int encoderPort = 0;
 		public static final int sensorPort = 9;
 
 		// public static final double encoderOffset = -(0.9 - 0.5);
@@ -157,13 +153,16 @@ public class Constants {
 		public static final Angle defaultAngle = Degrees.of(80);
 		public static final Angle intakeAngle = Degrees.of(8);
 		public static final double outtakeTime = 0.5;
-		public static final Angle processorAngle = Degrees.of(60);
+		public static final Angle processorAngle = Degrees.of(55);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 70; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(10);
+		public static final Voltage coralIntakeVolts = Volts.of(-5);
+		public static final Voltage coralIntakeSetVolts = Volts.of(0.3);
 		public static final Voltage outtakeVolts = Volts.of(-12);
+		public static final Voltage coralOuttakeVolts = Volts.of(-6);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
 		public static final SlotConfigs pid = new SlotConfigs()
@@ -210,7 +209,7 @@ public class Constants {
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
 			.withCurrentLimits(
 				new CurrentLimitsConfigs()
-					.withStatorCurrentLimit(40)
+					.withStatorCurrentLimit(60)
 			)
 			.withMotorOutput(
 				new MotorOutputConfigs()
@@ -232,12 +231,24 @@ public class Constants {
 			Home(0),
 			A1(0.21),
 			A2(0.33),
+			/* TODO: tune coral heights */
+			L1(0.21),
+			L2(0.33),
+			L3(0.33),
+			L4(0.485, Degrees.of(33)),
 			Barge(0.572); // 0.571 max
 
 			public final double height;
+			public final Angle angle;
 
 			Heights(double height) {
 				this.height = height;
+				this.angle = null;
+			}
+
+			Heights(double height, Angle angle) {
+				this.height = height;
+				this.angle = angle;
 			}
 		}
 	}
@@ -273,6 +284,7 @@ public class Constants {
 			Swerve,
 			Elevator,
 			EndEffector,
+			Superstructure,
 			None,
 		}
 	}

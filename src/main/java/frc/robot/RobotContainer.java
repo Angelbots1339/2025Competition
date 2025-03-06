@@ -4,15 +4,12 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Volts;
-
+import java.io.SequenceInputStream;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,9 +18,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.AlignUtil;
-import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.ElevatorTuning;
+import frc.lib.util.tuning.EndEffectorTuning;
+import frc.lib.util.tuning.SuperstructureTuning;
 import frc.lib.util.tuning.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
@@ -67,6 +64,10 @@ public class RobotContainer {
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getXButton());
+	private Trigger extendToL4 = new Trigger(() -> operator.getPOV() == 0);
+	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270);
+	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
+	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
 
 
 	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
@@ -76,6 +77,7 @@ public class RobotContainer {
 	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
 
 	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
+	private Trigger outtakeCoral = new Trigger(() -> driver.getRightBumperButton());
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
@@ -86,7 +88,7 @@ public class RobotContainer {
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		// SmartDashboard.putData("Auto", autoChooser);
+		SmartDashboard.putData("Auto", autoChooser);
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
@@ -110,6 +112,18 @@ public class RobotContainer {
 		extendToA2.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
 		);
+		extendToL4.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L4)
+		);
+		extendToL3.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L3)
+		);
+		extendToL2.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L2)
+		);
+		extendToL1.onTrue(
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L1)
+		);
 
 	}
 
@@ -118,6 +132,7 @@ public class RobotContainer {
 		.andThen(
 		Commands.select(
 			Map.ofEntries(
+				Map.entry(SequencingConstants.Heights.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.Heights.L4.angle))),
 				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
 				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
 				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
@@ -131,7 +146,8 @@ public class RobotContainer {
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
-		intakeCoral.whileTrue(new IntakeCoral(endeffector));
+		intakeCoral.whileTrue(new IntakeCoral(endeffector).onlyIf(() -> elevator.isAtHome()));
+		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
 
 		outtake.whileTrue(
 				Commands.either(
@@ -215,6 +231,7 @@ public class RobotContainer {
 	public void stopDefaultCommands() {
 		swerve.removeDefaultCommand();
 		elevator.removeDefaultCommand();
+		endeffector.removeDefaultCommand();
 	}
 
 	public Command getAutonomousCommand() {
@@ -222,8 +239,12 @@ public class RobotContainer {
 	}
 
 	public Command getTuningCommand() {
+		endeffector.stop();
+		elevator.stop();
+		ExtendElevator.heightOverride = -1;
 		return Commands.select(
 			Map.ofEntries(
+				Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),

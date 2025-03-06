@@ -50,6 +50,10 @@ public class Elevator extends SubsystemBase {
 		follower.setPosition(0);
 	}
 
+	public void stop() {
+		leader.setControl(new NeutralOut());
+	}
+
 	public void setHeight(double meters) {
 		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters)));
 		targetHeight = meters;

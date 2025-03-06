@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
@@ -13,6 +15,7 @@ public class ExtendElevator extends Command {
 
 	static public SequencingConstants.Heights target = SequencingConstants.Heights.Home;
 	public SequencingConstants.Heights override = null;
+	static public double heightOverride = -1;
 
 	public ExtendElevator(Elevator elevator, EndEffector endeffector, SequencingConstants.Heights override) {
 		this(elevator, endeffector);
@@ -39,6 +42,8 @@ public class ExtendElevator extends Command {
 
 		if (override != null)
 			elevator.setHeight(override.height);
+		else if (heightOverride != -1)
+			elevator.setHeight(heightOverride);
 		else
 			elevator.setHeight(target.height);
 	}

@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
 		m_robotContainer.stopDefaultCommands();
-		m_robotContainer.getTuningCommand().schedule();;
+		m_robotContainer.getTuningCommand().schedule();
 	}
 
 	@Override
@@ -113,5 +113,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testExit() {
 		m_robotContainer.setDefaultCommands();
+		m_robotContainer.getTuningCommand().cancel();
 	}
 }

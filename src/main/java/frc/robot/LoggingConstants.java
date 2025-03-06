@@ -14,14 +14,14 @@ public final class LoggingConstants {
                 public static LoggingLevel Modules = LoggingLevel.NONE;
                 public static LoggingLevel Motors = LoggingLevel.NONE;
                 public static LoggingLevel Gyro = LoggingLevel.NONE;
-                public static LoggingLevel Pose = LoggingLevel.NONE;
+                public static LoggingLevel Pose = LoggingLevel.NETWORK_TABLES;
                 public static LoggingLevel PidPose = LoggingLevel.NONE;
                 public static LoggingLevel Auto = LoggingLevel.NONE;
                 public static LoggingLevel Main = LoggingLevel.NONE;
         }
 
 		public class ElevatorLogging {
-			public static LoggingLevel Leader = LoggingLevel.NONE;
+			public static LoggingLevel Leader = LoggingLevel.NETWORK_TABLES;
 			public static LoggingLevel Follower = LoggingLevel.NONE;
 			public static LoggingLevel FollowerMotor = LoggingLevel.NONE;
 			public static LoggingLevel LeaderMotor = LoggingLevel.NONE;
@@ -29,7 +29,7 @@ public final class LoggingConstants {
 
 		public class EndEffectorLogging {
 			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
-			public static LoggingLevel Wheel = LoggingLevel.NONE;
+			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
 			public static LoggingLevel TOF = LoggingLevel.NETWORK_TABLES;
 		}
 
