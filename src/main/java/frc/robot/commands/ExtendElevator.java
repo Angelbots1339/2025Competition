@@ -25,8 +25,6 @@ public class ExtendElevator extends Command {
 	public ExtendElevator(Elevator elevator, EndEffector endeffector) {
 		this.elevator = elevator;
 		this.endEffector = endeffector;
-
-		addRequirements(elevator, endeffector);
 	}
 
 	@Override
