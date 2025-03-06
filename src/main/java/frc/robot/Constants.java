@@ -208,7 +208,7 @@ public class Constants {
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
 			.withCurrentLimits(
 				new CurrentLimitsConfigs()
-					.withStatorCurrentLimit(40)
+					.withStatorCurrentLimit(60)
 			)
 			.withMotorOutput(
 				new MotorOutputConfigs()
