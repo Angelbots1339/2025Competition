@@ -64,8 +64,8 @@ public class SuperstructureTuning extends Command {
 
 	@Override
 	public void initialize() {
-		setHeight.onTrue(new ExtendElevator(elevator, endeffector));
-		setAngle.onTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)).until(() -> endeffector.isAtSetpoint()));
+		setHeight.whileTrue(new ExtendElevator(elevator, endeffector));
+		setAngle.whileTrue(Commands.run(() -> endeffector.setAngle(() -> targetAngle)));
 		intakeRun.whileTrue(Commands.run(() -> endeffector.runIntake(volt_target))).whileFalse(Commands.run(() -> endeffector.runIntake(Volts.zero())));
 	}
 
