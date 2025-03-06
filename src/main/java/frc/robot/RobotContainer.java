@@ -147,7 +147,7 @@ public class RobotContainer {
 		);
 
 		intakeCoral.whileTrue(new IntakeCoral(endeffector).onlyIf(() -> elevator.isAtHome()));
-		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector));
+		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
 
 		outtake.whileTrue(
 				Commands.either(
