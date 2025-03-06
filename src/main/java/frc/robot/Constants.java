@@ -234,7 +234,7 @@ public class Constants {
 			L1(0.21),
 			L2(0.33),
 			L3(0.33),
-			L4(0.33),
+			L4(0.475, Degrees.of(33)),
 			Barge(0.572); // 0.571 max
 
 			public final double height;

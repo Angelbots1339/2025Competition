@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.io.SequenceInputStream;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -131,13 +132,14 @@ public class RobotContainer {
 		.andThen(
 		Commands.select(
 			Map.ofEntries(
+				Map.entry(SequencingConstants.Heights.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.Heights.L4.angle))),
 				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
 				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
 				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
 				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
 				Map.entry(SequencingConstants.Heights.Home, Commands.none())
 			),
-			() -> ExtendElevator.target).onlyIf(() -> !endeffector.hasCoral())));
+			() -> ExtendElevator.target)));
 		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
 
 		openIntake.whileTrue(
