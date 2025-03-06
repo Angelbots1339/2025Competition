@@ -87,7 +87,7 @@ public class RobotContainer {
 		setDefaultCommands();
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		// SmartDashboard.putData("Auto", autoChooser);
+		SmartDashboard.putData("Auto", autoChooser);
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
