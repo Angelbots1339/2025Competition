@@ -153,7 +153,7 @@ public class Constants {
 		public static final Angle defaultAngle = Degrees.of(80);
 		public static final Angle intakeAngle = Degrees.of(8);
 		public static final double outtakeTime = 0.5;
-		public static final Angle processorAngle = Degrees.of(60);
+		public static final Angle processorAngle = Degrees.of(55);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 70; /* mm */
