@@ -93,6 +93,8 @@ public class RobotContainer {
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
 				.andThen(endeffector.setAngleAndRun(() ->EndEffectorConstants.coralOuttakeVolts, () -> SequencingConstants.SetPoints.L4.angle)
 					.until(() -> !endeffector.hasCoral())).andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+		NamedCommands.registerCommand("Extend",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
