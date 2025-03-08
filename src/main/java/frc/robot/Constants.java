@@ -226,29 +226,38 @@ public class Constants {
 		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
 
 
-		public static enum Heights {
+		public static enum SetPoints {
 			Intake(0),
 			Home(0),
-			A1(0.21),
-			A2(0.33),
+			A1(0.145, Degrees.of(35), EndEffectorConstants.intakeVolts),
+			A2(0.33, Degrees.of(16), EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
 			L2(0.33),
 			L3(0.33),
 			L4(0.485, Degrees.of(33)),
-			Barge(0.572); // 0.571 max
+			Barge(0.572, Degrees.of(74)); // 0.571 max
 
 			public final double height;
 			public final Angle angle;
+			public final Voltage volts;
 
-			Heights(double height) {
+			SetPoints(double height) {
 				this.height = height;
 				this.angle = null;
+				this.volts = null;
 			}
 
-			Heights(double height, Angle angle) {
+			SetPoints(double height, Angle angle) {
 				this.height = height;
 				this.angle = angle;
+				this.volts = null;
+			}
+
+			SetPoints(double height, Angle angle, Voltage volts) {
+				this.height = height;
+				this.angle = angle;
+				this.volts = null;
 			}
 		}
 	}

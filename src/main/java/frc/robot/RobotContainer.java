@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
@@ -52,13 +54,13 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
-	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
-	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
-	private Trigger alignBarge = new Trigger(() -> driver.getAButton());
+	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
+	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
+	// private Trigger alignBarge = new Trigger(() -> driver.getAButton());
 
-	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	// private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
-	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+	// private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
@@ -87,42 +89,57 @@ public class RobotContainer {
 		configureOperatorBindings();
 		setDefaultCommands();
 
+		NamedCommands.registerCommand("Score L4",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
+				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle)
+					.until(() -> !endeffector.hasCoral())).andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+
+		NamedCommands.registerCommand("Low Algae",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+		NamedCommands.registerCommand("Barge",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
+			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))));
+		NamedCommands.registerCommand("Home",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
+
+		NamedCommands.registerCommand("Outtake",
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(1)));
+
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
+
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
 		}
 		tuningChooser.setDefaultOption("None", TuningSystem.None);
 		SmartDashboard.putData("Tuning System", tuningChooser);
-
-
-		// SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
-
 	}
 
 	private void configureOperatorBindings() {
-		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 		extendToBarge.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Barge)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.Barge)
 		);
 		extendToA1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A1)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.A1)
 		);
 		extendToA2.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.A2)
 		);
 		extendToL4.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L4)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L4)
 		);
 		extendToL3.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L3)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L3)
 		);
 		extendToL2.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L2)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L2)
 		);
 		extendToL1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L1)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
 		);
 
 	}
@@ -132,15 +149,15 @@ public class RobotContainer {
 		.andThen(
 		Commands.select(
 			Map.ofEntries(
-				Map.entry(SequencingConstants.Heights.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.Heights.L4.angle))),
-				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
-				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
-				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
-				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
-				Map.entry(SequencingConstants.Heights.Home, Commands.none())
+				Map.entry(SequencingConstants.SetPoints.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L4.angle))),
+				Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle))),
+				Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle))),
+				Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
+				Map.entry(SequencingConstants.SetPoints.Intake, Commands.none()),
+				Map.entry(SequencingConstants.SetPoints.Home, Commands.none())
 			),
 			() -> ExtendElevator.target)));
-		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		openIntake.whileTrue(
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
@@ -159,7 +176,8 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		// alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		// alignClosestReef.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset)), swerve)));
+		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
 		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
@@ -235,7 +253,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
 	}
 
 	public Command getTuningCommand() {

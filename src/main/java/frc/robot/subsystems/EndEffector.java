@@ -62,15 +62,17 @@ public class EndEffector extends SubsystemBase {
 		runIntake(EndEffectorConstants.intakeVolts);
 	}
 
-	public Command runOuttakeCommand(Voltage volts, Angle angle) {
+	public Command setAngleAndRun(Voltage volts, Angle angle) {
 		return run(() -> {
-		setAngle(angle);
-		if (isAtSetpoint())
-			runIntake(volts);
+			setAngle(angle);
+			if (isAtSetpoint())
+				runIntake(volts);
 		});
 	}
 
 	public void setAngle(Angle angle) {
+		if (angle == null)
+			return;
 		targetAngle = angle;
 		angleMotor.setControl(new MotionMagicVoltage(targetAngle));
 	}
@@ -80,6 +82,8 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public void runIntake(Voltage volts) {
+		if (volts == null)
+			return;
 		wheelMotor.setControl(new VoltageOut(volts));
 	}
 

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6695454545454544,
-        "y": 5.091960227272727
+        "x": 5.003289473684211,
+        "y": 5.18922697368421
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.238386315542107,
-        "y": 5.457184391127167
+        "x": 5.219795824630321,
+        "y": 5.06422697368421
       },
       "isLocked": false,
-      "linkedName": "R2R"
+      "linkedName": "R1R"
     },
     {
       "anchor": {
-        "x": 1.2165340909090911,
-        "y": 7.036420454545453
+        "x": 5.157236842105262,
+        "y": 5.112253289473684
       },
       "prevControl": {
-        "x": 1.4074720309588966,
-        "y": 6.875042937370548
+        "x": 4.940730491159153,
+        "y": 5.237253289473684
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LCS"
+      "linkedName": "R1C"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "LCS Right Coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

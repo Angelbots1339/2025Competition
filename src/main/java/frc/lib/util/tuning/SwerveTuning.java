@@ -33,11 +33,11 @@ public class SwerveTuning extends Command {
 	@Override
 	public void initialize() {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
-		shouldMove.whileTrue(swerve.drive(() -> Math.cos(test.getPOV() * Math.PI/180.0) * 0.1, () -> -Math.sin(test.getPOV() * Math.PI/180.0) * 0.1, () -> 0.0 , () -> isFieldRelative.getAsBoolean()));
+		shouldMove.whileTrue(swerve.drive(() -> Math.cos(test.getPOV() * Math.PI/180.0) * 0.5, () -> -Math.sin(test.getPOV() * Math.PI/180.0) * 0.5, () -> 0.0 , () -> isFieldRelative.getAsBoolean()));
 		swerve.setDefaultCommand(swerve.drive(() -> 0.0, () -> 0.0, () -> 0.0, () -> false));
 
-		leftRotate.whileTrue(swerve.drive(() -> 0.0, () -> 0.0, () -> 0.2, () -> false));
-		rightRotate.whileTrue(swerve.drive(() -> 0.0, () -> 0.0, () -> -0.2, () -> false));
+		leftRotate.whileTrue(swerve.drive(() -> 0.0, () -> 0.0, () -> 1.0, () -> false));
+		rightRotate.whileTrue(swerve.drive(() -> 0.0, () -> 0.0, () -> -1.0,  () -> false));
 	}
 
 	@Override
