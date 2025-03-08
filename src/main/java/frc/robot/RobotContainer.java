@@ -98,6 +98,14 @@ public class RobotContainer {
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
 				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle)).raceWith(Commands.waitSeconds(1)))
 				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+		NamedCommands.registerCommand("Barge",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
+			.andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))));
+		NamedCommands.registerCommand("Home",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
+
+		NamedCommands.registerCommand("Outtake",
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(1)));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
