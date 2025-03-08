@@ -13,11 +13,11 @@ public class ExtendElevator extends Command {
 	private Elevator elevator;
 	private EndEffector endEffector;
 
-	static public SequencingConstants.Heights target = SequencingConstants.Heights.Home;
-	public SequencingConstants.Heights override = null;
+	static public SequencingConstants.SetPoints target = SequencingConstants.SetPoints.Home;
+	public SequencingConstants.SetPoints override = null;
 	static public double heightOverride = -1;
 
-	public ExtendElevator(Elevator elevator, EndEffector endeffector, SequencingConstants.Heights override) {
+	public ExtendElevator(Elevator elevator, EndEffector endeffector, SequencingConstants.SetPoints override) {
 		this(elevator, endeffector);
 		this.override = override;
 	}

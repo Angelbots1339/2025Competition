@@ -50,6 +50,10 @@ public class RobotContainer {
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
+
+	private final Command prepareScore = new ExtendElevator(elevator, endeffector)
+		.andThen(endeffector.setAngleAndRun(() -> ExtendElevator.target.volts, () -> ExtendElevator.target.angle));
+
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
@@ -92,8 +96,8 @@ public class RobotContainer {
 		SmartDashboard.putData("Auto", autoChooser);
 
 		NamedCommands.registerCommand("Score L4",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.L4)
-				.andThen(endeffector.runOuttakeCommand(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.Heights.L4.angle)
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
+				.andThen(endeffector.setAngleAndRun(() ->EndEffectorConstants.coralOuttakeVolts, () -> SequencingConstants.SetPoints.L4.angle)
 					.until(() -> !endeffector.hasCoral())));
 
 		for (TuningSystem system : TuningSystem.values()) {
@@ -104,27 +108,27 @@ public class RobotContainer {
 	}
 
 	private void configureOperatorBindings() {
-		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 		extendToBarge.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.Barge)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.Barge)
 		);
 		extendToA1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A1)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.A1)
 		);
 		extendToA2.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.A2)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.A2)
 		);
 		extendToL4.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L4)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L4)
 		);
 		extendToL3.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L3)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L3)
 		);
 		extendToL2.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L2)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L2)
 		);
 		extendToL1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.Heights.L1)
+			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
 		);
 
 	}
@@ -134,15 +138,15 @@ public class RobotContainer {
 		.andThen(
 		Commands.select(
 			Map.ofEntries(
-				Map.entry(SequencingConstants.Heights.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.Heights.L4.angle))),
-				Map.entry(SequencingConstants.Heights.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
-				Map.entry(SequencingConstants.Heights.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
-				Map.entry(SequencingConstants.Heights.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
-				Map.entry(SequencingConstants.Heights.Intake, Commands.none()),
-				Map.entry(SequencingConstants.Heights.Home, Commands.none())
+				Map.entry(SequencingConstants.SetPoints.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L4.angle))),
+				Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
+				Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
+				Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
+				Map.entry(SequencingConstants.SetPoints.Intake, Commands.none()),
+				Map.entry(SequencingConstants.SetPoints.Home, Commands.none())
 			),
 			() -> ExtendElevator.target)));
-		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.Home));
+		homeElevator.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		openIntake.whileTrue(
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
