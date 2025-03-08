@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
 	/* relative to robot */
-	private static Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
-	private static Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
-	private static Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
-	private static Transform2d bargeOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
+	public static final Transform2d bargeOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
@@ -31,7 +32,7 @@ public class AlignUtil {
 		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
-	public static Command driveToClosestReef() {
+	public static Command driveToClosestReef(Swerve swerve) {
 		return driveToPose(offsetPose(getClosestReef(), coralOffset));
 	}
 

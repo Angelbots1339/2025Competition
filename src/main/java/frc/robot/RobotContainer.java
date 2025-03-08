@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.AlignUtil;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
@@ -53,13 +54,13 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
-	private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
-	private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
-	private Trigger alignBarge = new Trigger(() -> driver.getAButton());
+	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
+	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
+	// private Trigger alignBarge = new Trigger(() -> driver.getAButton());
 
-	private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	// private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 
-	private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
+	// private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
@@ -88,13 +89,16 @@ public class RobotContainer {
 		configureOperatorBindings();
 		setDefaultCommands();
 
-		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
-		SmartDashboard.putData("Auto", autoChooser);
-
 		NamedCommands.registerCommand("Score L4",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
 				.andThen(endeffector.setAngleAndRun(() ->EndEffectorConstants.coralOuttakeVolts, () -> SequencingConstants.SetPoints.L4.angle)
 					.until(() -> !endeffector.hasCoral())));
+		NamedCommands.registerCommand("Extend",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4));
+
+		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
+		SmartDashboard.putData("Auto", autoChooser);
+
 
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
@@ -161,7 +165,7 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		// alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		alignClosestReef.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset)), swerve)));
 		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));

@@ -323,7 +323,7 @@ public class Swerve extends SubsystemBase {
 		logged_modules = new LoggedSweveModules("modules", logger, this, SwerveLogging.Modules);
 
 		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
-		// logged_field.addPose2d("Closest Reef", () -> AlignUtil.getClosestReef(), true);
+		logged_field.addPose2d("Closest Reef", () -> AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset), true);
 		// logged_field.addPose2d("Selected Reef", () -> AlignUtil.getSelectedReef(), true);
 		logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
 		// logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
