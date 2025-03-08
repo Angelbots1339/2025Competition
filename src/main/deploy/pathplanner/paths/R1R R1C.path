@@ -8,32 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.707479182998814,
-        "y": 6.644427319799187
+        "x": 5.219795824630321,
+        "y": 5.06422697368421
       },
       "isLocked": false,
-      "linkedName": "R1L"
+      "linkedName": "R1R"
     },
     {
       "anchor": {
-        "x": 1.2165340909090911,
-        "y": 7.036420454545453
+        "x": 5.157236842105262,
+        "y": 5.112253289473684
       },
       "prevControl": {
-        "x": 1.435661839147978,
-        "y": 6.916074993676524
+        "x": 4.940730491159153,
+        "y": 5.237253289473684
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LCS"
+      "linkedName": "R1C"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3617021276595716,
-      "rotationDegrees": -54.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -47,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "LCS Left Coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999
