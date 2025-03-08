@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -90,15 +91,16 @@ public class RobotContainer {
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
 
+		NamedCommands.registerCommand("Score L4",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.Heights.L4)
+				.andThen(endeffector.runOuttakeCommand(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.Heights.L4.angle)
+					.until(() -> !endeffector.hasCoral())));
+
 		for (TuningSystem system : TuningSystem.values()) {
 			tuningChooser.addOption(system.toString(), system);
 		}
 		tuningChooser.setDefaultOption("None", TuningSystem.None);
 		SmartDashboard.putData("Tuning System", tuningChooser);
-
-
-		// SmartDashboard.putString("Selected Height", ExtendElevator.target.toString());
-
 	}
 
 	private void configureOperatorBindings() {
