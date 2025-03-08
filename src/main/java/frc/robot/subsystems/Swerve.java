@@ -151,13 +151,11 @@ public class Swerve extends SubsystemBase {
         double y = -MathUtil.clamp(
                 pidToPoseYController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getY(),
                         target.getY())
-                        + Math.signum(pidToPoseXController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
+                        + Math.signum(pidToPoseYController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
                 -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
 
-        // SmartDashboard.putNumber("PidXError",
-        // pidToPoseXController.getPositionError());
-        // SmartDashboard.putNumber("PidYError",
-        // pidToPoseYController.getPositionError());
+        SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
+        SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
 
         angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
                 () -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.getRotation());
@@ -288,7 +286,7 @@ public class Swerve extends SubsystemBase {
 		LimelightHelpers.SetRobotOrientation(limelightname, getYaw().getDegrees(), 0, 0, 0, 0, 0);
 		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(limelightname)
 				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
-		double std = VisionConstants.calcStdDev(tagDistance);
+		double std = VisionConstants.calcStdDev(tagDistance) * 10;
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightname);
 
 		if (mt2 == null)
@@ -304,7 +302,9 @@ public class Swerve extends SubsystemBase {
 				- (LimelightHelpers.getLatency_Capture(limelightname)
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
-		pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+		if (PoseEstimation.getEstimatedPose().getTranslation().getDistance(poseFromVision.getTranslation()) < 1) {
+			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+		}
 	}
 
 	public void updateVision() {

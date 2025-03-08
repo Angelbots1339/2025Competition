@@ -27,12 +27,12 @@ public class AlignUtil {
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	public static Command driveToPose(Pose2d target) {
-		PathConstraints constraints = new PathConstraints(SwerveConstants.maxspeed, 4.0,
+		PathConstraints constraints = new PathConstraints(1, 4.0,
 				SwerveConstants.maxturn, Units.degreesToRadians(720));
 		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
-	public static Command driveToClosestReef(Swerve swerve) {
+	public static Command driveToClosestReef() {
 		return driveToPose(offsetPose(getClosestReef(), coralOffset));
 	}
 

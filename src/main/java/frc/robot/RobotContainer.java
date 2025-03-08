@@ -92,9 +92,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Score L4",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
 				.andThen(endeffector.setAngleAndRun(() ->EndEffectorConstants.coralOuttakeVolts, () -> SequencingConstants.SetPoints.L4.angle)
-					.until(() -> !endeffector.hasCoral())));
-		NamedCommands.registerCommand("Extend",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4));
+					.until(() -> !endeffector.hasCoral())).andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
@@ -165,7 +163,8 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
-		alignClosestReef.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset)), swerve)));
+		// alignClosestReef.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset)), swerve)));
+		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
 		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
