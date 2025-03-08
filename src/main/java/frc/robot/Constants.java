@@ -229,7 +229,7 @@ public class Constants {
 		public static enum SetPoints {
 			Intake(0),
 			Home(0),
-			A1(0.21, Degrees.of(12), EndEffectorConstants.intakeVolts),
+			A1(0.141, Degrees.of(40), EndEffectorConstants.intakeVolts),
 			A2(0.33, Degrees.of(16), EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),

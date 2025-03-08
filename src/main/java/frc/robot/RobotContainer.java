@@ -91,10 +91,13 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Score L4",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
-				.andThen(endeffector.setAngleAndRun(() ->EndEffectorConstants.coralOuttakeVolts, () -> SequencingConstants.SetPoints.L4.angle)
+				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle)
 					.until(() -> !endeffector.hasCoral())).andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
-		NamedCommands.registerCommand("Extend",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4));
+
+		NamedCommands.registerCommand("Low Algae",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
@@ -139,8 +142,8 @@ public class RobotContainer {
 		Commands.select(
 			Map.ofEntries(
 				Map.entry(SequencingConstants.SetPoints.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L4.angle))),
-				Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle))),
-				Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.A2Angle))),
+				Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle))),
+				Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle))),
 				Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
 				Map.entry(SequencingConstants.SetPoints.Intake, Commands.none()),
 				Map.entry(SequencingConstants.SetPoints.Home, Commands.none())
@@ -242,7 +245,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
 	}
 
 	public Command getTuningCommand() {

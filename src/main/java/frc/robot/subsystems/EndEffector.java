@@ -62,11 +62,11 @@ public class EndEffector extends SubsystemBase {
 		runIntake(EndEffectorConstants.intakeVolts);
 	}
 
-	public Command setAngleAndRun(Supplier<Voltage> volts, Supplier<Angle> angle) {
+	public Command setAngleAndRun(Voltage volts, Angle angle) {
 		return run(() -> {
-			setAngle(angle.get());
+			setAngle(angle);
 			if (isAtSetpoint())
-				runIntake(volts.get());
+				runIntake(volts);
 		});
 	}
 
