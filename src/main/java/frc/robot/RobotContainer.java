@@ -50,10 +50,6 @@ public class RobotContainer {
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
-
-	private final Command prepareScore = new ExtendElevator(elevator, endeffector)
-		.andThen(endeffector.setAngleAndRun(() -> ExtendElevator.target.volts, () -> ExtendElevator.target.angle));
-
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
 
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
