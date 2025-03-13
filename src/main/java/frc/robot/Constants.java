@@ -141,8 +141,12 @@ public class Constants {
 		public static final int encoderPort = 0;
 		public static final int sensorPort = 9;
 
-		// public static final double encoderOffset = -(0.9 - 0.5);
-		public static final double encoderOffset = -0.25;
+		// public static final double encoderOffset = -(0.9 - 0.5); // kyle's dead code
+
+		// "zero" has been set based on the required 0 deg mark for the PID loop
+		// on 3/25/2025 this was changed from -.25 due to chain work
+		// we lost the old setting but when EE touches the ground, "current angle" should be around -34 deg, resultingtrue encoder = 0.071
+		public static final double encoderOffset = .433;
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
@@ -233,8 +237,8 @@ public class Constants {
 			A2(0.33, Degrees.of(16), EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
-			L2(0.33),
-			L3(0.33),
+			L2(0.21, Degrees.of(42)),
+			L3(0.27, Degrees.of(42)),
 			L4(0.485, Degrees.of(33)),
 			Barge(0.572, Degrees.of(74)); // 0.571 max
 
