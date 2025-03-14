@@ -146,36 +146,43 @@ public class Constants {
 		// "zero" has been set based on the required 0 deg mark for the PID loop
 		// on 3/25/2025 this was changed from -.25 due to chain work
 		// we lost the old setting but when EE touches the ground, "current angle" should be around -34 deg, resultingtrue encoder = 0.071
-		public static final double encoderOffset = .433;
+		// on 3/13/2025 the new EE was add, hard stop should be around 99 deg, hits bumpers around 8 degrees
+		public static final double encoderOffset = .12; 
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
 		public static final double gearbox = 9;
-		public static final Angle maxAngle = Degrees.of(90);
-		public static final Angle minAngle = Degrees.of(-43);
+		public static final Angle maxAngle = Degrees.of(99); // was 90
+		public static final Angle minAngle = Degrees.of(8);  // was -43
 
 		public static final Angle defaultAngle = Degrees.of(80);
-		public static final Angle intakeAngle = Degrees.of(8);
+		public static final Angle intakeAngle = Degrees.of(12); // was 8, this was too low for new EE + Bumpers
 		public static final double outtakeTime = 0.5;
 		public static final Angle processorAngle = Degrees.of(55);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
 		public static final double hasAlgaeThreshold = 70; /* mm */
 
-		public static final Voltage intakeVolts = Volts.of(10);
+		public static final Voltage intakeVolts = Volts.of(7.5);
 		public static final Voltage coralIntakeVolts = Volts.of(-5);
 		public static final Voltage coralIntakeSetVolts = Volts.of(0.3);
 		public static final Voltage outtakeVolts = Volts.of(-12);
 		public static final Voltage coralOuttakeVolts = Volts.of(-6);
 		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
 
+		// Old settings below - increasing P allowed the EE to correct on overshoots when w/o a game piece and hit set points appropriately when w/ algae
+		// P = 30
+		// I = 0
+		// D = 0
+		// S = .1
+		// G = .65
 		public static final SlotConfigs pid = new SlotConfigs()
 			.withGravityType(GravityTypeValue.Arm_Cosine)
 			.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-			.withKP(30)
+			.withKP(40)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.1)
+			.withKS(0.15)
 			.withKG(0.65);
 
 		public static final MotionMagicConfigs motion = new MotionMagicConfigs()
@@ -208,7 +215,12 @@ public class Constants {
 
 		public static final TalonFXConfiguration angleConfig = baseAngleConfig
 			.withMotionMagic(motion)
-			.withSlot0(Slot0Configs.from(pid));
+			.withSlot0(Slot0Configs.from(pid))
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(80)
+					.withSupplyCurrentLimit(40)
+			);
 
 		public static final TalonFXConfiguration wheelConfig = new TalonFXConfiguration()
 			.withCurrentLimits(
@@ -218,7 +230,12 @@ public class Constants {
 			.withMotorOutput(
 				new MotorOutputConfigs()
 				.withNeutralMode(NeutralModeValue.Brake)
-				.withInverted(InvertedValue.Clockwise_Positive)
+				.withInverted(InvertedValue.CounterClockwise_Positive)
+			)
+			.withCurrentLimits(
+				new CurrentLimitsConfigs()
+					.withStatorCurrentLimit(25)
+					.withSupplyCurrentLimit(40)
 			);
 	}
 
