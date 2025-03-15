@@ -156,7 +156,7 @@ public class Constants {
 		public static final Angle minAngle = Degrees.of(8);  // was -43
 
 		public static final Angle defaultAngle = Degrees.of(80);
-		public static final Angle intakeAngle = Degrees.of(12); // was 8, this was too low for new EE + Bumpers
+		public static final Angle intakeAngle = Degrees.of(16); // was 8, this was too low for new EE + Bumpers
 		public static final double outtakeTime = 0.5;
 		public static final Angle processorAngle = Degrees.of(55);
 
