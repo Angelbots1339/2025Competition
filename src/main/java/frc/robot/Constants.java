@@ -35,7 +35,7 @@ public class Constants {
 		public static final double angularDriveKS = 0.4; // radians per sec
 		public static final double angularDriveTolerance = 1.5; // Degrees
 
-		public static final double pidToPoseKP = 2.5;
+		public static final double pidToPoseKP = 0; // was 2.5
 		public static final double pidToPoseKD = 0;
 		public static final double pidToPoseKS = 0.15;
 		public static final double pidToPoseTolerance = 0.03; // Meters
