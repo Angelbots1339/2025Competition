@@ -168,7 +168,7 @@ public class Constants {
 		public static final Voltage coralIntakeSetVolts = Volts.of(0.3);
 		public static final Voltage outtakeVolts = Volts.of(-12);
 		public static final Voltage coralOuttakeVolts = Volts.of(-6);
-		public static final Voltage algaeHoldVoltage = Volts.of(0.4);
+		public static final Voltage algaeHoldVoltage = Volts.of(0.7);
 
 		// Old settings below - increasing P allowed the EE to correct on overshoots when w/o a game piece and hit set points appropriately when w/ algae
 		// P = 30
