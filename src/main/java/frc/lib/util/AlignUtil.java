@@ -18,7 +18,8 @@ import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
 	/* relative to robot */
-	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	/* negative back, right */
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, Units.inchesToMeters(2), Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
@@ -68,9 +69,9 @@ public class AlignUtil {
 		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()));
 	}
 
-	// public static Command driveToProcessor() {
-	// 	return driveToPose(offsetPose(FieldUtil.getProcessor(), processorOffset));
-	// }
+	public static Command driveToProcessor(Swerve swerve) {
+		return driveToPose(swerve, offsetPose(FieldUtil.getProcessor(), processorOffset));
+	}
 
 	public static Pose2d getClosestBarge() {
 		return PoseEstimation.getEstimatedPose()

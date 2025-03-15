@@ -286,12 +286,12 @@ public class Constants {
 	public class VisionConstants {
 		/* offset for new bot
 		 * left:
-		 * - pitch -45
-		 * - roll: 0
+		 * - pitch -30
+		 * - roll: 180
 		 * - yaw: 180
-		 * - right: -0.293231
-		 * - Forward: 0.032436
-		 * - Up: 0.706252
+		 * - right: -0.292965
+		 * - Forward: 0.042503
+		 * - Up: 0.705851
 		 *
 		 * Right:
 		 * - pitch 45

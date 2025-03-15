@@ -25,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.LimelightHelpers;
 import frc.lib.util.PoseEstimation;
+import frc.lib.util.LimelightHelpers.RawFiducial;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
@@ -34,6 +36,7 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.IntakeCoral;
@@ -201,8 +204,14 @@ public class RobotContainer {
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
 		// alignBarge.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(new Pose2d(AlignUtil.getClosestBarge().getX(), PoseEstimation.getEstimatedPose().getY(), AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
-			swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
-			.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true))
+				Commands.either(
+					swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
+						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true)),
+					swerve.defer(() -> AlignUtil.driveToProcessor(swerve))
+						.andThen(swerve.angularDrive(() -> leftY.get() * 0.2, () -> 0.0, () -> FieldUtil.getProcessor().getRotation().rotateBy(Rotation2d.k180deg), () -> true)),
+					() ->
+					FieldUtil.isRedAlliance() ? PoseEstimation.getEstimatedPose().getY() < 4 : PoseEstimation.getEstimatedPose().getY() > 4
+				)
 		);
 		alignClosestReef.whileTrue(
 			swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
