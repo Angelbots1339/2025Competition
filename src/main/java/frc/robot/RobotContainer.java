@@ -55,7 +55,7 @@ public class RobotContainer {
 	private final EndEffector endeffector = new EndEffector();
 
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
-	private final Swerve swerve = new Swerve();
+	public final Swerve swerve = new Swerve();
 
 	// DRIVER TRIGGERS
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());

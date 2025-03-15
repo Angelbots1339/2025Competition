@@ -70,6 +70,10 @@ public class Swerve extends SubsystemBase {
 
 	/** Creates a new Swerve. */
 	public Swerve() {
+		angularDrivePID.setTolerance(SwerveConstants.angularDriveTolerance);
+		angularDrivePID.enableContinuousInput(0, 360);
+		pidToPoseXController.setTolerance(SwerveConstants.pidToPoseTolerance);
+		angularDrivePID.setTolerance(SwerveConstants.pidToPoseTolerance);
 		configPathPlanner();
 
 		initlogs();
@@ -186,7 +190,8 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public boolean isAtPose() {
-        return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && isAngularDriveAtSetpoint();
+        // return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && isAngularDriveAtSetpoint();
+        return isAngularDriveAtSetpoint();
     }
 
 	public void resetPose(Pose2d pose) {
@@ -277,12 +282,16 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		updateVision();
+		updatePose();
+	}
+
+	public void updatePose() {
+		updateVision(false);
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
 
-	public void addVision(String limelightname) {
+	public void addVision(String limelightname, boolean trust) {
 		LimelightHelpers.SetRobotOrientation(limelightname, getYaw().getDegrees(), 0, 0, 0, 0, 0);
 		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(limelightname)
 				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
@@ -302,20 +311,14 @@ public class Swerve extends SubsystemBase {
 				- (LimelightHelpers.getLatency_Capture(limelightname)
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
-			SmartDashboard.putBoolean("init", PoseEstimation.initVision);
-		if (PoseEstimation.getEstimatedPose().getTranslation().getDistance(poseFromVision.getTranslation()) < 1) {
-			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
-		}
-
-		if (PoseEstimation.initVision == false) {
-			pose.resetPose(poseFromVision);
-			PoseEstimation.initVision = true;
+		if (pose.getEstimatedPosition().getTranslation().getDistance(poseFromVision.getTranslation()) < 1 || trust) {
+			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(0.7, 0.7, 0));
 		}
 	}
 
-	public void updateVision() {
-		addVision(VisionConstants.LimelightRightName);
-		addVision(VisionConstants.LimelightLeftName);
+	public void updateVision(boolean trust) {
+		addVision(VisionConstants.LimelightRightName, trust);
+		addVision(VisionConstants.LimelightLeftName, trust);
 	}
 
 	@Override
