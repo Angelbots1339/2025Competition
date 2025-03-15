@@ -21,7 +21,7 @@ public class AlignUtil {
 	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
-	public static final Transform2d bargeOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);

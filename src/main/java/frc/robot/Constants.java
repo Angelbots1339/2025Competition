@@ -29,10 +29,10 @@ public class Constants {
 		public static final double maxturn = 2 * Math.PI;
 		public static final double slowedSpeed = 0.5;
 
-		public static final double angularDriveKP = 0.075;
+		public static final double angularDriveKP = 0.055; // 0.075
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0.005;
-		public static final double angularDriveKS = 0.4; // radians per sec
+		public static final double angularDriveKD = 0.002;
+		public static final double angularDriveKS = 0.2; // radians per sec
 		public static final double angularDriveTolerance = 1.5; // Degrees
 
 		public static final double pidToPoseKP = 0; // was 2.5

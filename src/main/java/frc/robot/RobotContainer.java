@@ -14,7 +14,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,8 +23,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
+import frc.lib.util.FieldUtil;
 import frc.lib.util.PoseEstimation;
-import frc.lib.util.LimelightHelpers.PoseEstimate;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
@@ -96,6 +95,8 @@ public class RobotContainer {
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
+
+	private Command bargeExtend = new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge).andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)));
 
 	public RobotContainer() {
 		configureDriverBindings();
@@ -198,7 +199,9 @@ public class RobotContainer {
 		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
 		// alignBarge.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(new Pose2d(AlignUtil.getClosestBarge().getX(), PoseEstimation.getEstimatedPose().getY(), AlignUtil.getClosestBarge().getRotation())))));
-		alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve)));
+		alignBarge.whileTrue(
+			swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve)).until(() -> swerve.isAtPose())
+		);
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
 		// selectReef.onTrue(
