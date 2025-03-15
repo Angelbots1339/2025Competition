@@ -32,6 +32,12 @@ public class IntakeCoral extends Command {
 	public void execute() {
 		if (endEffector.hasCoral()) {
 			seen_coral = true;
+			intake_timer.start();
+		}
+
+		if (!endEffector.hasCoral() && seen_coral == true && !intake_timer.hasElapsed(0.1)) {
+			intake_timer.reset();
+			seen_coral = false;
 		}
 	}
 
@@ -44,6 +50,6 @@ public class IntakeCoral extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return !endEffector.hasCoral() && seen_coral == true;
+		return !endEffector.hasCoral() && seen_coral == true && intake_timer.hasElapsed(0.5);
 	}
 }
