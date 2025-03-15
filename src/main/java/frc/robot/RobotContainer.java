@@ -48,7 +48,7 @@ public class RobotContainer {
 
 	private Elevator elevator = new Elevator();
 	private final EndEffector endeffector = new EndEffector();
-	
+
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
@@ -63,7 +63,7 @@ public class RobotContainer {
 
 	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
 	private Trigger outtakeCoral = new Trigger(() -> driver.getRightBumperButton());
-		
+
 	// Kyle's Dead code
 	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
 	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
@@ -170,10 +170,11 @@ public class RobotContainer {
 		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
 
 		outtake.whileTrue(
+				Commands.runOnce(() -> endeffector.hold()).andThen(
 				Commands.either(
 					Commands.run(() -> endeffector.setAngle(EndEffectorConstants.processorAngle), endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector),
-				() -> elevator.isAtHome())
+				() -> elevator.isAtHome()))
 		).onFalse(Commands.runOnce(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
 					.andThen(Commands.waitSeconds(EndEffectorConstants.outtakeTime)));
 
