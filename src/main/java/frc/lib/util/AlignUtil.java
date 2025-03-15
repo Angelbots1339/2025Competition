@@ -27,7 +27,7 @@ public class AlignUtil {
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	public static Command driveToPose(Swerve swerve, Pose2d target) {
-		return Commands.run(() -> swerve.pidToPose(target));
+		return Commands.run(() -> swerve.pidToPose(target), swerve).until(() -> swerve.isAtPose());
 		// PathConstraints constraints = new PathConstraints(1, 4.0,
 		// 		SwerveConstants.maxturn, Units.degreesToRadians(720));
 		// return AutoBuilder.pathfindToPose(target, constraints, 0.0);

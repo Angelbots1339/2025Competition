@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
 		angularDrivePID.setTolerance(SwerveConstants.angularDriveTolerance);
 		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(SwerveConstants.pidToPoseTolerance);
-		angularDrivePID.setTolerance(SwerveConstants.pidToPoseTolerance);
+		pidToPoseYController.setTolerance(SwerveConstants.pidToPoseTolerance);
 		configPathPlanner();
 
 		initlogs();
@@ -190,8 +190,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public boolean isAtPose() {
-        // return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && isAngularDriveAtSetpoint();
-        return isAngularDriveAtSetpoint();
+        return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && isAngularDriveAtSetpoint();
     }
 
 	public void resetPose(Pose2d pose) {
@@ -337,6 +336,10 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
 		// logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
 		// logged_field.addPose2d("Limelight Right", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose : Pose2d.kZero, true);
+		logger.addBoolean("at pose", () -> isAtPose(), SwerveLogging.PidPose);
+		logger.addBoolean("at rot", () -> isAngularDriveAtSetpoint(), SwerveLogging.PidPose);
+		logger.addDouble("target angle error", () -> angularDrivePID.getError(), SwerveLogging.PidPose);
+		logger.addDouble("target angle", () -> angularDrivePID.getSetpoint(), SwerveLogging.PidPose);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);

@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,7 +60,7 @@ public class RobotContainer {
 
 	// DRIVER TRIGGERS
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
-	// private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger alignClosestReef = new Trigger(() -> driver.getAButton());
 	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
 	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
 
@@ -200,7 +201,8 @@ public class RobotContainer {
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
 		// alignBarge.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(new Pose2d(AlignUtil.getClosestBarge().getX(), PoseEstimation.getEstimatedPose().getY(), AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
-			swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve)).until(() -> swerve.isAtPose())
+			swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
+			.andThen(swerve.angularDrive(leftY, () -> 0.0, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true))
 		);
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
