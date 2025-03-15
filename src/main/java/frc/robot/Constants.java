@@ -243,13 +243,13 @@ public class Constants {
 		public static final Angle endEffectorAvoidAngle = Degrees.of(73);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(74);
-		public static final Angle reefAlgaeAngle = Degrees.of(35); // elevator 0.33
+		public static final Angle reefAlgaeAngle = Degrees.of(60); // elevator 0.33
 
 
 		public static enum SetPoints {
 			Intake(0),
 			Home(0),
-			A1(0.145, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
+			A1(0.12, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			A2(0.25, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
