@@ -302,8 +302,9 @@ public class Swerve extends SubsystemBase {
 				- (LimelightHelpers.getLatency_Capture(limelightname)
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
-		if (PoseEstimation.getEstimatedPose().getTranslation().getDistance(poseFromVision.getTranslation()) < 1) {
+		if (PoseEstimation.getEstimatedPose().getTranslation().getDistance(poseFromVision.getTranslation()) < 1 || PoseEstimation.initVision == false) {
 			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+			PoseEstimation.initVision = true;
 		}
 	}
 
