@@ -202,7 +202,7 @@ public class RobotContainer {
 		// alignBarge.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(new Pose2d(AlignUtil.getClosestBarge().getX(), PoseEstimation.getEstimatedPose().getY(), AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
 			swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
-			.andThen(swerve.angularDrive(leftY, () -> 0.0, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true))
+			.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true))
 		);
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
