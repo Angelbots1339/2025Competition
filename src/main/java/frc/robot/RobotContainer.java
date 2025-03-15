@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.io.SequenceInputStream;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -166,7 +168,7 @@ public class RobotContainer {
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
-		intakeCoral.whileTrue(new IntakeCoral(endeffector).onlyIf(() -> elevator.isAtHome()));
+		intakeCoral.whileTrue(new IntakeCoral(endeffector).andThen(Commands.run(() -> endeffector.setAngle(Degrees.of(98)))).onlyIf(() -> elevator.isAtHome()));
 		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
 
 		outtake.whileTrue(

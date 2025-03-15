@@ -23,7 +23,7 @@ public class IntakeCoral extends Command {
 
 	@Override
 	public void initialize() {
-		endEffector.setAngle(Degrees.of(97.5));
+		endEffector.setAngle(Degrees.of(98));
 		endEffector.runIntake(EndEffectorConstants.coralIntakeVolts);
 		intake_timer.reset();
 	}
@@ -35,7 +35,7 @@ public class IntakeCoral extends Command {
 			intake_timer.start();
 		}
 
-		if (!endEffector.hasCoral() && seen_coral == true && !intake_timer.hasElapsed(0.1)) {
+		if (!endEffector.hasCoral() && seen_coral == true && !intake_timer.hasElapsed(0.05)) {
 			intake_timer.reset();
 			seen_coral = false;
 		}
