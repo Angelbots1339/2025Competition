@@ -147,7 +147,7 @@ public class Constants {
 		// on 3/25/2025 this was changed from -.25 due to chain work
 		// we lost the old setting but when EE touches the ground, "current angle" should be around -34 deg, resultingtrue encoder = 0.071
 		// on 3/13/2025 the new EE was add, hard stop should be around 99 deg, hits bumpers around 8 degrees
-		public static final double encoderOffset = .12; 
+		public static final double encoderOffset = .12;
 		public static double timeBeforeEncoderReset = 1.5;
 
 		public static final double gearRatio = 32.0 / 16.0;
@@ -161,7 +161,7 @@ public class Constants {
 		public static final Angle processorAngle = Degrees.of(55);
 
 		public static final Angle angleErrorTolerence = Degrees.of(3);
-		public static final double hasAlgaeThreshold = 70; /* mm */
+		public static final double hasAlgaeThreshold = 90; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(7.5);
 		public static final Voltage coralIntakeVolts = Volts.of(-5);

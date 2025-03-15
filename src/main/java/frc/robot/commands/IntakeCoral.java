@@ -14,6 +14,7 @@ import frc.robot.subsystems.EndEffector;
 public class IntakeCoral extends Command {
 	private EndEffector endEffector;
 	private Timer intake_timer = new Timer();
+	private boolean seen_coral = false;
 
 	public IntakeCoral(EndEffector endeffector) {
 		this.endEffector = endeffector;
@@ -30,7 +31,7 @@ public class IntakeCoral extends Command {
 	@Override
 	public void execute() {
 		if (endEffector.hasCoral()) {
-			intake_timer.start();
+			seen_coral = true;
 		}
 	}
 
@@ -38,10 +39,11 @@ public class IntakeCoral extends Command {
 	public void end(boolean interrupted) {
 		endEffector.hold();
 		intake_timer.reset();
+		seen_coral = false;
 	}
 
 	@Override
 	public boolean isFinished() {
-		return endEffector.hasCoral() && intake_timer.hasElapsed(0.2);
+		return !endEffector.hasCoral() && seen_coral == true;
 	}
 }
