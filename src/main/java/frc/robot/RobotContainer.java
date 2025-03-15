@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.io.SequenceInputStream;
 import java.util.Map;
@@ -96,6 +97,8 @@ public class RobotContainer {
 	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
 	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
 
+	private Trigger deAlgae = new Trigger(() -> operator.getStartButton());
+
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
@@ -114,7 +117,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Low Algae",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(1)))
 				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
@@ -159,6 +162,8 @@ public class RobotContainer {
 		extendToL1.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
 		);
+		deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+			.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
 	}
 
