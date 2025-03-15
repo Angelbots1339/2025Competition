@@ -240,7 +240,7 @@ public class Constants {
 	}
 
 	public class SequencingConstants {
-		public static final Angle endEffectorAvoidAngle = Degrees.of(73);
+		public static final Angle endEffectorAvoidAngle = Degrees.of(82);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(74);
 		public static final Angle reefAlgaeAngle = Degrees.of(60); // elevator 0.33
@@ -250,7 +250,7 @@ public class Constants {
 			Intake(0),
 			Home(0),
 			A1(0.12, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
-			A2(0.25, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
+			A2(0.20, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
 			L2(0.21, Degrees.of(42)),
