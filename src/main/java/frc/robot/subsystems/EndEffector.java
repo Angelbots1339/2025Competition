@@ -121,7 +121,7 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean hasCoral() {
-		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold;
+		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold && sensor.getRange() > 65; /* lower bound because rigging sometimes gets detected */
 	}
 
 	public void setPID(SlotConfigs newPID) {

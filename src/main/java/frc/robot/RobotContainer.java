@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.io.SequenceInputStream;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -48,20 +50,30 @@ public class RobotContainer {
 
 	private Elevator elevator = new Elevator();
 	private final EndEffector endeffector = new EndEffector();
+
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
 	private final Swerve swerve = new Swerve();
 
+	// DRIVER TRIGGERS
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
-
 	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
+	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
+
+	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
+	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
+
+	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
+	private Trigger outtakeCoral = new Trigger(() -> driver.getRightBumperButton());
+
+	// Kyle's Dead code
 	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
 	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
 	// private Trigger alignBarge = new Trigger(() -> driver.getAButton());
-
 	// private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
-
 	// private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
+	// OPERATOR TRIGGERS
 	private Trigger extendToBarge = new Trigger(() -> operator.getYButton());
 	private Trigger extendToA1 = new Trigger(() -> operator.getAButton());
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
@@ -71,15 +83,6 @@ public class RobotContainer {
 	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
 	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
 
-
-	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
-	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
-
-	private Trigger openIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
-	private Trigger outtake = new Trigger(() -> driver.getLeftBumperButton());
-
-	private Trigger intakeCoral = new Trigger(() -> driver.getRightTriggerAxis() > 0.5);
-	private Trigger outtakeCoral = new Trigger(() -> driver.getRightBumperButton());
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
@@ -150,6 +153,8 @@ public class RobotContainer {
 		Commands.select(
 			Map.ofEntries(
 				Map.entry(SequencingConstants.SetPoints.L4, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L4.angle))),
+				Map.entry(SequencingConstants.SetPoints.L3, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L3.angle))),
+				Map.entry(SequencingConstants.SetPoints.L2, new RunCommand(() -> endeffector.setAngle(SequencingConstants.SetPoints.L2.angle))),
 				Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle))),
 				Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle))),
 				Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
@@ -163,14 +168,15 @@ public class RobotContainer {
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector).onlyIf(() -> elevator.isAtHome())
 		);
 
-		intakeCoral.whileTrue(new IntakeCoral(endeffector).onlyIf(() -> elevator.isAtHome()));
+		intakeCoral.whileTrue(new IntakeCoral(endeffector).andThen(Commands.run(() -> endeffector.setAngle(Degrees.of(98)))).onlyIf(() -> elevator.isAtHome()));
 		outtakeCoral.whileTrue(Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
 
 		outtake.whileTrue(
+				Commands.runOnce(() -> endeffector.hold()).andThen(
 				Commands.either(
 					Commands.run(() -> endeffector.setAngle(EndEffectorConstants.processorAngle), endeffector),
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector),
-				() -> elevator.isAtHome())
+				() -> elevator.isAtHome()))
 		).onFalse(Commands.runOnce(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
 					.andThen(Commands.waitSeconds(EndEffectorConstants.outtakeTime)));
 
