@@ -33,9 +33,9 @@ public class AlignUtil {
 		// return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
-	// public static Command driveToClosestReef() {
-	// 	return driveToPose(offsetPose(getClosestReef(), coralOffset));
-	// }
+	public static Command driveToClosestReef(Swerve swerve) {
+		return driveToPose(swerve, offsetPose(getClosestReef(), coralOffset));
+	}
 
 	// public static Command driveToSelectedReef() {
 	// 	return driveToSelectedReef(selectedReefindex);
