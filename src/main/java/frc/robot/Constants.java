@@ -253,8 +253,8 @@ public class Constants {
 			A2(0.20, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
-			L2(0.21, Degrees.of(42)),
-			L3(0.27, Degrees.of(42)),
+			L2(0.08, Degrees.of(55)),
+			L3(0.21, Degrees.of(55)),
 			L4(0.485, Degrees.of(33)),
 			Barge(0.572, Degrees.of(74)), // 0.571 max
 			DeAlgae(0.14, Degrees.of(0), Volts.of(10)); // used in case of algae being inside
