@@ -23,9 +23,17 @@ public class AlignUtil {
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
+	public static final double reefOffset = Units.inchesToMeters(20);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
+
+	public enum Side {
+		Left,
+		Right
+	}
+
+	public static Side selectedSide = Side.Right;
 
 	public static Command driveToPose(Swerve swerve, Pose2d target) {
 		return Commands.run(() -> swerve.pidToPose(target), swerve).until(() -> swerve.isAtPose());
@@ -35,7 +43,14 @@ public class AlignUtil {
 	}
 
 	public static Command driveToClosestReef(Swerve swerve) {
-		return driveToPose(swerve, offsetPose(getClosestReef(), coralOffset));
+		Transform2d offset = coralOffset;
+		if (selectedSide == Side.Left) {
+			offset = new Transform2d(coralOffset.getX() + reefOffset, coralOffset.getY(), coralOffset.getRotation());
+		}
+		if (selectedSide == Side.Right) {
+			offset = new Transform2d(coralOffset.getX() - reefOffset, coralOffset.getY(), coralOffset.getRotation());
+		}
+		return driveToPose(swerve, offsetPose(getClosestReef(), offset));
 	}
 
 	// public static Command driveToSelectedReef() {

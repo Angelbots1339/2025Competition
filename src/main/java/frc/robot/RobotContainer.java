@@ -28,6 +28,7 @@ import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.lib.util.PoseEstimation;
+import frc.lib.util.AlignUtil.Side;
 import frc.lib.util.LimelightHelpers.RawFiducial;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
@@ -95,6 +96,9 @@ public class RobotContainer {
 	private Trigger extendToL4 = new Trigger(() -> operator.getPOV() == 0);
 	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270 || operator.getPOV() == 90);
 	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 180);
+
+	private Trigger selectRight = new Trigger(() -> operator.getRightTriggerAxis() > 0.1);
+	private Trigger selectLeft = new Trigger(() -> operator.getLeftTriggerAxis() > 0.1);
 	// private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 90);
 
 	private Trigger deAlgae = new Trigger(() -> operator.getStartButton());
@@ -144,6 +148,8 @@ public class RobotContainer {
 	}
 
 	private void configureOperatorBindings() {
+		selectLeft.onTrue(Commands.runOnce(() -> AlignUtil.selectedSide = Side.Left));
+		selectRight.onTrue(Commands.runOnce(() -> AlignUtil.selectedSide = Side.Right));
 		home.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 		extendToBarge.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.Barge)
