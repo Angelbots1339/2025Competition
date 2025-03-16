@@ -29,8 +29,15 @@ public class AlignUtil {
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	public enum Side {
-		Left,
-		Right
+		Left(1),
+		Right(-1);
+
+		public double mult = 1;
+
+		Side(double mult) {
+			this.mult = mult;
+		}
+
 	}
 
 	public static Side selectedSide = Side.Right;
@@ -45,10 +52,10 @@ public class AlignUtil {
 	public static Command driveToClosestReef(Swerve swerve) {
 		Transform2d offset = coralOffset;
 		if (selectedSide == Side.Left) {
-			offset = new Transform2d(coralOffset.getX() + reefOffset, coralOffset.getY(), coralOffset.getRotation());
+			offset = new Transform2d(coralOffset.getX(), coralOffset.getY() + reefOffset, coralOffset.getRotation());
 		}
 		if (selectedSide == Side.Right) {
-			offset = new Transform2d(coralOffset.getX() - reefOffset, coralOffset.getY(), coralOffset.getRotation());
+			offset = new Transform2d(coralOffset.getX(), coralOffset.getY() - reefOffset, coralOffset.getRotation());
 		}
 		return driveToPose(swerve, offsetPose(getClosestReef(), offset));
 	}
