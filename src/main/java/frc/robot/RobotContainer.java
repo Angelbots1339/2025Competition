@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.io.SequenceInputStream;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +25,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
+import frc.lib.util.FieldUtil;
+import frc.lib.util.LimelightHelpers;
+import frc.lib.util.PoseEstimation;
+import frc.lib.util.LimelightHelpers.RawFiducial;
 import frc.lib.util.tuning.ElevatorTuning;
 import frc.lib.util.tuning.EndEffectorTuning;
 import frc.lib.util.tuning.SuperstructureTuning;
@@ -30,6 +37,7 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.SequencingConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.TuningConstants.TuningSystem;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.IntakeCoral;
@@ -52,11 +60,11 @@ public class RobotContainer {
 	private final EndEffector endeffector = new EndEffector();
 
 	/* IMPORTANT: Instantiate swerve subsystem last or else all other logging fails for some reason */
-	private final Swerve swerve = new Swerve();
+	public final Swerve swerve = new Swerve();
 
 	// DRIVER TRIGGERS
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButtonPressed());
-	private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	private Trigger alignClosestReef = new Trigger(() -> driver.getAButton());
 	private Trigger extendElevator = new Trigger(() -> driver.getBButton());
 	private Trigger homeElevator = new Trigger(() -> driver.getYButton());
 
@@ -70,6 +78,12 @@ public class RobotContainer {
 	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
 	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
 	// private Trigger alignBarge = new Trigger(() -> driver.getAButton());
+
+	// private Trigger alignClosestReef = new Trigger(() -> driver.getXButton());
+	// private Trigger alignSelectedReef = new Trigger(() -> driver.getBButton());
+	// private Trigger alignCoralStation = new Trigger(() -> driver.getYButton());
+	private Trigger alignBarge = new Trigger(() -> driver.getXButton());
+
 	// private Trigger alignProcessor = new Trigger(() -> driver.getLeftTriggerAxis() > 0.5);
 	// private Trigger selectReef = new Trigger(() -> driver.getPOV() != -1);
 
@@ -79,13 +93,17 @@ public class RobotContainer {
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getXButton());
 	private Trigger extendToL4 = new Trigger(() -> operator.getPOV() == 0);
-	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270);
-	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
-	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
+	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270 || operator.getPOV() == 90);
+	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 180);
+	// private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 90);
+
+	private Trigger deAlgae = new Trigger(() -> operator.getStartButton());
 
 	private final SendableChooser<Command> autoChooser;
 
 	private final SendableChooser<TuningSystem> tuningChooser = new SendableChooser<>();
+
+	private Command bargeExtend = new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge).andThen(new InstantCommand(() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle)));
 
 	public RobotContainer() {
 		configureDriverBindings();
@@ -99,7 +117,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Low Algae",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.A1Angle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(1)))
 				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
@@ -141,9 +159,11 @@ public class RobotContainer {
 		extendToL2.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L2)
 		);
-		extendToL1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
-		);
+		// extendToL1.onTrue(
+		// 	Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
+		// );
+		deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+			.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
 	}
 
@@ -183,10 +203,25 @@ public class RobotContainer {
 		resetGyro.onTrue(Commands.runOnce(swerve::resetGyro, swerve));
 
 		// alignClosestReef.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset)), swerve)));
-		alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
+		// alignClosestReef.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestReef()));
 		// alignSelectedReef.whileTrue(swerve.defer(() -> AlignUtil.driveToSelectedReef()));
 		// alignCoralStation.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestCoralStation()));
 		// alignBarge.whileTrue(swerve.defer(() -> AlignUtil.driveToClosestBarge().andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.5, () -> AlignUtil.getClosestBarge().getRotation().plus(Rotation2d.k180deg), () -> true))));
+		// alignBarge.whileTrue(swerve.defer(() -> Commands.run(() -> swerve.pidToPose(new Pose2d(AlignUtil.getClosestBarge().getX(), PoseEstimation.getEstimatedPose().getY(), AlignUtil.getClosestBarge().getRotation())))));
+		alignBarge.whileTrue(
+				Commands.either(
+					swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
+						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2, () -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg), () -> true)),
+					swerve.defer(() -> AlignUtil.driveToProcessor(swerve))
+						.andThen(swerve.angularDrive(() -> leftY.get() * 0.2, () -> 0.0, () -> FieldUtil.getProcessor().getRotation().rotateBy(Rotation2d.k180deg), () -> true)),
+					() ->
+					FieldUtil.isRedAlliance() ? PoseEstimation.getEstimatedPose().getY() < 4 : PoseEstimation.getEstimatedPose().getY() > 4
+				)
+		);
+		alignClosestReef.whileTrue(
+			swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
+			.andThen(swerve.angularDrive(() -> leftY.get() * 0.2, () -> leftX.get() * 0.2, () -> AlignUtil.getClosestReef().getRotation().rotateBy(Rotation2d.k180deg), () -> false))
+		);
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
 		// selectReef.onTrue(

@@ -32,6 +32,7 @@ public class EndEffector extends SubsystemBase {
 			EndEffectorConstants.encoderOffset);
 
 	private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.sensorPort);
+	private TimeOfFlight funnelSensor = new TimeOfFlight(10);
 
 	private Angle targetAngle = EndEffectorConstants.maxAngle;
 	private final Timer throughBoreTimer = new Timer();
@@ -47,6 +48,7 @@ public class EndEffector extends SubsystemBase {
 		encoder.setInverted(true);
 		throughBoreTimer.start();
 		sensor.setRangingMode(RangingMode.Short, 24);
+		funnelSensor.setRangingMode(RangingMode.Short, 24);
 		initLogs();
 		angleMotor.setPosition(EndEffectorConstants.maxAngle);
 	}
@@ -121,7 +123,8 @@ public class EndEffector extends SubsystemBase {
 	}
 
 	public boolean hasCoral() {
-		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold && sensor.getRange() > 65; /* lower bound because rigging sometimes gets detected */
+		// return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold && sensor.getRange() > 65; /* lower bound because rigging sometimes gets detected */
+		return sensor.getRange() <= EndEffectorConstants.hasAlgaeThreshold && funnelSensor.getRange() >= EndEffectorConstants.hasAlgaeThreshold; /* lower bound because rigging sometimes gets detected */
 	}
 
 	public void setPID(SlotConfigs newPID) {
@@ -158,6 +161,7 @@ public class EndEffector extends SubsystemBase {
 		logger.addDouble("pid error", () -> Rotations.of(angleMotor.getClosedLoopError().getValue()).in(Degrees), EndEffectorLogging.Angle);
 
 		logger.addDouble("TOF distance", () -> sensor.getRange(), EndEffectorLogging.TOF);
+		logger.addDouble("Funnel TOF distance", () -> funnelSensor.getRange(), EndEffectorLogging.TOF);
 		logger.addBoolean("Has Coral", this::hasCoral, EndEffectorLogging.TOF);
 
 

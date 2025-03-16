@@ -18,56 +18,59 @@ import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
 	/* relative to robot */
-	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	/* negative back, right */
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength - Units.inchesToMeters(2.5), Units.inchesToMeters(2), Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
-	public static final Transform2d bargeOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
+	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
-	public static Command driveToPose(Pose2d target) {
-		PathConstraints constraints = new PathConstraints(1, 4.0,
-				SwerveConstants.maxturn, Units.degreesToRadians(720));
-		return AutoBuilder.pathfindToPose(target, constraints, 0.0);
+	public static Command driveToPose(Swerve swerve, Pose2d target) {
+		return Commands.run(() -> swerve.pidToPose(target), swerve).until(() -> swerve.isAtPose());
+		// PathConstraints constraints = new PathConstraints(1, 4.0,
+		// 		SwerveConstants.maxturn, Units.degreesToRadians(720));
+		// return AutoBuilder.pathfindToPose(target, constraints, 0.0);
 	}
 
-	public static Command driveToClosestReef() {
-		return driveToPose(offsetPose(getClosestReef(), coralOffset));
+	public static Command driveToClosestReef(Swerve swerve) {
+		return driveToPose(swerve, offsetPose(getClosestReef(), coralOffset));
 	}
 
-	public static Command driveToSelectedReef() {
-		return driveToSelectedReef(selectedReefindex);
+	// public static Command driveToSelectedReef() {
+	// 	return driveToSelectedReef(selectedReefindex);
+	// }
+
+	// public static Command driveToSelectedReef(int i) {
+	// 	if (i < 0 || i > 5)
+	// 		return Commands.none();
+	// 	selectReef(i);
+	// 	if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
+	// 		return Commands.none();
+
+	// 	return driveToPose(offsetPose(selectedReef, coralOffset));
+	// }
+
+	// public static Command driveToLeftCoralStation() {
+	// 	return driveToPose(offsetPose(FieldUtil.getLeftCoralStation(), stationOffset));
+	// }
+
+	// public static Command driveToRightCoralStation() {
+	// 	return driveToPose(offsetPose(FieldUtil.getRightCoralStation(), stationOffset));
+	// }
+
+	// public static Command driveToClosestCoralStation() {
+	// 	return driveToPose(offsetPose(getClosestCoralStation(), stationOffset));
+	// }
+
+	public static Command driveToClosestBarge(Swerve swerve) {
+		Pose2d target = offsetPose(getClosestBarge(), bargeOffset);
+		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()));
 	}
 
-	public static Command driveToSelectedReef(int i) {
-		if (i < 0 || i > 5)
-			return Commands.none();
-		selectReef(i);
-		if (selectedReef.equals(new Pose2d(0, 0, Rotation2d.kZero)))
-			return Commands.none();
-
-		return driveToPose(offsetPose(selectedReef, coralOffset));
-	}
-
-	public static Command driveToLeftCoralStation() {
-		return driveToPose(offsetPose(FieldUtil.getLeftCoralStation(), stationOffset));
-	}
-
-	public static Command driveToRightCoralStation() {
-		return driveToPose(offsetPose(FieldUtil.getRightCoralStation(), stationOffset));
-	}
-
-	public static Command driveToClosestCoralStation() {
-		return driveToPose(offsetPose(getClosestCoralStation(), stationOffset));
-	}
-
-	public static Command driveToClosestBarge() {
-		return driveToPose(offsetPose(getClosestBarge(), bargeOffset));
-	}
-
-	public static Command driveToProcessor() {
-		return driveToPose(offsetPose(FieldUtil.getProcessor(), processorOffset));
+	public static Command driveToProcessor(Swerve swerve) {
+		return driveToPose(swerve, offsetPose(FieldUtil.getProcessor(), processorOffset));
 	}
 
 	public static Pose2d getClosestBarge() {

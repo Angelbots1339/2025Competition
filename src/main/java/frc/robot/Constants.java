@@ -29,17 +29,17 @@ public class Constants {
 		public static final double maxturn = 2 * Math.PI;
 		public static final double slowedSpeed = 0.5;
 
-		public static final double angularDriveKP = 0.075;
+		public static final double angularDriveKP = 0.075; // 0.075
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0.005;
-		public static final double angularDriveKS = 0.4; // radians per sec
-		public static final double angularDriveTolerance = 1.5; // Degrees
+		public static final double angularDriveKS = 0.2; // radians per sec
+		public static final double angularDriveTolerance = 3; // Degrees
 
-		public static final double pidToPoseKP = 2.5;
+		public static final double pidToPoseKP = 2.5; // was 2.5
 		public static final double pidToPoseKD = 0;
 		public static final double pidToPoseKS = 0.15;
 		public static final double pidToPoseTolerance = 0.03; // Meters
-		public static final double pidToPoseMaxSpeed = 1; // Meters per second
+		public static final double pidToPoseMaxSpeed = 2; // Meters per second
 
 		public static final PathConstraints PathPlannerConstraints = new PathConstraints(maxspeed, 4.0,
 				maxturn, Units.degreesToRadians(720));
@@ -153,7 +153,7 @@ public class Constants {
 		public static final double gearRatio = 32.0 / 16.0;
 		public static final double gearbox = 9;
 		public static final Angle maxAngle = Degrees.of(99); // was 90
-		public static final Angle minAngle = Degrees.of(8);  // was -43
+		public static final Angle minAngle = Degrees.of(0);  // was -43
 
 		public static final Angle defaultAngle = Degrees.of(80);
 		public static final Angle intakeAngle = Degrees.of(18); // was 8, this was too low for new EE + Bumpers
@@ -240,24 +240,24 @@ public class Constants {
 	}
 
 	public class SequencingConstants {
-		public static final Angle endEffectorAvoidAngle = Degrees.of(73);
+		public static final Angle endEffectorAvoidAngle = Degrees.of(82);
 		/* TODO: find the angle at which we will start to score algae */
 		public static final Angle endEffectorBargeAngle = Degrees.of(74);
-		public static final Angle A2Angle = Degrees.of(16); // elevator 0.33
-		public static final Angle A1Angle = Degrees.of(12); // elevator 0.21
+		public static final Angle reefAlgaeAngle = Degrees.of(60); // elevator 0.33
 
 
 		public static enum SetPoints {
 			Intake(0),
 			Home(0),
-			A1(0.145, Degrees.of(35), EndEffectorConstants.intakeVolts),
-			A2(0.33, Degrees.of(16), EndEffectorConstants.intakeVolts),
+			A1(0.12, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
+			A2(0.20, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
-			L2(0.21, Degrees.of(42)),
-			L3(0.27, Degrees.of(42)),
-			L4(0.485, Degrees.of(33)),
-			Barge(0.572, Degrees.of(74)); // 0.571 max
+			L2(0.08, Degrees.of(55)),
+			L3(0.21, Degrees.of(55)),
+			L4(0.4, Degrees.of(60)),
+			Barge(0.572, Degrees.of(74)), // 0.571 max
+			DeAlgae(0.14, Degrees.of(0), Volts.of(10)); // used in case of algae being inside
 
 			public final double height;
 			public final Angle angle;
@@ -286,12 +286,12 @@ public class Constants {
 	public class VisionConstants {
 		/* offset for new bot
 		 * left:
-		 * - pitch -45
-		 * - roll: 0
+		 * - pitch -30
+		 * - roll: 180
 		 * - yaw: 180
-		 * - right: -0.293231
-		 * - Forward: 0.032436
-		 * - Up: 0.706252
+		 * - right: -0.292965
+		 * - Forward: 0.042503
+		 * - Up: 0.705851
 		 *
 		 * Right:
 		 * - pitch 45

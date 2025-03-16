@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.Swerve;
 
 public class PoseEstimation {
+	public static boolean initVision = false;
 
     private static Pose2d estimatedPose = new Pose2d();
     private static Pose2d estimatedVelocity = new Pose2d();

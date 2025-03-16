@@ -70,6 +70,10 @@ public class Swerve extends SubsystemBase {
 
 	/** Creates a new Swerve. */
 	public Swerve() {
+		angularDrivePID.setTolerance(SwerveConstants.angularDriveTolerance);
+		angularDrivePID.enableContinuousInput(0, 360);
+		pidToPoseXController.setTolerance(SwerveConstants.pidToPoseTolerance);
+		pidToPoseYController.setTolerance(SwerveConstants.pidToPoseTolerance);
 		configPathPlanner();
 
 		initlogs();
@@ -277,16 +281,20 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		updateVision();
+		updatePose();
+	}
+
+	public void updatePose() {
+		updateVision(false);
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
 
-	public void addVision(String limelightname) {
+	public void addVision(String limelightname, boolean trust) {
 		LimelightHelpers.SetRobotOrientation(limelightname, getYaw().getDegrees(), 0, 0, 0, 0, 0);
 		double tagDistance = LimelightHelpers.getTargetPose3d_CameraSpace(limelightname)
 				.getTranslation().getNorm(); // Find direct distance to target for std dev calculation
-		double std = VisionConstants.calcStdDev(tagDistance) * 10;
+		double std = VisionConstants.calcStdDev(tagDistance);
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightname);
 
 		if (mt2 == null)
@@ -302,14 +310,13 @@ public class Swerve extends SubsystemBase {
 				- (LimelightHelpers.getLatency_Capture(limelightname)
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
-		if (PoseEstimation.getEstimatedPose().getTranslation().getDistance(poseFromVision.getTranslation()) < 1) {
+		if (mt2.avgTagDist < 4)
 			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
-		}
 	}
 
-	public void updateVision() {
-		addVision(VisionConstants.LimelightRightName);
-		addVision(VisionConstants.LimelightLeftName);
+	public void updateVision(boolean trust) {
+		addVision(VisionConstants.LimelightRightName, trust);
+		addVision(VisionConstants.LimelightLeftName, trust);
 	}
 
 	@Override
@@ -328,6 +335,10 @@ public class Swerve extends SubsystemBase {
 		logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
 		// logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
 		// logged_field.addPose2d("Limelight Right", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose : Pose2d.kZero, true);
+		logger.addBoolean("at pose", () -> isAtPose(), SwerveLogging.PidPose);
+		logger.addBoolean("at rot", () -> isAngularDriveAtSetpoint(), SwerveLogging.PidPose);
+		logger.addDouble("target angle error", () -> angularDrivePID.getError(), SwerveLogging.PidPose);
+		logger.addDouble("target angle", () -> angularDrivePID.getSetpoint(), SwerveLogging.PidPose);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);
