@@ -93,9 +93,9 @@ public class RobotContainer {
 	private Trigger extendToA2 = new Trigger(() -> operator.getBButton());
 	private Trigger home = new Trigger(() -> operator.getXButton());
 	private Trigger extendToL4 = new Trigger(() -> operator.getPOV() == 0);
-	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270);
-	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 90);
-	private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 180);
+	private Trigger extendToL3 = new Trigger(() -> operator.getPOV() == 270 || operator.getPOV() == 90);
+	private Trigger extendToL2 = new Trigger(() -> operator.getPOV() == 180);
+	// private Trigger extendToL1 = new Trigger(() -> operator.getPOV() == 90);
 
 	private Trigger deAlgae = new Trigger(() -> operator.getStartButton());
 
@@ -159,9 +159,9 @@ public class RobotContainer {
 		extendToL2.onTrue(
 			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L2)
 		);
-		extendToL1.onTrue(
-			Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
-		);
+		// extendToL1.onTrue(
+		// 	Commands.runOnce(() -> ExtendElevator.target = SequencingConstants.SetPoints.L1)
+		// );
 		deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
 			.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
