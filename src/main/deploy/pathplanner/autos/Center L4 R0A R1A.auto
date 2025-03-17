@@ -63,6 +63,12 @@
           "data": {
             "pathName": "BR Score R1C"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "A2"
+          }
         }
       ]
     }
