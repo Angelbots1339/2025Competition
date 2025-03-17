@@ -30,15 +30,8 @@ public class AlignUtil {
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
 	public enum Side {
-		Left(1),
-		Right(-1);
-
-		public double mult = 1;
-
-		Side(double mult) {
-			this.mult = mult;
-		}
-
+		Left,
+		Right,
 	}
 
 	public static Side selectedSide = Side.Right;
