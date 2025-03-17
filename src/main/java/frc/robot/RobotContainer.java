@@ -117,7 +117,11 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Low Algae",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
+				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+		NamedCommands.registerCommand("A2",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
 				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
