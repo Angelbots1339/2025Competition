@@ -130,7 +130,7 @@ public class RobotContainer {
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		NamedCommands.registerCommand("Outtake",
-					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(1)));
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(0.5)));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
