@@ -57,6 +57,12 @@
           "data": {
             "name": "Home"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR Score R1C"
+          }
         }
       ]
     }
