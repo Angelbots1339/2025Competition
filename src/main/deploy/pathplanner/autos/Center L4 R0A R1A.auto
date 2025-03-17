@@ -17,9 +17,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "R0R R0C"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Home"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R0R R0C"
+                }
+              }
+            ]
           }
         },
         {
@@ -62,12 +75,6 @@
           "type": "path",
           "data": {
             "pathName": "BR Score R1C"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "A2"
           }
         }
       ]
