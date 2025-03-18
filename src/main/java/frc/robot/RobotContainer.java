@@ -112,12 +112,16 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Score L4",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
-				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle)
-					.until(() -> !endeffector.hasCoral())).andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle).withTimeout(2)
+					.until(() -> !endeffector.hasCoral())));
 
 		NamedCommands.registerCommand("Low Algae",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(1)))
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
+				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+		NamedCommands.registerCommand("A2",
+			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
+				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
 				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
@@ -126,7 +130,7 @@ public class RobotContainer {
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		NamedCommands.registerCommand("Outtake",
-					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(1)));
+					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(0.5)));
 
 		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
 		SmartDashboard.putData("Auto", autoChooser);
