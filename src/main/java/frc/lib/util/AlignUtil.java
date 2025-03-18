@@ -20,12 +20,12 @@ import frc.robot.subsystems.Swerve;
 public class AlignUtil {
 	/* relative to robot */
 	/* negative back, right */
-	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength - Units.inchesToMeters(2.5), 0, Rotation2d.kZero);
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength + Units.inchesToMeters(2.5), 0, Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
 	/* TODO: change this.  this is the distance from the center of the reef to each of the branch */
-	public static final double reefOffset = Units.inchesToMeters(20);
+	public static final double reefOffset = Units.inchesToMeters(7);
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);

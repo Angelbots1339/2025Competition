@@ -176,7 +176,10 @@ public class RobotContainer {
 		// Commands.runOnce(() -> ExtendElevator.target =
 		// SequencingConstants.SetPoints.L1)
 		// );
-		deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+		// deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+		deAlgae.onTrue(Commands.either(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae),
+			elevator.setHeightCommand(SequencingConstants.SetPoints.DeAlgae.height).until(() -> elevator.isAtSetpoint()),
+			() -> elevator.getHeight() > 0.175)
 				.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
 	}
