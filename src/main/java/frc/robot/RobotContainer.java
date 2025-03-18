@@ -115,6 +115,8 @@ public class RobotContainer {
 				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle).withTimeout(2)
 					.until(() -> !endeffector.hasCoral())));
 
+		NamedCommands.registerCommand("Intake", new IntakeCoral(endeffector).withTimeout(5));
+
 		NamedCommands.registerCommand("Low Algae",
 			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
 				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
