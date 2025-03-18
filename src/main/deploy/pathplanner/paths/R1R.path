@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.229537582068258,
-        "y": 5.593177117369751
+        "x": 6.220217552147317,
+        "y": 5.582762046722164
       },
       "isLocked": false,
       "linkedName": "Wall Start"
@@ -20,8 +20,8 @@
         "y": 5.18922697368421
       },
       "prevControl": {
-        "x": 5.242742120886741,
-        "y": 5.261077024120522
+        "x": 5.256547320316992,
+        "y": 5.260092609552356
       },
       "nextControl": null,
       "isLocked": false,
@@ -69,7 +69,7 @@
   "folder": "Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
