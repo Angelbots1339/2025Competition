@@ -20,7 +20,7 @@ import frc.robot.subsystems.Swerve;
 public class AlignUtil {
 	/* relative to robot */
 	/* negative back, right */
-	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength - Units.inchesToMeters(2.5), Units.inchesToMeters(2), Rotation2d.kZero);
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength - Units.inchesToMeters(2.5), 0, Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
