@@ -147,16 +147,22 @@ public class Swerve extends SubsystemBase {
 
 
     public void pidToPose(Pose2d target) {
+		pidToPose(target, 0);
+	}
+    public void pidToPose(Pose2d target, double maxspeed) {
+		if (maxspeed == 0) {
+			maxspeed = SwerveConstants.pidToPoseMaxSpeed;
+		}
         double x = -MathUtil.clamp(
                 pidToPoseXController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getX(),
                         target.getX())
                         + Math.signum(pidToPoseXController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
-                -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
+                -maxspeed, maxspeed);
         double y = -MathUtil.clamp(
                 pidToPoseYController.calculate(PoseEstimation.getEstimatedPose().getTranslation().getY(),
                         target.getY())
                         + Math.signum(pidToPoseYController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
-                -SwerveConstants.pidToPoseMaxSpeed, SwerveConstants.pidToPoseMaxSpeed);
+                -maxspeed, maxspeed);
 
         SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
         SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
@@ -285,7 +291,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void updatePose() {
-		updateVision(false);
+			updateVision(false);
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}

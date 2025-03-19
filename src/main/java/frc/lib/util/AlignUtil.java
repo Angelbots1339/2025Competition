@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.RobotConstants;
@@ -19,15 +20,31 @@ import frc.robot.subsystems.Swerve;
 public class AlignUtil {
 	/* relative to robot */
 	/* negative back, right */
-	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength - Units.inchesToMeters(2.5), Units.inchesToMeters(2), Rotation2d.kZero);
+	public static final Transform2d coralOffset = new Transform2d(-RobotConstants.frontLength, 0.015, Rotation2d.kZero);
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
+	public static final double reefOffset = Units.inchesToMeters(5.5 + 1.75  / 2); // 7
+	/* this is the offset from the bargeoffset robot relative */
+	public static final double bargeScoreOffset = 0.4; // 7
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
 
+	public enum Side {
+		Left,
+		Right,
+	}
+
+	public static Side selectedSide = Side.Right;
+
 	public static Command driveToPose(Swerve swerve, Pose2d target) {
+		return driveToPose(swerve, target, false);
+	}
+	public static Command driveToPose(Swerve swerve, Pose2d target, boolean slow) {
+		if (slow)
+			return Commands.run(() -> swerve.pidToPose(target, 1), swerve).until(() -> swerve.isAtPose());
+		else
 		return Commands.run(() -> swerve.pidToPose(target), swerve).until(() -> swerve.isAtPose());
 		// PathConstraints constraints = new PathConstraints(1, 4.0,
 		// 		SwerveConstants.maxturn, Units.degreesToRadians(720));
@@ -35,7 +52,14 @@ public class AlignUtil {
 	}
 
 	public static Command driveToClosestReef(Swerve swerve) {
-		return driveToPose(swerve, offsetPose(getClosestReef(), coralOffset));
+		Transform2d offset = coralOffset;
+		if (selectedSide == Side.Left) {
+			offset = new Transform2d(coralOffset.getX(), coralOffset.getY() + reefOffset, coralOffset.getRotation());
+		}
+		if (selectedSide == Side.Right) {
+			offset = new Transform2d(coralOffset.getX(), coralOffset.getY() - reefOffset, coralOffset.getRotation());
+		}
+		return driveToPose(swerve, offsetPose(getClosestReef(), offset));
 	}
 
 	// public static Command driveToSelectedReef() {
@@ -68,6 +92,13 @@ public class AlignUtil {
 		Pose2d target = offsetPose(getClosestBarge(), bargeOffset);
 		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()));
 	}
+
+	public static Command driveToClosestBargeScore(Swerve swerve) {
+		Pose2d target = offsetPose(getClosestBarge(), new Transform2d(bargeOffset.getX() + bargeScoreOffset, bargeOffset.getY(), bargeOffset.getRotation()));
+		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()), true);
+	}
+
+
 
 	public static Command driveToProcessor(Swerve swerve) {
 		return driveToPose(swerve, offsetPose(FieldUtil.getProcessor(), processorOffset));

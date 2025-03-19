@@ -35,6 +35,7 @@ public final class LoggingConstants {
 
         public class RobotContainerLogging {
                 public static LoggingLevel StickValues = LoggingLevel.NONE;
+                public static LoggingLevel Side = LoggingLevel.NETWORK_TABLES;
         }
 
         public class GlobalLoggingConstants {

@@ -11,17 +11,26 @@
           "incKey": 79
         },
         {
-          "decayRate": 0.0,
-          "keyRate": 0.009999999776482582
+          "incKey": 39,
+          "keyRate": 0.10000000149011612
+        },
+        {
+          "incKey": 76,
+          "keyRate": 0.10000000149011612
         }
       ],
-      "axisCount": 3,
+      "axisCount": 4,
       "buttonCount": 4,
       "buttonKeys": [
         71,
         67,
         82,
-        76
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
       ],
       "povConfig": [
         {
@@ -92,7 +101,6 @@
     },
     {},
     {
-      "guid": "78696e70757401000000000000000000",
       "useGamepad": true
     }
   ]
