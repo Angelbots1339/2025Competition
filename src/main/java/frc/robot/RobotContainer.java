@@ -16,6 +16,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.Leds;
 import frc.lib.util.LimelightHelpers;
 import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
@@ -122,20 +125,26 @@ public class RobotContainer {
 		configureOperatorBindings();
 		setDefaultCommands();
 		initLogs();
+		initializeEndgameAlerts();
 
 		NamedCommands.registerCommand("Score L4",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
-				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle).withTimeout(2)
-					.until(() -> !endeffector.hasCoral())));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
+						.andThen(endeffector
+								.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts,
+										SequencingConstants.SetPoints.L4.angle)
+								.withTimeout(2)
+								.until(() -> !endeffector.hasCoral())));
 
 		NamedCommands.registerCommand("Low Algae",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
-				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
+						.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle))
+								.raceWith(Commands.waitSeconds(0.3)))
+						.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("A2",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
-				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
+						.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle))
+								.raceWith(Commands.waitSeconds(0.3)))
+						.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
 						.andThen(new InstantCommand(
@@ -144,11 +153,11 @@ public class RobotContainer {
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		NamedCommands.registerCommand("Outtake",
-					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(0.5)));
+				Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
+						.raceWith(Commands.waitSeconds(0.5)));
 
 		autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
-			  (stream) -> stream.filter(auto -> auto.getName().startsWith("Comp"))
-		  );
+				(stream) -> stream.filter(auto -> auto.getName().startsWith("Comp")));
 
 		SmartDashboard.putData("Auto", autoChooser);
 
@@ -179,10 +188,12 @@ public class RobotContainer {
 		// Commands.runOnce(() -> ExtendElevator.target =
 		// SequencingConstants.SetPoints.L1)
 		// );
-		// deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+		// deAlgae.onTrue(new ExtendElevator(elevator, endeffector,
+		// SequencingConstants.SetPoints.DeAlgae)
 		deAlgae.onTrue(Commands.either(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae),
-			elevator.setHeightCommand(SequencingConstants.SetPoints.DeAlgae.height).until(() -> elevator.isAtSetpoint()),
-			() -> elevator.getHeight() > 0.175)
+				elevator.setHeightCommand(SequencingConstants.SetPoints.DeAlgae.height)
+						.until(() -> elevator.isAtSetpoint()),
+				() -> elevator.getHeight() > 0.175)
 				.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
 	}
@@ -250,11 +261,10 @@ public class RobotContainer {
 		// PoseEstimation.getEstimatedPose().getY(),
 		// AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
-						swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
-								.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
+				swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
+						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
 								() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
-										() -> true))
-		);
+								() -> true)));
 		alignClosestReef.whileTrue(
 				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
 						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
@@ -316,6 +326,65 @@ public class RobotContainer {
 		// }
 
 		// }, swerve));
+	}
+
+	private void initializeEndgameAlerts() {
+		new Trigger(() -> {
+			return DriverStation.isTeleopEnabled()
+					&& DriverStation.getMatchTime() > 0.0
+					&& DriverStation.getMatchTime() <= Math.round(20);
+		})
+				.onTrue(
+						Commands.run(
+								() -> {
+									Leds.getInstance().endgameAlert = true;
+									driver.setRumble(RumbleType.kBothRumble, 1.0);
+									operator.setRumble(RumbleType.kBothRumble, 1.0);
+								})
+								.withTimeout(1.5)
+								.andThen(
+										Commands.run(
+												() -> {
+													Leds.getInstance().endgameAlert = false;
+													driver.setRumble(RumbleType.kBothRumble, 0.0);
+													operator.setRumble(RumbleType.kBothRumble, 0.0);
+												})
+												.withTimeout(1.0)));
+
+		new Trigger(
+				() -> DriverStation.isTeleopEnabled()
+						&& DriverStation.getMatchTime() > 0.0
+						&& DriverStation.getMatchTime() <= Math.round(10))
+				.onTrue(
+						Commands.sequence(
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = true;
+											driver.setRumble(RumbleType.kBothRumble, 1.0);
+											operator.setRumble(RumbleType.kBothRumble, 1.0);
+										})
+										.withTimeout(0.25),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = false;
+											driver.setRumble(RumbleType.kBothRumble, 0.0);
+											operator.setRumble(RumbleType.kBothRumble, 0.0);
+										})
+										.withTimeout(0.1),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = true;
+											driver.setRumble(RumbleType.kBothRumble, 1.0);
+											operator.setRumble(RumbleType.kBothRumble, 1.0);
+										})
+										.withTimeout(0.25),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = false;
+											driver.setRumble(RumbleType.kBothRumble, 0.0);
+											operator.setRumble(RumbleType.kBothRumble, 0.0);
+										})
+										.withTimeout(1.0)));
 	}
 
 	public void setDefaultCommands() {
