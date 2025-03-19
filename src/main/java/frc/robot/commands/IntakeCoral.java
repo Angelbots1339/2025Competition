@@ -47,6 +47,6 @@ public class IntakeCoral extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return endEffector.hasCoral() && timer.hasElapsed(0.05);
+		return endEffector.hasCoral();
 	}
 }
