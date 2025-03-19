@@ -24,8 +24,9 @@ public class AlignUtil {
 	public static final Transform2d processorOffset = new Transform2d(-RobotConstants.frontLength, 0, Rotation2d.kZero);
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
-	/* TODO: change this.  this is the distance from the center of the reef to each of the branch */
 	public static final double reefOffset = Units.inchesToMeters(5.5 + 1.75  / 2); // 7
+	/* this is the offset from the bargeoffset robot relative */
+	public static final double bargeScoreOffset = 0.4; // 7
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
@@ -38,6 +39,12 @@ public class AlignUtil {
 	public static Side selectedSide = Side.Right;
 
 	public static Command driveToPose(Swerve swerve, Pose2d target) {
+		return driveToPose(swerve, target, false);
+	}
+	public static Command driveToPose(Swerve swerve, Pose2d target, boolean slow) {
+		if (slow)
+			return Commands.run(() -> swerve.pidToPose(target, 1), swerve).until(() -> swerve.isAtPose());
+		else
 		return Commands.run(() -> swerve.pidToPose(target), swerve).until(() -> swerve.isAtPose());
 		// PathConstraints constraints = new PathConstraints(1, 4.0,
 		// 		SwerveConstants.maxturn, Units.degreesToRadians(720));
@@ -85,6 +92,13 @@ public class AlignUtil {
 		Pose2d target = offsetPose(getClosestBarge(), bargeOffset);
 		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()));
 	}
+
+	public static Command driveToClosestBargeScore(Swerve swerve) {
+		Pose2d target = offsetPose(getClosestBarge(), new Transform2d(bargeOffset.getX() + bargeScoreOffset, bargeOffset.getY(), bargeOffset.getRotation()));
+		return driveToPose(swerve, new Pose2d(target.getX(), PoseEstimation.getEstimatedPose().getY(), target.getRotation()), true);
+	}
+
+
 
 	public static Command driveToProcessor(Swerve swerve) {
 		return driveToPose(swerve, offsetPose(FieldUtil.getProcessor(), processorOffset));

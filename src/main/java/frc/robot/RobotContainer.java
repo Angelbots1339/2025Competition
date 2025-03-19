@@ -146,7 +146,10 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Outtake",
 					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(0.5)));
 
-		autoChooser = AutoBuilder.buildAutoChooser("Mobility");
+		autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+			  (stream) -> stream.filter(auto -> auto.getName().startsWith("Comp"))
+		  );
+
 		SmartDashboard.putData("Auto", autoChooser);
 
 		for (TuningSystem system : TuningSystem.values()) {
@@ -247,17 +250,11 @@ public class RobotContainer {
 		// PoseEstimation.getEstimatedPose().getY(),
 		// AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
-				Commands.either(
 						swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
 								.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
-										() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
-										() -> true)),
-						swerve.defer(() -> AlignUtil.driveToProcessor(swerve))
-								.andThen(swerve.angularDrive(() -> leftY.get() * 0.2, () -> 0.0,
-										() -> FieldUtil.getProcessor().getRotation().rotateBy(Rotation2d.k180deg),
-										() -> true)),
-						() -> FieldUtil.isRedAlliance() ? PoseEstimation.getEstimatedPose().getY() < 4
-								: PoseEstimation.getEstimatedPose().getY() > 4));
+								() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
+										() -> true))
+		);
 		alignClosestReef.whileTrue(
 				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
 						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
