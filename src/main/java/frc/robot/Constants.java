@@ -38,7 +38,7 @@ public class Constants {
 		public static final double pidToPoseKP = 2.5; // was 2.5
 		public static final double pidToPoseKD = 0;
 		public static final double pidToPoseKS = 0.15;
-		public static final double pidToPoseTolerance = 0.03; // Meters
+		public static final double pidToPoseTolerance = 0.02; // Meters
 		public static final double pidToPoseMaxSpeed = 2; // Meters per second
 
 		public static final PathConstraints PathPlannerConstraints = new PathConstraints(maxspeed, 4.0,
