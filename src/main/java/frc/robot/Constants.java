@@ -256,7 +256,7 @@ public class Constants {
 			L2(0.08, Degrees.of(55)),
 			L3(0.21, Degrees.of(55)),
 			L4(0.4, Degrees.of(60)),
-			Barge(0.572, Degrees.of(74)), // 0.571 max
+			Barge(0.57, Degrees.of(74)), // 0.571 max
 			DeAlgae(0.14, Degrees.of(0), Volts.of(10)); // used in case of algae being inside
 
 			public final double height;
