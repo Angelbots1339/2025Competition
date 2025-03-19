@@ -25,7 +25,7 @@ public class AlignUtil {
 	public static final Transform2d stationOffset = new Transform2d(-RobotConstants.backLength, 0, Rotation2d.k180deg);
 	public static final Transform2d bargeOffset = new Transform2d(-0.684272, 0, Rotation2d.kZero);
 	/* TODO: change this.  this is the distance from the center of the reef to each of the branch */
-	public static final double reefOffset = Units.inchesToMeters(7);
+	public static final double reefOffset = Units.inchesToMeters(0); // 7
 
 	private static int selectedReefindex = -1;
 	private static Pose2d selectedReef = new Pose2d(0, 0, Rotation2d.kZero);
