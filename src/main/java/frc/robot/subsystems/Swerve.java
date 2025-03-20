@@ -181,12 +181,12 @@ public class Swerve extends SubsystemBase {
 
 		ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
 
-		req = new SwerveRequest.RobotCentric()
+		req = new SwerveRequest.FieldCentric()
 				.withDriveRequestType(DriverConstants.openLoopDrive ? DriveRequestType.OpenLoopVoltage
 						: DriveRequestType.Velocity)
-				.withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
-				.withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with negative X (left)
-				.withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
+				.withVelocityX(-speeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
+				.withVelocityY(-speeds.vyMetersPerSecond) // Drive left with negative X (left)
+				.withRotationalRate(speeds.omegaRadiansPerSecond);
 
 		swerve.setControl(req);
 	}
