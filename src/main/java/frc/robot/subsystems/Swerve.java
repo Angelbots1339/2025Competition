@@ -75,11 +75,11 @@ public class Swerve extends SubsystemBase {
 
 	/** Creates a new Swerve. */
 	public Swerve() {
+		configPathPlanner();
 		angularDrivePID.setTolerance(SwerveConstants.angularDriveTolerance);
 		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(SwerveConstants.pidToPoseTolerance);
 		pidToPoseYController.setTolerance(SwerveConstants.pidToPoseTolerance);
-		configPathPlanner();
 
 		initlogs();
 		// putSwerveState();
@@ -264,7 +264,7 @@ public class Swerve extends SubsystemBase {
 					if (alliance.isPresent()) {
 						return alliance.get() == DriverStation.Alliance.Red;
 					}
-					return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
+					return false;
 				},
 				this // Reference to this subsystem to set requirements
 		);
@@ -279,7 +279,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void setYaw(Rotation2d angle) {
-		swerve.getPigeon2().setYaw(angle.getDegrees());
+		swerve.getPigeon2().setYaw(angle.getDegrees(), 0.1);
 	}
 
 	public void resetGyro() {
@@ -296,7 +296,7 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-			updatePose();
+		updatePose();
 	}
 
 	public void updatePose() {

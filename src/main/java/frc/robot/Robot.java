@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
 		disabledTimer.start();
 
 		// WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+		FollowPathCommand.warmupCommand().schedule();
 	}
 
 	@Override
