@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
@@ -16,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
@@ -39,6 +41,7 @@ import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.Robot;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
@@ -67,6 +70,8 @@ public class Swerve extends SubsystemBase {
 	private LoggedSubsystem logger = new LoggedSubsystem("Swerve");
 	private LoggedSweveModules logged_modules;
 	private LoggedField logged_field;
+
+	public boolean use_vision = false;
 
 	/** Creates a new Swerve. */
 	public Swerve() {
@@ -200,8 +205,12 @@ public class Swerve extends SubsystemBase {
     }
 
 	public void resetPose(Pose2d pose) {
+		setYaw(pose.getRotation());
+		PoseEstimation.updateEstimatedPose(pose, this);
 		swerve.resetPose(pose);
 		this.pose.resetPose(pose);
+		updatePose();
+		use_vision = true;
 	}
 
 	private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX, Supplier<Double> translationY,
@@ -287,11 +296,13 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		updatePose();
+			updatePose();
 	}
 
 	public void updatePose() {
+		if (use_vision) {
 			updateVision(false);
+		}
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
@@ -317,12 +328,14 @@ public class Swerve extends SubsystemBase {
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
 		if (mt2.avgTagDist < 4)
-			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, std));
 	}
 
 	public void updateVision(boolean trust) {
+		if (Robot.isReal()) {
 		addVision(VisionConstants.LimelightRightName, trust);
 		addVision(VisionConstants.LimelightLeftName, trust);
+		}
 	}
 
 	@Override
