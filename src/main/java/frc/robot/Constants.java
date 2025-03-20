@@ -164,7 +164,7 @@ public class Constants {
 		public static final double hasAlgaeThreshold = 90; /* mm */
 
 		public static final Voltage intakeVolts = Volts.of(7.5);
-		public static final Voltage coralIntakeVolts = Volts.of(-3);
+		public static final Voltage coralIntakeVolts = Volts.of(-5);
 		public static final Voltage coralIntakeSetVolts = Volts.of(0.3);
 		public static final Voltage outtakeVolts = Volts.of(-12);
 		public static final Voltage coralOuttakeVolts = Volts.of(-6);
@@ -253,8 +253,8 @@ public class Constants {
 			A2(0.24, reefAlgaeAngle, EndEffectorConstants.intakeVolts),
 			/* TODO: tune coral heights */
 			L1(0.21),
-			L2(0.08, Degrees.of(55)),
-			L3(0.21, Degrees.of(55)),
+			L2(0.1, Degrees.of(55)),
+			L3(0.22, Degrees.of(55)),
 			L4(0.4, Degrees.of(60)),
 			Barge(0.57, Degrees.of(74)), // 0.571 max
 			DeAlgae(0.14, Degrees.of(0), Volts.of(10)); // used in case of algae being inside
