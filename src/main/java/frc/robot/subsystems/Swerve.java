@@ -287,7 +287,9 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		if (DriverStation.isEnabled()) {
 		updatePose();
+		}
 	}
 
 	public void updatePose() {
