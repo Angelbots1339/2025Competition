@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center R0L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Home"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R0L R0C"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Low Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R0C BR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Barge"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Home"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR Score R1C"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
