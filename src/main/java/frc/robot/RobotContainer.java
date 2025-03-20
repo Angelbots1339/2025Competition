@@ -406,7 +406,8 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
+		// return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
+		return autoChooser.getSelected();
 	}
 
 	public Command getTuningCommand() {
