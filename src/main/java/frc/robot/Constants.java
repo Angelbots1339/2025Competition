@@ -102,8 +102,8 @@ public class Constants {
 				.withReverseSoftLimitThreshold(metersToRotations(Heights.Min));
 
 		public static final MotionMagicConfigs motionmagic = new MotionMagicConfigs()
-			.withMotionMagicAcceleration(metersToRotations(1))
-			.withMotionMagicCruiseVelocity(metersToRotations(1));
+			.withMotionMagicAcceleration(metersToRotations(1.6))
+			.withMotionMagicCruiseVelocity(metersToRotations(2.5));
 
 		public static final TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withMotorOutput(
