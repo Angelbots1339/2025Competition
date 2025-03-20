@@ -149,6 +149,7 @@ public class RobotContainer {
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
 						.andThen(new InstantCommand(
 								() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))));
+
 		NamedCommands.registerCommand("Home",
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 

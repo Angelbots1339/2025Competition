@@ -42,8 +42,8 @@ public class ExtendElevator extends Command {
 
 		if (override != null)
 			elevator.setHeight(override.height);
-		else if (heightOverride != -1)
-			elevator.setHeight(heightOverride);
+		// else if (heightOverride != -1)
+		// 	elevator.setHeight(heightOverride);
 		else
 			elevator.setHeight(target.height);
 	}
@@ -54,6 +54,8 @@ public class ExtendElevator extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return elevator.isAtSetpoint() && endEffector.isAtSetpoint();
+		return elevator.isAtSetpoint() && endEffector.isAtSetpoint() && (
+				override != null ? elevator.getTargetHeight() == override.height : elevator.getTargetHeight() == target.height
+		);
 	}
 }
