@@ -32,6 +32,13 @@ public class ExtendElevator extends Command {
 	@Override
 	public void initialize() {
 		endEffector.setAngle(SequencingConstants.endEffectorAvoidAngle);
+
+		// if (override != null)
+		// 	elevator.setTarget(override.height);
+		// else if (heightOverride != -1)
+		// 	elevator.setTarget(heightOverride);
+		// else
+		// 	elevator.setTarget(target.height);
 	}
 
 	@Override
