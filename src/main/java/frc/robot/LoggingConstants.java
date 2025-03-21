@@ -14,27 +14,27 @@ public final class LoggingConstants {
                 public static LoggingLevel Modules = LoggingLevel.NONE;
                 public static LoggingLevel Motors = LoggingLevel.NONE;
                 public static LoggingLevel Gyro = LoggingLevel.NONE;
-                public static LoggingLevel Pose = LoggingLevel.NETWORK_TABLES;
-                public static LoggingLevel PidPose = LoggingLevel.NETWORK_TABLES;
+                public static LoggingLevel Pose = LoggingLevel.ONBOARD_ONLY;
+                public static LoggingLevel PidPose = LoggingLevel.ONBOARD_ONLY;
                 public static LoggingLevel Auto = LoggingLevel.NONE;
                 public static LoggingLevel Main = LoggingLevel.NONE;
         }
 
 		public class ElevatorLogging {
-			public static LoggingLevel Leader = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Leader = LoggingLevel.ONBOARD_ONLY;
 			public static LoggingLevel Follower = LoggingLevel.NONE;
 			public static LoggingLevel FollowerMotor = LoggingLevel.NONE;
 			public static LoggingLevel LeaderMotor = LoggingLevel.NONE;
 		}
 
 		public class EndEffectorLogging {
-			public static LoggingLevel Angle = LoggingLevel.NETWORK_TABLES;
-			public static LoggingLevel Wheel = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel Angle = LoggingLevel.ONBOARD_ONLY;
+			public static LoggingLevel Wheel = LoggingLevel.ONBOARD_ONLY;
 			public static LoggingLevel TOF = LoggingLevel.NETWORK_TABLES;
 		}
 
         public class RobotContainerLogging {
-                public static LoggingLevel StickValues = LoggingLevel.NONE;
+                public static LoggingLevel StickValues = LoggingLevel.ONBOARD_ONLY;
                 public static LoggingLevel Side = LoggingLevel.NETWORK_TABLES;
         }
 
