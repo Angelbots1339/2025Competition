@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 7.19,
-        "y": 3.875
+        "y": 3.825
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.926028605447596,
-        "y": 3.8979627465952356
+        "y": 3.8479627465952357
       },
       "isLocked": false,
       "linkedName": "Center R1R Start"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.75,
-        "y": 3.8747431506849312
+        "y": 3.825
       },
       "prevControl": {
         "x": 5.997817677641919,
-        "y": 3.84178258867264
+        "y": 3.792039437987709
       },
       "nextControl": null,
       "isLocked": false,
