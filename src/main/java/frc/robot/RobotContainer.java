@@ -211,9 +211,9 @@ public class RobotContainer {
 										Map.entry(SequencingConstants.SetPoints.L2, new RunCommand(
 												() -> endeffector.setAngle(SequencingConstants.SetPoints.L2.angle))),
 										Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(
-												() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle))),
+												() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle)).onlyIf(() -> !endeffector.hasCoral())),
 										Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(
-												() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle))),
+												() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle)).onlyIf(() -> !endeffector.hasCoral())),
 										Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(
 												() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
 										Map.entry(SequencingConstants.SetPoints.Intake, Commands.none()),
