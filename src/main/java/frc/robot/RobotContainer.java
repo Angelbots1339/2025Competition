@@ -268,10 +268,7 @@ public class RobotContainer {
 								() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
 								() -> true)));
 		alignClosestReef.whileTrue(
-				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
-						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
-								() -> AlignUtil.getClosestReef().getRotation().rotateBy(Rotation2d.k180deg),
-								() -> false)));
+				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve)));
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
 		// selectReef.onTrue(
