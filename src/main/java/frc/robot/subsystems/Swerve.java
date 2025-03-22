@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
@@ -16,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
@@ -39,6 +41,7 @@ import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
 import frc.lib.util.logging.loggedObjects.LoggedField;
 import frc.lib.util.logging.loggedObjects.LoggedSweveModules;
+import frc.robot.Robot;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LoggingConstants.SwerveLogging;
@@ -68,13 +71,15 @@ public class Swerve extends SubsystemBase {
 	private LoggedSweveModules logged_modules;
 	private LoggedField logged_field;
 
+	public boolean use_vision = false;
+
 	/** Creates a new Swerve. */
 	public Swerve() {
+		configPathPlanner();
 		angularDrivePID.setTolerance(SwerveConstants.angularDriveTolerance);
 		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(SwerveConstants.pidToPoseTolerance);
 		pidToPoseYController.setTolerance(SwerveConstants.pidToPoseTolerance);
-		configPathPlanner();
 
 		initlogs();
 		// putSwerveState();
@@ -164,8 +169,8 @@ public class Swerve extends SubsystemBase {
                         + Math.signum(pidToPoseYController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
                 -maxspeed, maxspeed);
 
-        SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
-        SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
+        // SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
+        // SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
 
         angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
                 () -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.getRotation());
@@ -181,12 +186,12 @@ public class Swerve extends SubsystemBase {
 
 		ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
 
-		req = new SwerveRequest.RobotCentric()
+		req = new SwerveRequest.FieldCentric()
 				.withDriveRequestType(DriverConstants.openLoopDrive ? DriveRequestType.OpenLoopVoltage
 						: DriveRequestType.Velocity)
-				.withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
-				.withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with negative X (left)
-				.withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
+				.withVelocityX(-speeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
+				.withVelocityY(-speeds.vyMetersPerSecond) // Drive left with negative X (left)
+				.withRotationalRate(speeds.omegaRadiansPerSecond);
 
 		swerve.setControl(req);
 	}
@@ -200,8 +205,12 @@ public class Swerve extends SubsystemBase {
     }
 
 	public void resetPose(Pose2d pose) {
+		setYaw(pose.getRotation());
+		PoseEstimation.updateEstimatedPose(pose, this);
 		swerve.resetPose(pose);
 		this.pose.resetPose(pose);
+		updatePose();
+		use_vision = true;
 	}
 
 	private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX, Supplier<Double> translationY,
@@ -255,7 +264,7 @@ public class Swerve extends SubsystemBase {
 					if (alliance.isPresent()) {
 						return alliance.get() == DriverStation.Alliance.Red;
 					}
-					return FieldUtil.isRedAlliance() && !DriverStation.isTeleop();
+					return false;
 				},
 				this // Reference to this subsystem to set requirements
 		);
@@ -270,7 +279,7 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void setYaw(Rotation2d angle) {
-		swerve.getPigeon2().setYaw(angle.getDegrees());
+		swerve.getPigeon2().setYaw(angle.getDegrees(), 0.1);
 	}
 
 	public void resetGyro() {
@@ -291,7 +300,9 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void updatePose() {
+		if (use_vision) {
 			updateVision(false);
+		}
 		pose.update(getYaw(), swerve.getState().ModulePositions);
 		PoseEstimation.updateEstimatedPose(pose.getEstimatedPosition(), this);
 	}
@@ -317,12 +328,14 @@ public class Swerve extends SubsystemBase {
 						+ LimelightHelpers.getLatency_Pipeline(limelightname)) / 1000;
 
 		if (mt2.avgTagDist < 4)
-			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, 0));
+			pose.addVisionMeasurement(poseFromVision, poseFromVisionTimestamp, VecBuilder.fill(std, std, std));
 	}
 
 	public void updateVision(boolean trust) {
+		if (Robot.isReal()) {
 		addVision(VisionConstants.LimelightRightName, trust);
 		addVision(VisionConstants.LimelightLeftName, trust);
+		}
 	}
 
 	@Override
@@ -335,43 +348,41 @@ public class Swerve extends SubsystemBase {
 		logged_field = new LoggedField("PoseEstimation", logger, SwerveLogging.Pose, true);
 		logged_modules = new LoggedSweveModules("modules", logger, this, SwerveLogging.Modules);
 
-		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), true);
-		logged_field.addPose2d("Closest Reef", () -> AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset), true);
+		logged_field.addPose2d("PoseEstimation", () -> PoseEstimation.getEstimatedPose(), false);
+		logged_field.addPose2d("Closest Reef", () -> AlignUtil.offsetPose(AlignUtil.getClosestReef(), AlignUtil.coralOffset), false);
 		// logged_field.addPose2d("Selected Reef", () -> AlignUtil.getSelectedReef(), true);
-		logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
+		// logged_field.addPose2d("Closest Barge", () -> AlignUtil.getClosestBarge(), true);
 		// logged_field.addPose2d("Limelight Left", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightLeftName).pose : Pose2d.kZero, true);
 		// logged_field.addPose2d("Limelight Right", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose != null ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightRightName).pose : Pose2d.kZero, true);
-		logger.addBoolean("at pose", () -> isAtPose(), SwerveLogging.PidPose);
-		logger.addBoolean("at rot", () -> isAngularDriveAtSetpoint(), SwerveLogging.PidPose);
-		logger.addDouble("target angle error", () -> angularDrivePID.getError(), SwerveLogging.PidPose);
-		logger.addDouble("target angle", () -> angularDrivePID.getSetpoint(), SwerveLogging.PidPose);
+		// logger.addDouble("target angle error", () -> angularDrivePID.getError(), SwerveLogging.PidPose);
+		// logger.addDouble("target angle", () -> angularDrivePID.getSetpoint(), SwerveLogging.PidPose);
 		logger.add(logged_field);
 
 		logger.add(logged_modules);
 	}
 
 	public void putSwerveState() {
-		SmartDashboard.putData("Swerve Drive", new Sendable() {
-			@Override
-			public void initSendable(SendableBuilder builder) {
-				builder.setSmartDashboardType("SwerveDrive");
-				builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
-				builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
+		// SmartDashboard.putData("Swerve Drive", new Sendable() {
+		// 	@Override
+		// 	public void initSendable(SendableBuilder builder) {
+		// 		builder.setSmartDashboardType("SwerveDrive");
+		// 		builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
 
-				builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
-				builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
+		// 		builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
 
-				builder.addDoubleProperty("Front Right Angle", () -> getModuleAngle(1).getDegrees(), null);
-				builder.addDoubleProperty("Front Right Velocity", () -> getModuleSpeed(1), null);
+		// 		builder.addDoubleProperty("Front Right Angle", () -> getModuleAngle(1).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Right Velocity", () -> getModuleSpeed(1), null);
 
-				builder.addDoubleProperty("Back Left Angle", () -> getModuleAngle(2).getDegrees(), null);
-				builder.addDoubleProperty("Back Left Velocity", () -> getModuleSpeed(2), null);
+		// 		builder.addDoubleProperty("Back Left Angle", () -> getModuleAngle(2).getDegrees(), null);
+		// 		builder.addDoubleProperty("Back Left Velocity", () -> getModuleSpeed(2), null);
 
-				builder.addDoubleProperty("Back Right Angle", () -> getModuleAngle(3).getDegrees(), null);
-				builder.addDoubleProperty("Back Right Velocity", () -> getModuleSpeed(3), null);
+		// 		builder.addDoubleProperty("Back Right Angle", () -> getModuleAngle(3).getDegrees(), null);
+		// 		builder.addDoubleProperty("Back Right Velocity", () -> getModuleSpeed(3), null);
 
-				builder.addDoubleProperty("Robot Angle", () -> getYaw().getDegrees(), null);
-			}
-		});
+		// 		builder.addDoubleProperty("Robot Angle", () -> getYaw().getDegrees(), null);
+		// 	}
+		// });
 	}
 }

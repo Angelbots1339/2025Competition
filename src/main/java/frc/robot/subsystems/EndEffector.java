@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -104,7 +106,8 @@ public class EndEffector extends SubsystemBase {
 
 	public void hold() {
 		if (hasCoral())
-			wheelMotor.setControl(new NeutralOut());
+			// wheelMotor.setControl(new NeutralOut());
+			runIntake(Volts.of(0.17));
 		else
 			runIntake(EndEffectorConstants.algaeHoldVoltage);
 	}

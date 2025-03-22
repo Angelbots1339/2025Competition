@@ -16,6 +16,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.Leds;
 import frc.lib.util.LimelightHelpers;
 import frc.lib.util.PoseEstimation;
 import frc.lib.util.logging.LoggedSubsystem;
@@ -122,41 +125,48 @@ public class RobotContainer {
 		configureOperatorBindings();
 		setDefaultCommands();
 		initLogs();
+		initializeEndgameAlerts();
 
 		NamedCommands.registerCommand("Score L4",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
-				.andThen(endeffector.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts, SequencingConstants.SetPoints.L4.angle).withTimeout(2)
-					.until(() -> !endeffector.hasCoral())));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.L4)
+						.andThen(endeffector
+								.setAngleAndRun(EndEffectorConstants.coralOuttakeVolts,
+										SequencingConstants.SetPoints.L4.angle)
+								.withTimeout(2)
+								.until(() -> !endeffector.hasCoral())));
 
 		NamedCommands.registerCommand("Low Algae",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
-				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A1)
+						.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle))
+								.raceWith(Commands.waitSeconds(0.3)))
+						.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("A2",
-			new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
-				.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle)).raceWith(Commands.waitSeconds(0.3)))
-				.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
+				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.A2)
+						.andThen(new RunCommand(() -> endeffector.intake(SequencingConstants.reefAlgaeAngle))
+								.raceWith(Commands.waitSeconds(0.3)))
+						.andThen(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home)));
 		NamedCommands.registerCommand("Barge",
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Barge)
 						.andThen(new InstantCommand(
 								() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))));
+
 		NamedCommands.registerCommand("Home",
 				new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.Home));
 
 		NamedCommands.registerCommand("Outtake",
-					Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector).raceWith(Commands.waitSeconds(0.5)));
+				Commands.run(() -> endeffector.runIntake(EndEffectorConstants.outtakeVolts), endeffector)
+						.raceWith(Commands.waitSeconds(0.5)));
 
 		autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
-			  (stream) -> stream.filter(auto -> auto.getName().startsWith("Comp"))
-		  );
+				(stream) -> stream.filter(auto -> auto.getName().startsWith("Comp")));
 
 		SmartDashboard.putData("Auto", autoChooser);
 
-		for (TuningSystem system : TuningSystem.values()) {
-			tuningChooser.addOption(system.toString(), system);
-		}
-		tuningChooser.setDefaultOption("None", TuningSystem.None);
-		SmartDashboard.putData("Tuning System", tuningChooser);
+		// for (TuningSystem system : TuningSystem.values()) {
+		// 	tuningChooser.addOption(system.toString(), system);
+		// }
+		// tuningChooser.setDefaultOption("None", TuningSystem.None);
+		// SmartDashboard.putData("Tuning System", tuningChooser);
 	}
 
 	private void configureOperatorBindings() {
@@ -179,10 +189,12 @@ public class RobotContainer {
 		// Commands.runOnce(() -> ExtendElevator.target =
 		// SequencingConstants.SetPoints.L1)
 		// );
-		// deAlgae.onTrue(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae)
+		// deAlgae.onTrue(new ExtendElevator(elevator, endeffector,
+		// SequencingConstants.SetPoints.DeAlgae)
 		deAlgae.onTrue(Commands.either(new ExtendElevator(elevator, endeffector, SequencingConstants.SetPoints.DeAlgae),
-			elevator.setHeightCommand(SequencingConstants.SetPoints.DeAlgae.height).until(() -> elevator.isAtSetpoint()),
-			() -> elevator.getHeight() > 0.175)
+				elevator.setHeightCommand(SequencingConstants.SetPoints.DeAlgae.height)
+						.until(() -> elevator.isAtSetpoint()),
+				() -> elevator.getHeight() > 0.175)
 				.andThen(endeffector.setAngleAndRun(Volts.of(5), Degrees.of(0))));
 
 	}
@@ -199,9 +211,9 @@ public class RobotContainer {
 										Map.entry(SequencingConstants.SetPoints.L2, new RunCommand(
 												() -> endeffector.setAngle(SequencingConstants.SetPoints.L2.angle))),
 										Map.entry(SequencingConstants.SetPoints.A1, new RunCommand(
-												() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle))),
+												() -> endeffector.intake(SequencingConstants.SetPoints.A1.angle)).onlyIf(() -> !endeffector.hasCoral())),
 										Map.entry(SequencingConstants.SetPoints.A2, new RunCommand(
-												() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle))),
+												() -> endeffector.intake(SequencingConstants.SetPoints.A2.angle)).onlyIf(() -> !endeffector.hasCoral())),
 										Map.entry(SequencingConstants.SetPoints.Barge, new InstantCommand(
 												() -> endeffector.setAngle(SequencingConstants.endEffectorBargeAngle))),
 										Map.entry(SequencingConstants.SetPoints.Intake, Commands.none()),
@@ -211,9 +223,10 @@ public class RobotContainer {
 
 		openIntake.whileTrue(
 				Commands.run(() -> endeffector.intake(EndEffectorConstants.intakeAngle), endeffector)
-						.onlyIf(() -> elevator.isAtHome()));
+						.onlyIf(() -> elevator.isAtHome() && !endeffector.hasCoral()));
 
 		intakeCoral.whileTrue(new IntakeCoral(endeffector)
+				.andThen(Commands.run(() -> endeffector.runIntake(Volts.of(5))).withTimeout(0.1).andThen(Commands.runOnce(() -> endeffector.hold())))
 				.andThen(Commands.run(() -> endeffector.setAngle(Degrees.of(98)))).onlyIf(() -> elevator.isAtHome()));
 		outtakeCoral.whileTrue(
 				Commands.run(() -> endeffector.runIntake(EndEffectorConstants.coralOuttakeVolts), endeffector));
@@ -250,16 +263,12 @@ public class RobotContainer {
 		// PoseEstimation.getEstimatedPose().getY(),
 		// AlignUtil.getClosestBarge().getRotation())))));
 		alignBarge.whileTrue(
-						swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
-								.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
-								() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
-										() -> true))
-		);
-		alignClosestReef.whileTrue(
-				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve))
+				swerve.defer(() -> AlignUtil.driveToClosestBarge(swerve))
 						.andThen(swerve.angularDrive(() -> 0.0, () -> leftX.get() * 0.2,
-								() -> AlignUtil.getClosestReef().getRotation().rotateBy(Rotation2d.k180deg),
-								() -> false)));
+								() -> AlignUtil.getClosestBarge().getRotation().rotateBy(Rotation2d.k180deg),
+								() -> true)));
+		alignClosestReef.whileTrue(
+				swerve.defer(() -> AlignUtil.driveToClosestReef(swerve)));
 		// alignProcessor.whileTrue(swerve.defer(() -> AlignUtil.driveToProcessor()));
 
 		// selectReef.onTrue(
@@ -318,8 +327,67 @@ public class RobotContainer {
 		// }, swerve));
 	}
 
+	private void initializeEndgameAlerts() {
+		new Trigger(() -> {
+			return DriverStation.isTeleopEnabled()
+					&& DriverStation.getMatchTime() > 0.0
+					&& DriverStation.getMatchTime() <= Math.round(20);
+		})
+				.onTrue(
+						Commands.run(
+								() -> {
+									Leds.getInstance().endgameAlert = true;
+									driver.setRumble(RumbleType.kBothRumble, 1.0);
+									operator.setRumble(RumbleType.kBothRumble, 1.0);
+								})
+								.withTimeout(1.5)
+								.andThen(
+										Commands.run(
+												() -> {
+													Leds.getInstance().endgameAlert = false;
+													driver.setRumble(RumbleType.kBothRumble, 0.0);
+													operator.setRumble(RumbleType.kBothRumble, 0.0);
+												})
+												.withTimeout(1.0)));
+
+		new Trigger(
+				() -> DriverStation.isTeleopEnabled()
+						&& DriverStation.getMatchTime() > 0.0
+						&& DriverStation.getMatchTime() <= Math.round(10))
+				.onTrue(
+						Commands.sequence(
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = true;
+											driver.setRumble(RumbleType.kBothRumble, 1.0);
+											operator.setRumble(RumbleType.kBothRumble, 1.0);
+										})
+										.withTimeout(0.25),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = false;
+											driver.setRumble(RumbleType.kBothRumble, 0.0);
+											operator.setRumble(RumbleType.kBothRumble, 0.0);
+										})
+										.withTimeout(0.1),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = true;
+											driver.setRumble(RumbleType.kBothRumble, 1.0);
+											operator.setRumble(RumbleType.kBothRumble, 1.0);
+										})
+										.withTimeout(0.25),
+								Commands.run(
+										() -> {
+											Leds.getInstance().endgameAlert = false;
+											driver.setRumble(RumbleType.kBothRumble, 0.0);
+											operator.setRumble(RumbleType.kBothRumble, 0.0);
+										})
+										.withTimeout(1.0)));
+	}
+
 	public void setDefaultCommands() {
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> !elevator.isAtHome()));
+		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true, () -> elevator.getHeight() >= 0.07));
 		endeffector.setDefaultCommand(
 				Commands.run(() -> endeffector.home(), endeffector).onlyIf(() -> elevator.isAtHome())
 						.andThen(Commands.run(() -> endeffector.hold(), endeffector)));
@@ -337,20 +405,22 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
+		// return Commands.waitSeconds(0.250).andThen(autoChooser.getSelected());
+		return autoChooser.getSelected();
 	}
 
 	public Command getTuningCommand() {
-		endeffector.stop();
-		elevator.stop();
-		ExtendElevator.heightOverride = -1;
-		return Commands.select(
-				Map.ofEntries(
-						Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
-						Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
-						Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
-						Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
-						Map.entry(TuningSystem.None, Commands.none())),
-				() -> tuningChooser.getSelected());
+		return Commands.none();
+		// endeffector.stop();
+		// elevator.stop();
+		// ExtendElevator.heightOverride = -1;
+		// return Commands.select(
+		// 		Map.ofEntries(
+		// 				Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
+		// 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
+		// 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
+		// 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
+		// 				Map.entry(TuningSystem.None, Commands.none())),
+		// 		() -> tuningChooser.getSelected());
 	}
 }

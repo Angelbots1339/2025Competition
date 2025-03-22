@@ -59,13 +59,13 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void setHeight(double meters) {
-		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters)));
 		targetHeight = meters;
+		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters)));
 	}
 
 	public void setHeight(Supplier<Double> meters) {
-		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters.get())));
 		targetHeight = meters.get();
+		leader.setControl(ElevatorConstants.PositionRequest.withPosition(ElevatorConstants.metersToRotations(meters.get())));
 	}
 
 	public Command setHeightCommand(double meters) {
@@ -94,6 +94,10 @@ public class Elevator extends SubsystemBase {
 
 	public boolean isAtSetpoint() {
 		return Math.abs(getErrorMeters()) <= ElevatorConstants.ErrorTolerence;
+	}
+
+	public void setTarget(double height) {
+		this.targetHeight = height;
 	}
 
 	public boolean isAtHome() {
