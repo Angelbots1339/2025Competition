@@ -169,8 +169,8 @@ public class Swerve extends SubsystemBase {
                         + Math.signum(pidToPoseYController.getError()) * Math.abs(SwerveConstants.pidToPoseKS),
                 -maxspeed, maxspeed);
 
-        SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
-        SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
+        // SmartDashboard.putNumber("PidXError", pidToPoseXController.getPositionError());
+        // SmartDashboard.putNumber("PidYError", pidToPoseYController.getPositionError());
 
         angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
                 () -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.getRotation());
@@ -362,27 +362,27 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void putSwerveState() {
-		SmartDashboard.putData("Swerve Drive", new Sendable() {
-			@Override
-			public void initSendable(SendableBuilder builder) {
-				builder.setSmartDashboardType("SwerveDrive");
-				builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
-				builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
+		// SmartDashboard.putData("Swerve Drive", new Sendable() {
+		// 	@Override
+		// 	public void initSendable(SendableBuilder builder) {
+		// 		builder.setSmartDashboardType("SwerveDrive");
+		// 		builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
 
-				builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
-				builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
+		// 		builder.addDoubleProperty("Front Left Angle", () -> getModuleAngle(0).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Left Velocity", () -> getModuleSpeed(0), null);
 
-				builder.addDoubleProperty("Front Right Angle", () -> getModuleAngle(1).getDegrees(), null);
-				builder.addDoubleProperty("Front Right Velocity", () -> getModuleSpeed(1), null);
+		// 		builder.addDoubleProperty("Front Right Angle", () -> getModuleAngle(1).getDegrees(), null);
+		// 		builder.addDoubleProperty("Front Right Velocity", () -> getModuleSpeed(1), null);
 
-				builder.addDoubleProperty("Back Left Angle", () -> getModuleAngle(2).getDegrees(), null);
-				builder.addDoubleProperty("Back Left Velocity", () -> getModuleSpeed(2), null);
+		// 		builder.addDoubleProperty("Back Left Angle", () -> getModuleAngle(2).getDegrees(), null);
+		// 		builder.addDoubleProperty("Back Left Velocity", () -> getModuleSpeed(2), null);
 
-				builder.addDoubleProperty("Back Right Angle", () -> getModuleAngle(3).getDegrees(), null);
-				builder.addDoubleProperty("Back Right Velocity", () -> getModuleSpeed(3), null);
+		// 		builder.addDoubleProperty("Back Right Angle", () -> getModuleAngle(3).getDegrees(), null);
+		// 		builder.addDoubleProperty("Back Right Velocity", () -> getModuleSpeed(3), null);
 
-				builder.addDoubleProperty("Robot Angle", () -> getYaw().getDegrees(), null);
-			}
-		});
+		// 		builder.addDoubleProperty("Robot Angle", () -> getYaw().getDegrees(), null);
+		// 	}
+		// });
 	}
 }

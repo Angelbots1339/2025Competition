@@ -162,11 +162,11 @@ public class RobotContainer {
 
 		SmartDashboard.putData("Auto", autoChooser);
 
-		for (TuningSystem system : TuningSystem.values()) {
-			tuningChooser.addOption(system.toString(), system);
-		}
-		tuningChooser.setDefaultOption("None", TuningSystem.None);
-		SmartDashboard.putData("Tuning System", tuningChooser);
+		// for (TuningSystem system : TuningSystem.values()) {
+		// 	tuningChooser.addOption(system.toString(), system);
+		// }
+		// tuningChooser.setDefaultOption("None", TuningSystem.None);
+		// SmartDashboard.putData("Tuning System", tuningChooser);
 	}
 
 	private void configureOperatorBindings() {
