@@ -107,7 +107,7 @@ public class EndEffector extends SubsystemBase {
 	public void hold() {
 		if (hasCoral())
 			// wheelMotor.setControl(new NeutralOut());
-			runIntake(Volts.of(0.1));
+			runIntake(Volts.of(0.17));
 		else
 			runIntake(EndEffectorConstants.algaeHoldVoltage);
 	}
