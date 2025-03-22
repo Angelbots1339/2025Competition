@@ -412,16 +412,17 @@ public class RobotContainer {
 	}
 
 	public Command getTuningCommand() {
-		endeffector.stop();
-		elevator.stop();
-		ExtendElevator.heightOverride = -1;
-		return Commands.select(
-				Map.ofEntries(
-						Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
-						Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
-						Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
-						Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
-						Map.entry(TuningSystem.None, Commands.none())),
-				() -> tuningChooser.getSelected());
+		return Commands.none();
+		// endeffector.stop();
+		// elevator.stop();
+		// ExtendElevator.heightOverride = -1;
+		// return Commands.select(
+		// 		Map.ofEntries(
+		// 				Map.entry(TuningSystem.Superstructure, new SuperstructureTuning(elevator, endeffector)),
+		// 				Map.entry(TuningSystem.EndEffector, new EndEffectorTuning(endeffector)),
+		// 				Map.entry(TuningSystem.Elevator, new ElevatorTuning(elevator)),
+		// 				Map.entry(TuningSystem.Swerve, new SwerveTuning(swerve)),
+		// 				Map.entry(TuningSystem.None, Commands.none())),
+		// 		() -> tuningChooser.getSelected());
 	}
 }

@@ -30,12 +30,12 @@ public final class LoggingConstants {
 		public class EndEffectorLogging {
 			public static LoggingLevel Angle = LoggingLevel.ONBOARD_ONLY;
 			public static LoggingLevel Wheel = LoggingLevel.ONBOARD_ONLY;
-			public static LoggingLevel TOF = LoggingLevel.NETWORK_TABLES;
+			public static LoggingLevel TOF = LoggingLevel.ONBOARD_ONLY;
 		}
 
         public class RobotContainerLogging {
                 public static LoggingLevel StickValues = LoggingLevel.ONBOARD_ONLY;
-                public static LoggingLevel Side = LoggingLevel.NETWORK_TABLES;
+                public static LoggingLevel Side = LoggingLevel.ONBOARD_ONLY;
         }
 
         public class GlobalLoggingConstants {
